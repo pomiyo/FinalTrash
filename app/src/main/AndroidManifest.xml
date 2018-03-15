@@ -139,7 +139,6 @@
         </activity>
         <activity android:name="com.example.taquio.trasearch.BusinessMessages.BusinessMessages"></activity>
         <activity android:name="com.example.taquio.trasearch.BusinessProfile.BusinessProfile" />
-        <activity android:name="com.example.taquio.trasearch.BusinessProfile.BusinessProfile2" />
         <activity android:name="com.example.taquio.trasearch.Samok.BusinessRegActivity" />
         <activity
             android:name="com.example.taquio.trasearch.Samok.BusinessRegActivity2"
@@ -155,6 +154,8 @@
                 <meta-data
                     android:name="com.google.android.gms.version"
                     android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".Samok.BusinessProfile2"/>
     </application>
 
 </manifest>

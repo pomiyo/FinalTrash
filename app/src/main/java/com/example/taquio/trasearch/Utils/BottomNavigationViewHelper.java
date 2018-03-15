@@ -9,11 +9,11 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.taquio.trasearch.Camera.CameraActivity;
+import com.example.taquio.trasearch.Messages.MessagesActivity;
+import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
 import com.example.taquio.trasearch.Samok.MapActivity;
-import com.example.taquio.trasearch.Messages.MessagesActivity;
 import com.example.taquio.trasearch.Samok.MyProfileActivity;
-import com.example.taquio.trasearch.R;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 /**
@@ -57,6 +57,7 @@ public class BottomNavigationViewHelper {
                     case R.id.ic_nearby:
                         //Log.d(TAG, "onNavigationItemSelected: Nearby selected");
                         Intent intent4 = new Intent(context, MapActivity.class);
+                        intent4.putExtra("CallFrom", "frombottomnav");
                         context.startActivity(intent4);
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         ((Activity)context).finish();

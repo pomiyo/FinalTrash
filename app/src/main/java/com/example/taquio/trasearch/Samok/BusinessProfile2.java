@@ -1,4 +1,4 @@
-package com.example.taquio.trasearch.BusinessProfile;
+package com.example.taquio.trasearch.Samok;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessProfile.BusinessBuy;
+import com.example.taquio.trasearch.BusinessProfile.BusinessEdit;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BusinessBottomNavigationViewHelper;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +40,7 @@ public class BusinessProfile2 extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 2;
 
     TextView tvName, tvEmail, tvMobile, tvPhone, tvLocation;
-    Button btnBuy, btnSell, btnEdit;
+    Button btnBuy, btnSell, btnEdit,btnRoute;
     ImageView verify, notVerify;
     CircleImageView profPicImage;
     private DatabaseReference databaseReference;
@@ -47,10 +50,12 @@ public class BusinessProfile2 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.business_activity_profile);
+        setContentView(R.layout.business_activity_profile2);
         Log.d(TAG, "onCreate: business profile 2 sstarting");
 
         setupBottomNavigationView();
+        final Junkshop bundle = (Junkshop) getIntent().getParcelableExtra("busprofile");
+        Toast.makeText(mContext, "" +bundle.getBsnBusinessName(), Toast.LENGTH_SHORT).show();
 
 //        setupViewPager();
         tvName = (TextView) findViewById(R.id.busEditUser);
@@ -60,6 +65,7 @@ public class BusinessProfile2 extends AppCompatActivity {
         tvLocation = (TextView) findViewById(R.id.busLoc);
         btnBuy = (Button) findViewById(R.id.btnBuy);
         btnSell = (Button) findViewById(R.id.btnSell);
+        btnRoute = findViewById(R.id.route);
         btnEdit = (Button) findViewById(R.id.busBtnEdit);
 
         verify = (ImageView) findViewById(R.id.imVerify);
@@ -86,6 +92,17 @@ public class BusinessProfile2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mContext, BusinessEdit.class);
+                startActivity(i);
+            }
+        });
+        //pass data to MapActivity
+        btnRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Junkshop junkshop = (Junkshop) getIntent().getParcelableExtra("busprofile");
+                Intent i = new Intent(BusinessProfile2.this, MapActivity.class);
+                i.putExtra("CallFrom", "fromprofile");
+                i.putExtra("BusinessDetail", bundle);
                 startActivity(i);
             }
         });

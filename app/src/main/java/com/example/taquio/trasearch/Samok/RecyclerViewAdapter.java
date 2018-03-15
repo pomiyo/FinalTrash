@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taquio.trasearch.BusinessProfile.BusinessProfile2;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.UniversalImageLoader;
 import com.google.firebase.database.DataSnapshot;
@@ -48,12 +48,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
          TextView address;
          ImageView businessPhoto;
          Junkshop shop = new Junkshop();
-
+         LinearLayout lin;
         public ViewHolder(View itemView) {
             super(itemView);
             mview = itemView;
             address = itemView.findViewById(R.id.image_name);
             businessPhoto = itemView.findViewById(R.id.businessImage);
+            lin = itemView.findViewById(R.id.linout);
+
         }
     }
 
@@ -93,6 +95,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     holder.mview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
+                            Intent busprofileIntent = new Intent(v.getContext(), BusinessProfile2.class);
+                            busprofileIntent.putExtra("busprofile", holder.shop);
+                            v.getContext().startActivity(busprofileIntent);
+                        }
+                    });
+                    holder.lin.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
