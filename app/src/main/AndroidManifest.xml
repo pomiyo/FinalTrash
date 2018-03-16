@@ -156,6 +156,7 @@
                     android:value="@integer/google_play_services_version" />
 
         <activity android:name=".Samok.BusinessProfile2"/>
+        <activity android:name=".Utils.PaymentDetails"/>
     </application>
 
 </manifest>

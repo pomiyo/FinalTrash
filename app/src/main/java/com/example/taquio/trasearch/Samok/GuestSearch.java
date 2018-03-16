@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.SearchLogic.ArticleData;
+import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
+import com.example.taquio.trasearch.SearchLogic.VideoData;
+import com.example.taquio.trasearch.SearchLogic.VideoHTTPRequest;
 import com.example.taquio.trasearch.Utils.Donate;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -30,6 +34,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import android.os.Handler;
+import android.os.Message;
 
 /**
  * Created by Del Mar on 2/12/2018.
@@ -46,6 +58,7 @@ public class GuestSearch extends AppCompatActivity {
     private DatabaseReference searchItem;
     AdView mAdView;
     FloatingActionButton floatBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +80,10 @@ public class GuestSearch extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
-        mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        mAdView.loadAd(adRequest);
+//        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
+//        mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+//        mAdView.loadAd(adRequest);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,68 +98,143 @@ public class GuestSearch extends AppCompatActivity {
 
             }
         });
-        searchExec.setOnClickListener(new View.OnClickListener() {
+
+
+//        searchExec.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final String search = searchText.getText().toString();
+//                Log.d(TAG, "Hello World" + search);
+////                progressDialog = new ProgressDialog(GuestSearch.this);
+////                progressDialog.setTitle("Searching");
+////                progressDialog.setMessage("Please wait while we CRAWL");
+////                progressDialog.show();
+////                progressDialog.setCanceledOnTouchOutside(false);
+////                final String search = searchText.getText().toString();
+////
+////                DatabaseReference mTraSearch;
+////                mTraSearch = FirebaseDatabase.getInstance().getReference().child("TraSearch");
+////                searchItem = FirebaseDatabase.getInstance().getReference().child("TraSearch").child(search).child("Videos");
+////
+////                Log.d(TAG, "Before EventListener");
+////                mTraSearch.addValueEventListener(new ValueEventListener() {
+////                    @Override
+////                    public void onDataChange(DataSnapshot dataSnapshot) {
+////                        Log.d(TAG, "Before checking");
+////                        if(!dataSnapshot.child(search).exists())
+////                        {
+////                            Spider spider = new Spider();
+////                            Map<Integer, CrawledData> videoLinks;
+////                            Map tobeUpload = new HashMap();
+////                            videoLinks = spider.searchEngine(search);
+////                            for(Integer index: videoLinks.keySet()){
+////                                Integer key = index;
+////                                CrawledData value = videoLinks.get(key);
+////                                String[] newLink = value.getUrl().split("v=");
+////
+////
+////                                tobeUpload.put(newLink[1]+"/Title",value.getTitle());
+////                            }
+////
+////                            searchItem.updateChildren(tobeUpload).addOnCompleteListener(new OnCompleteListener() {
+////                                @Override
+////                                public void onComplete(@NonNull Task task) {
+////                                    if(task.isSuccessful())
+////                                    {
+////                                        Log.d(TAG, "onComplete: Search Completed");
+////                                        progressDialog.dismiss();
+////                                    }
+////                                    else
+////                                    {
+////                                        Log.d(TAG, "onComplete: Search Failed");
+////                                        progressDialog.dismiss();
+////                                    }
+////                                }
+////                            });
+////                        }
+////                        else{
+////                            Log.d(TAG, "onDataChange: "+search+" already in the DAtabase");
+////                            progressDialog.dismiss();
+////                        }
+////                    }
+////
+////                    @Override
+////                    public void onCancelled(DatabaseError databaseError) {
+////
+////                    }
+////                });
+//            }
+//        });
+    }
+
+    public void getArticles(View view) {
+        final String sea = searchText.getText().toString();
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        Future<Map<Integer, ArticleData>> future = executor.submit(new Callable<Map<Integer, ArticleData>>() {
             @Override
-            public void onClick(View v) {
-                progressDialog = new ProgressDialog(GuestSearch.this);
-                progressDialog.setTitle("Searching");
-                progressDialog.setMessage("Please wait while we CRAWL");
-                progressDialog.show();
-                progressDialog.setCanceledOnTouchOutside(false);
-                final String search = searchText.getText().toString();
-
-                DatabaseReference mTraSearch;
-                mTraSearch = FirebaseDatabase.getInstance().getReference().child("TraSearch");
-                searchItem = FirebaseDatabase.getInstance().getReference().child("TraSearch").child(search).child("Videos");
-
-
-                mTraSearch.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.child(search).exists())
-                        {
-                            Spider spider = new Spider();
-                            Map<Integer, CrawledData> videoLinks;
-                            Map tobeUpload = new HashMap();
-                            videoLinks = spider.searchEngine(search);
-                            for(Integer index: videoLinks.keySet()){
-                                Integer key = index;
-                                CrawledData value = videoLinks.get(key);
-                                String[] newLink = value.getUrl().split("v=");
-
-
-                                tobeUpload.put(newLink[1]+"/Title",value.getTitle());
-                            }
-
-                            searchItem.updateChildren(tobeUpload).addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    if(task.isSuccessful())
-                                    {
-                                        Log.d(TAG, "onComplete: Search Completed");
-                                        progressDialog.dismiss();
-                                    }
-                                    else
-                                    {
-                                        Log.d(TAG, "onComplete: Search Failed");
-                                        progressDialog.dismiss();
-                                    }
-                                }
-                            });
-                        }else{
-                            Log.d(TAG, "onDataChange: "+search+" already in the DAtabase");
-                            progressDialog.dismiss();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+            public Map<Integer, ArticleData> call() throws Exception {
+                ArticleHTTPRequest articleHTTPRequest = new ArticleHTTPRequest();
+                return articleHTTPRequest.sendGet(sea);
             }
         });
+        executor.shutdown();
+
+        try {
+            Map<Integer, ArticleData> articleData;
+            StringBuilder sb = new StringBuilder();
+            articleData = future.get();
+            for (Integer index: articleData.keySet()) {
+                ArticleData value = articleData.get(index);
+                String name = value.getName() + "\n";
+                sb.append(name);
+            }
+            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void getVideos(View view){
+        final String sea = searchText.getText().toString();
+//        Toast.makeText(this, "YAWA" + sea, Toast.LENGTH_SHORT).show();
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        Future<Map<Integer, VideoData>>  future = executor.submit(new Callable<Map<Integer, VideoData>>() {
+            @Override
+            public Map<Integer, VideoData> call() throws Exception {
+//                StringBuilder sb = new StringBuilder();
+                VideoHTTPRequest request = new VideoHTTPRequest();
+//                Map<Integer, VideoData> videoDatas;
+//                videoDatas = request.sendGet(sea);
+//                for (Integer index: videoDatas.keySet()) {
+//                    VideoData value = videoDatas.get(index);
+//                    String title = value.getTitle();
+//                    sb.append(title);
+//                }
+                return request.sendGet(sea);
+            }
+        });
+        executor.shutdown();
+        try {
+            Map<Integer, VideoData> videoDatas;
+            StringBuilder sb = new StringBuilder();
+            videoDatas = future.get();
+            for (Integer index: videoDatas.keySet()) {
+                VideoData value = videoDatas.get(index);
+                String title = value.getTitle() + "\n";
+                sb.append(title);
+            }
+            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     protected void onStart() {
