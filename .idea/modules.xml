@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FinalTrash.iml" filepath="$PROJECT_DIR$/FinalTrash.iml" />
+      <module fileurl="file://C:\Users\Edward\Desktop\Final\FinalTrash\FinalTrash.iml" filepath="C:\Users\Edward\Desktop\Final\FinalTrash\FinalTrash.iml" />
       <module fileurl="file://C:\Users\Del Mar\AndroidStudioProjects\New folder\TraSearch6\.idea\TraSearch6.iml" filepath="C:\Users\Del Mar\AndroidStudioProjects\New folder\TraSearch6\.idea\TraSearch6.iml" />
       <module fileurl="file://C:\Users\ARVN\StudioProjects\FinalTrash\TraSearch6.iml" filepath="C:\Users\ARVN\StudioProjects\FinalTrash\TraSearch6.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
