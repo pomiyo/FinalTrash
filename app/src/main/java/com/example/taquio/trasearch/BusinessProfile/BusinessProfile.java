@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -38,9 +40,10 @@ public class BusinessProfile extends AppCompatActivity {
     private static final String TAG = "BusinessProfile";
     private Context mContext = BusinessProfile.this;
     private static final int ACTIVITY_NUM = 2;
+    private ViewPager mViewPager;
 
     TextView tvName, tvEmail, tvMobile, tvPhone, tvLocation;
-    Button btnBuy, btnSell, btnEdit;
+    Button btnEdit;
     ImageView verify, notVerify;
     CircleImageView profPicImage;
     private DatabaseReference databaseReference;
@@ -60,29 +63,15 @@ public class BusinessProfile extends AppCompatActivity {
         tvMobile = (TextView) findViewById(R.id.busUserNumber);
         tvPhone = (TextView) findViewById(R.id.busTele);
         tvLocation = (TextView) findViewById(R.id.busLoc);
-        btnBuy = (Button) findViewById(R.id.btnBuy);
-        btnSell = (Button) findViewById(R.id.btnSell);
         btnEdit = (Button) findViewById(R.id.busBtnEdit);
 
         verify = (ImageView) findViewById(R.id.imVerify);
         notVerify = (ImageView) findViewById(R.id.imNotVerify);
         profPicImage = (CircleImageView) findViewById(R.id.busImageView10);
 
-        btnBuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(BusinessProfile.this, BusinessBuy.class);
-                startActivity(i);
-            }
-        });
-
-        btnSell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(BusinessProfile.this, BusinessBuy.class);
-                startActivity(i);
-            }
-        });
+        mViewPager = (ViewPager) findViewById(R.id.busContainer);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.busProfileTabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,22 +128,15 @@ public class BusinessProfile extends AppCompatActivity {
 
             }
         });
-
+        setupViewPager(mViewPager);
     }
 
-//    private void setupViewPager() {
-//        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//        adapter.addFragment(new BusinessInboxFragment());
-//        adapter.addFragment(new FriendsListFragment());
-//        ViewPager viewPager = (ViewPager) findViewById(R.id.businessProfileContainer);
-//        viewPager.setAdapter(adapter);
-//
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.busProfileTabLayout);
-//        tabLayout.setupWithViewPager(viewPager);
-//
-//        tabLayout.getTabAt(0).setText("Selling");
-//        tabLayout.getTabAt(1).setText("Buying");
-//    }
+    private void setupViewPager(ViewPager viewPager) {
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new BusinessBuyFragment(), "Buy");
+        adapter.addFragment(new BusinessSellFragment(), "Sell");
+        viewPager.setAdapter(adapter);
+    }
 
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");

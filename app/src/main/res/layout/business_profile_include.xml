@@ -44,26 +44,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Taylor's Junk Yard"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imVerify"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginLeft="3dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="6dp"
                     android:layout_toRightOf="@+id/busEditUser"
                     android:src="@drawable/ic_verify"
                     android:visibility="invisible"/>
 
                 <ImageView
                     android:id="@+id/imNotVerify"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:layout_marginLeft="3dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="6dp"
                     android:layout_toRightOf="@+id/busEditUser"
                     android:src="@drawable/ic_x"
                     android:visibility="invisible"/>
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="taylor_junkyard@gmail.com"
-                    android:textSize="15dp"
+                    android:textSize="15sp"
                     android:textColor="@color/black" />
 
             </LinearLayout>

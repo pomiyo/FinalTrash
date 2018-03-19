@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -216,7 +217,7 @@ public class ActivityLogin extends AppCompatActivity {
                     }
                     else if(userType.equals("business"))
                     {
-                        startActivity(new Intent(ActivityLogin.this,BusinessProfileActivity.class));
+                        startActivity(new Intent(ActivityLogin.this,BusinessHome.class));
                         finish();
                     }else{
                         Toast.makeText(ActivityLogin.this,"UserType is null",Toast.LENGTH_LONG).show();

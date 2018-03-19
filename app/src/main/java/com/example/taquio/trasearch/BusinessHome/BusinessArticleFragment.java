@@ -24,7 +24,7 @@ public class BusinessArticleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.business_home_articles_fragment, container, false);
 
-        btn = view.findViewById(R.id.buttonAdd);
+        btn = view.findViewById(R.id.addBtn);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

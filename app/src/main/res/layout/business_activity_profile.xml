@@ -8,48 +8,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/bProfileRel1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/business_profile_include"/>
-
-        </RelativeLayout>
-
         <LinearLayout
-            android:id="@+id/bProfileRel2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bProfileRel1"
-            android:orientation="horizontal"
-            android:weightSum="100"
-            android:padding="5dp"
-            android:gravity="center">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="100">
 
-            <Button
-                android:id="@+id/btnBuy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="47"
-                android:background="@drawable/btn"
-                android:text="Buying"
-                android:layout_marginRight="3dp"
-                />
+            <LinearLayout
+                android:id="@+id/bProfileRel1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnSell"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="47"
-                android:background="@drawable/btn"
-                android:text="Selling"
-                android:layout_marginLeft="3dp"/>
+                <include layout="@layout/business_profile_include"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bProfileRel2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <include layout="@layout/layout_business_top_tabs"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="34"
+                android:orientation="horizontal">
+
+                <include layout="@layout/layout_business_center_viewpager"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <include layout="@layout/business_bottom_navigation"/>
 
-        <include layout="@layout/business_bottom_navigation"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

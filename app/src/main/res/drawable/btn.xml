@@ -4,20 +4,17 @@
         <shape android:shape="rectangle"  >
             <stroke android:width="2dp" android:color="#000000" />
             <solid android:color="@color/blue"  />
-            <corners android:radius="25dp"/>
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle"  >
             <stroke android:width="2dp" android:color="#000000" />
             <solid android:color="@color/blue"/>
-            <corners android:radius="25dp"/>
         </shape>
     </item>
     <item >
         <shape android:shape="rectangle"  >
             <stroke android:width="2dp" android:color="#000000" />
-            <corners android:radius="25dp"/>
         </shape>
     </item>
 </selector>

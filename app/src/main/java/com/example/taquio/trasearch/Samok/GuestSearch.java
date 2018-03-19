@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
+import com.example.taquio.trasearch.Guest.GuestHome;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.SearchLogic.ArticleData;
 import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
@@ -71,6 +73,16 @@ public class GuestSearch extends AppCompatActivity {
 
         StrictMode.setThreadPolicy(policy);
 
+        searchText = findViewById(R.id.searchText);
+
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(GuestSearch.this, GuestHome.class);
+                startActivity(i);
+            }
+        });
+
         floatBtn = findViewById(R.id.floatingButton);
 
         floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +92,10 @@ public class GuestSearch extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
-//        mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-//        mAdView.loadAd(adRequest);
+        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        mAdView.loadAd(adRequest);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,7 +280,7 @@ public class GuestSearch extends AppCompatActivity {
                         }
                         else if(userType.equals("business"))
                         {
-                            startActivity(new Intent(GuestSearch.this,BusinessProfileActivity.class));
+                            startActivity(new Intent(GuestSearch.this,BusinessHome.class));
                             finish();
                         }else{
                             Toast.makeText(GuestSearch.this,"UserType is null",Toast.LENGTH_LONG).show();
