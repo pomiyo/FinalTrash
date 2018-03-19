@@ -44,6 +44,8 @@ public class MaterialsFragment extends Fragment {
     private EditText materials_inputName;
     private Button materials_add;
     private Materials materials;
+    private boolean flag = false;
+
     public MaterialsFragment() {
         // Required empty public constructor
     }
@@ -82,7 +84,6 @@ public class MaterialsFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                            boolean flag = false;
                             for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                             {
                                 Log.d(TAG, "onDataChange: "+dataSnapshot1.getChildren());
@@ -107,6 +108,7 @@ public class MaterialsFragment extends Fragment {
                                 });
                             }else{
                                 Toast.makeText(getContext(),"Duplicate Entry",Toast.LENGTH_SHORT).show();
+                                flag=false;
                             }
 
 

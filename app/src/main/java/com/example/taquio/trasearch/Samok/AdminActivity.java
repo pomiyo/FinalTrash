@@ -33,6 +33,7 @@ public class AdminActivity extends AppCompatActivity {
         adapter.addFragment(new UnverifiedUsers());
         adapter.addFragment(new AllUsersFragment());
         adapter.addFragment(new MaterialsFragment());
+        adapter.addFragment(new ReportFragment());
         ViewPager viewPager = findViewById(R.id.adminContainer);
         viewPager.setAdapter(adapter);
 
@@ -42,7 +43,7 @@ public class AdminActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setText("Users (Not Yet Verified)");
         tabLayout.getTabAt(1).setText("All Users");
         tabLayout.getTabAt(2).setText("Material Fragment");
-
+        tabLayout.getTabAt(3).setText("Reports");
     }
 
 
