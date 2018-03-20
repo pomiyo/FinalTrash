@@ -513,7 +513,7 @@ public class ViewProfileFragment extends Fragment {
                     photo.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
                     photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                     photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                    photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
+                    photo.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                     photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
 

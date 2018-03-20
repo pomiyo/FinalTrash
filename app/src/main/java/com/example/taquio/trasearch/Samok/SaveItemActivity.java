@@ -1,8 +1,7 @@
 package com.example.taquio.trasearch.Samok;
 
 import android.content.Context;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,18 +9,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.eschao.android.widget.elasticlistview.ElasticListView;
-import com.eschao.android.widget.elasticlistview.LoadFooter;
 import com.eschao.android.widget.elasticlistview.OnLoadListener;
 import com.eschao.android.widget.elasticlistview.OnUpdateListener;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
-import com.example.taquio.trasearch.Utils.GridImageAdapter;
+import com.example.taquio.trasearch.Utils.ViewPostFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,54 +31,56 @@ import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SaveItemActivity extends AppCompatActivity implements OnUpdateListener, OnLoadListener {
+public class SaveItemActivity extends AppCompatActivity{
     private static final String TAG = "SaveItemActivity";
     private static final int NUM_GRID_COLUMNS = 3;
 
-    SaveItemActivity.OnGridImageSelectedListener mOnGridImageSelectedListener;
+//    OnSelect mOnSelectedListener;
 
     private ElasticListView mListView;
     private SaveListAdapter adapter;
     private ArrayList<String> msaveUserId;
-    private ArrayList<Photo> mPhotos;
+    private ArrayList<String> thephotos;
     private ArrayList<Photo> mPaginatedPhotos;
     private int resultsCount = 0;
     private GridView gridView;
+    FrameLayout mFrameLayout;
+    RelativeLayout mRelativeLayout;
 
-    @Override
-    public void onUpdate() {
-        getSaveItems();
-    }
-    @Override
-    public void onLoad() {
-        Log.d(TAG, "ElasticListView: loading...");
-
-        // Notify load is done
-        mListView.notifyLoaded();
-    }
-
-    public interface OnGridImageSelectedListener{
-        void onGridImageSelected(Photo photo, int activityNumber);
-    }
+//    @Override
+//    public void onUpdate() {
+//        getSaveItems();
+//    }
+//    @Override
+//    public void onLoad() {
+//        Log.d(TAG, "ElasticListView: loading...");
+//        // Notify load is done
+//        mListView.notifyLoaded();
+//    }
+//
+//    public interface OnSelect {
+//        void onImageSelected(Photo photo, int activityNumber);
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_item);
+         mFrameLayout = findViewById(R.id.frame_container);
+         mRelativeLayout = findViewById(R.id.relativeSave);
 
         mListView = findViewById(R.id.listView);
         gridView = findViewById(R.id.grid);
 
-        try{
-            mOnGridImageSelectedListener = (SaveItemActivity.OnGridImageSelectedListener) getApplicationContext();
-        }catch (ClassCastException e){
-            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
-        }
+//        try{
+//            mOnSelectedListener = (OnSelect) context;
+//        }catch (ClassCastException e){
+//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
+//        }
+
         ImageView backArrow = findViewById(R.id.ivBackArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,25 +106,21 @@ public class SaveItemActivity extends AppCompatActivity implements OnUpdateListe
 //    }
     private void getSaveItems() {
         Log.d(TAG, "getKeys: searching for following");
-
         clearAll();
 
         Query query = FirebaseDatabase.getInstance().getReference()
                 .child("Bookmarks")
-                .orderByKey();
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     Log.d(TAG, "getKeys: found user: " + singleSnapshot
-                            .getChildren());
-
-                    msaveUserId.add(singleSnapshot.getKey());
+                            .getKey());
+                        thephotos.add(singleSnapshot.getKey());
                 }
-
-                getPhotos();
+                getPhotos(thephotos);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -131,49 +130,48 @@ public class SaveItemActivity extends AppCompatActivity implements OnUpdateListe
 
     }
     private void clearAll(){
-        mPhotos = new ArrayList<>();
+        thephotos = new ArrayList<>();
         mPaginatedPhotos = new ArrayList<>();
         msaveUserId = new ArrayList<>();
     }
-    private void getPhotos() {
+    public  void getPhotos(ArrayList<String> thephotos) {
         Log.d(TAG, "getPhotos: getting list of photos");
         final ArrayList<Photo> photos = new ArrayList<>();
-        for (int i = 0; i < msaveUserId.size(); i++) {
-            final int count = i;
+        for (int i = 0; i < thephotos.size(); i++) {
             Query query = FirebaseDatabase.getInstance().getReference()
-                    .child("Users_Photos")
-                    .child(msaveUserId.get(i))
-                    .orderByChild("user_id")
-                    .equalTo(msaveUserId.get(i));
+                    .child("Photos")
+                    .child(thephotos.get(i));
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Dara ayyy "+ dataSnapshot.getValue());
+//                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        Log.d(TAG, "singlesnashot value"+ dataSnapshot.getValue());
 
-                        Photo newPhoto = new Photo();
-                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
-                        try {
-                            newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
-                            newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
-                            newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
-                            newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                            newPhoto.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
-                            newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+                            Photo newPhoto = new Photo();
+                            Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                            try {
+                                newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
+                                newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
+                                newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+                                newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+                                newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
+                                newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
-                            List<Like> likesList = new ArrayList<Like>();
-                            for (DataSnapshot dSnapshot : singleSnapshot
-                                    .child(getString(R.string.field_likes)).getChildren()) {
-                                Like like = new Like();
-                                like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                                likesList.add(like);
+                                List<Like> likesList = new ArrayList<Like>();
+                                for (DataSnapshot dSnapshot : dataSnapshot
+                                        .child(getString(R.string.field_likes)).getChildren()) {
+                                    Like like = new Like();
+                                    like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+                                    likesList.add(like);
+                                }
+                                newPhoto.setLikes(likesList);
+                                photos.add(newPhoto);
+                                Log.d(TAG, "photo checking : "+ photos.size());
+                            } catch (NullPointerException e) {
+                                Log.e(TAG, "onDataChange: NullPointerException: " + e.getMessage());
                             }
-                            newPhoto.setLikes(likesList);
-                            photos.add(newPhoto);
-                        } catch (NullPointerException e) {
-                            Log.e(TAG, "onDataChange: NullPointerException: " + e.getMessage());
-                        }
-
-                    }
+//                    }
                     //setup our image grid
                     int gridWidth = getResources().getDisplayMetrics().widthPixels;
                     int imageWidth = gridWidth/NUM_GRID_COLUMNS;
@@ -183,14 +181,17 @@ public class SaveItemActivity extends AppCompatActivity implements OnUpdateListe
                     for(int i = 0; i < photos.size(); i++){
                         imgUrls.add(photos.get(i).getImage_path());
                     }
-                    SaveGridImageAdapter adapter = new SaveGridImageAdapter(getApplicationContext(),R.layout.layout_grid_imageview,
+
+                    SaveGridImageAdapter adapter = new SaveGridImageAdapter(SaveItemActivity.this,R.layout.layout_grid_imageview,
                             "", imgUrls);
                     gridView.setAdapter(adapter);
-//                    Log.d(TAG, "Dara ayyy "+ photos.get(2));
+
                     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), 4);
+                            Log.d(TAG, "image sa url : " + photos.get(position));
+                           onImageSelected(photos.get(position),4);
+
                         }
                     });
                 }
@@ -201,6 +202,36 @@ public class SaveItemActivity extends AppCompatActivity implements OnUpdateListe
                 }
             });
         }
+    }
+
+    private void onImageSelected(Photo photo, int i) {
+
+        hideLayoutSave();
+
+
+        ViewPostFragment fragment = new ViewPostFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.photo), photo);
+        args.putInt(getString(R.string.activity_number), i);
+
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction  = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    public  void hideLayoutSave(){
+        Log.d(TAG, "hideLayout: hiding layout");
+        mRelativeLayout.setVisibility(View.GONE);
+        mFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+
+    public  void showLayoutSave(){
+        Log.d(TAG, "hideLayout: showing layout");
+        mRelativeLayout.setVisibility(View.VISIBLE);
+        mFrameLayout.setVisibility(View.GONE);
     }
 //    @Override
 //    public void onAttach(Context context) {
@@ -309,11 +340,10 @@ public class SaveItemActivity extends AppCompatActivity implements OnUpdateListe
         MenuItem menuItem = menu.getItem(4);
         menuItem.setChecked(true);
 
-        Log.d(TAG, "setupBottomNavigationView: Start Notification Badge");
-        BottomNavigationMenuView bottomNavigationMenuView =
-                (BottomNavigationMenuView) bottomNavigationViewEx.getChildAt(0);
-        View v = bottomNavigationMenuView.getChildAt(1);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+//        Log.d(TAG, "setupBottomNavigationView: Start Notification Badge");
+//        BottomNavigationMenuView bottomNavigationMenuView =
+//                (BottomNavigationMenuView) bottomNavigationViewEx.getChildAt(0);
+//        View v = bottomNavigationMenuView.getChildAt(1);
+//        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
     }
-
 }

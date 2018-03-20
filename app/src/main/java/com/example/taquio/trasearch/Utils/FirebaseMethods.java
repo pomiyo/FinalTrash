@@ -18,7 +18,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -32,7 +34,7 @@ import java.util.TimeZone;
 public class FirebaseMethods {
 
     private static final String TAG = "FirebaseMethods";
-
+    private final Object timestamp = ServerValue.TIMESTAMP;
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -183,17 +185,17 @@ public class FirebaseMethods {
         String newPhotoKey = myRef.child("Photos").push().getKey();
         Photo photo = new Photo();
         photo.setPhoto_description(caption);
-        photo.setDate_created(getTimestamp());
+//        photo.setDate_created(ServerValue.TIMESTAMP);
         photo.setImage_path(url);
         photo.setQuantity(tags);
         photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
         photo.setPhoto_id(newPhotoKey);
-
         //insert into database
         myRef.child("Users_Photos")
                 .child(FirebaseAuth.getInstance().getCurrentUser()
                         .getUid()).child(newPhotoKey).setValue(photo);
         myRef.child("Photos").child(newPhotoKey).setValue(photo);
+        myRef.child("Photos").child(newPhotoKey).child("date_created").setValue(ServerValue.TIMESTAMP);
 
     }
     public int getImageCount(DataSnapshot dataSnapshot){

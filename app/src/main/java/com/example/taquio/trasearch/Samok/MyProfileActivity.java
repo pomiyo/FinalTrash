@@ -28,8 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnGridImageSelectedListener ,
-        ViewProfileFragment.OnGridImageSelectedListener,
-        SaveItemActivity.OnGridImageSelectedListener{
+        ViewProfileFragment.OnGridImageSelectedListener{
 
     private static final String TAG = "ProfileActivity";
     private Context mContext = MyProfileActivity.this;
@@ -46,8 +45,8 @@ public class MyProfileActivity extends AppCompatActivity implements
         init();
         profilePhoto = findViewById(R.id.myProfile_image);
 
-
     }
+
     @Override
     public void onGridImageSelected(Photo photo, int activityNumber) {
         Log.d(TAG, "onGridImageSelected: selected an image gridview: " + photo.toString());
@@ -146,5 +145,4 @@ public class MyProfileActivity extends AppCompatActivity implements
             mDatabase.child("online").setValue(ServerValue.TIMESTAMP);
         }
     }
-
 }
