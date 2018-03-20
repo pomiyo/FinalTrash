@@ -77,8 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/image_likes"
-                    android:layout_margin="10dp"
-                    android:text=" a sample description..."
+                    android:layout_margin="15dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"/>
 
@@ -88,7 +87,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/image_caption"
-                    android:text="number of items"
                     android:textColor="@color/black"
                     android:layout_marginLeft="15dp"
                     android:textSize="18sp"/>

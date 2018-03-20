@@ -28,6 +28,7 @@ import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
+import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.example.taquio.trasearch.Samok.SaveItemActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -438,6 +439,46 @@ public class ViewPostFragment extends Fragment{
 //            mLikes.setText(mLikesString);
             mCaption.setText(mPhoto.getPhoto_description());
             mItem.setText(mPhoto.getQuantity());
+
+        Query query = myRef.child("Users")
+                .orderByChild("userID")
+                .equalTo(mPhoto.getUser_id());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    final User user = singleSnapshot.getValue(User.class);
+
+                    mProfileImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                                    getActivity().getString(R.string.home_activity));
+                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                    mUsername.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                                    getActivity().getString(R.string.home_activity));
+                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 //        }
 //        mComments.setText("#" + mPhoto.getComments().size());
 //        if(mPhoto.getComments().size() > 0){

@@ -32,8 +32,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30dp"
                 android:layout_toRightOf="@+id/backArrow"
-                android:text="Photo"
-                android:textColor="@color/black"
+                android:text="Post"
+                android:textColor="@color/white"
                 android:textSize="20sp"/>
 
 

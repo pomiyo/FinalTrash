@@ -41,7 +41,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="70dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/bookmark"/>
         <LinearLayout
@@ -65,18 +65,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Sean Daniel Del Mar"
+                    android:text="Juan Cruz"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"/>
 
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/verifyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="2.1dp"
-                    android:src="@drawable/ic_verify"/>
-
+                    android:src="@drawable/ic_verify"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/verifiedLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verified by Admin"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout

@@ -61,7 +61,7 @@
                         android:layout_margin="20dp"
                         android:background="@drawable/share_input_outline"
                         android:padding="10dp"
-                        android:hint="Write item quantity..." />
+                        android:hint="Write quantity in Kilo / pcs..." />
                 </RelativeLayout>
             </LinearLayout>
 

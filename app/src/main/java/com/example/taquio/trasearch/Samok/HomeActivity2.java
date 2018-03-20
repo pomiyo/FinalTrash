@@ -117,7 +117,7 @@ public class HomeActivity2 extends AppCompatActivity implements
 //            }
 //        });
 
-        doIncrease();
+//        doIncrease();
 
 
         floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -128,96 +128,96 @@ public class HomeActivity2 extends AppCompatActivity implements
             }
         });
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        final MenuItem menuItem = menu.findItem(R.id.testAction);
-//        View actionView = MenuItemCompat.getActionView(menuItem);
-//        actionView.setOnClickListener(new View.OnClickListener() {
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//
+//        final MenuItem menuItem = menu.findItem(R.id.testAction);
+////        View actionView = MenuItemCompat.getActionView(menuItem);
+////        actionView.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+////
+////                onOptionsItemSelected(menuItem);
+////
+////                Toast.makeText(getApplicationContext(), "You are notified!", Toast.LENGTH_LONG).show();
+////            }
+////        });
+//
+//        menuItem.setIcon(buildCounterDrawable(count, R.drawable.ic_bell));
+//
+////        textNotificationCount = (TextView) findViewById(R.id.cart_badge);
+////        textNotificationCount.setText(String.valueOf(setNotification()));
+////        textNotificationCount.setVisibility(View.VISIBLE);
+//
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        switch (item.getItemId()){
+//            case R.id.testAction: {
+//                counterTextPanel.setVisibility(View.GONE);
+//                return true;
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//    private Drawable buildCounterDrawable(int count, int backgroundImageId) {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View view = inflater.inflate(R.layout.counter_menuitem_layout, null);
+//        view.setBackgroundResource(backgroundImageId);
+//
+//        if (count == 0) {
+//
+//             counterTextPanel = view.findViewById(R.id.counterValuePanel);
+//            counterTextPanel.setVisibility(View.GONE);
+//        } else {
+//
+//            TextView textView = (TextView) view.findViewById(R.id.count);
+//            textView.setText("" + count);
+//        }
+//        view.measure(
+//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+//
+//        view.setDrawingCacheEnabled(true);
+//        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+//        view.setDrawingCacheEnabled(false);
+//
+//        return new BitmapDrawable(getResources(), bitmap);
+//    }
+//    private void doIncrease() {
+//        count = setNotification();
+//        invalidateOptionsMenu();
+//    }
+//    private int setNotification(){
+//         int val = 0;
+//        Query query =  FirebaseDatabase.getInstance().getReference()
+//                .child("Likes")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .orderByKey();
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    myLikes.add(singleSnapshot.getKey());
+//                }
+//            }
 //
-//                onOptionsItemSelected(menuItem);
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
 //
-//                Toast.makeText(getApplicationContext(), "You are notified!", Toast.LENGTH_LONG).show();
 //            }
 //        });
-
-        menuItem.setIcon(buildCounterDrawable(count, R.drawable.ic_bell));
-
-//        textNotificationCount = (TextView) findViewById(R.id.cart_badge);
-//        textNotificationCount.setText(String.valueOf(setNotification()));
-//        textNotificationCount.setVisibility(View.VISIBLE);
-
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.testAction: {
-                counterTextPanel.setVisibility(View.GONE);
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    private Drawable buildCounterDrawable(int count, int backgroundImageId) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.counter_menuitem_layout, null);
-        view.setBackgroundResource(backgroundImageId);
-
-        if (count == 0) {
-
-             counterTextPanel = view.findViewById(R.id.counterValuePanel);
-            counterTextPanel.setVisibility(View.GONE);
-        } else {
-
-            TextView textView = (TextView) view.findViewById(R.id.count);
-            textView.setText("" + count);
-        }
-        view.measure(
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-
-        view.setDrawingCacheEnabled(true);
-        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
-
-        return new BitmapDrawable(getResources(), bitmap);
-    }
-    private void doIncrease() {
-        count = setNotification();
-        invalidateOptionsMenu();
-    }
-    private int setNotification(){
-         int val = 0;
-        Query query =  FirebaseDatabase.getInstance().getReference()
-                .child("Likes")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .orderByKey();
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    myLikes.add(singleSnapshot.getKey());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        val = myLikes.size();
-       return val;
-    }
+//        val = myLikes.size();
+//       return val;
+//    }
 
     public void onImageSelected( Photo item,  int i, final String user_id) {
 
