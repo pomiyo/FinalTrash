@@ -39,9 +39,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -54,7 +57,9 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int ACTIVITY_NUM = 4;
     private static final int NUM_GRID_COLUMNS = 3;
+
     OnGridImageSelectedListener mOnGridImageSelectedListener;
+
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -140,7 +145,16 @@ public class ProfileFragment extends Fragment {
         }
         super.onAttach(context);
     }
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
 
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
     private void setupGridView(){
         Log.d(TAG, "setupGridView: Setting up image grid.");
 
@@ -163,7 +177,7 @@ public class ProfileFragment extends Fragment {
                         photo.setQuantity(objectMap.get("quantity").toString());
                         photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                         photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                        photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
+                        photo.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                         photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
 //                        ArrayList<Comment> comments = new ArrayList<Comment>();

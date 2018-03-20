@@ -268,10 +268,11 @@ public class HomeActivity2 extends AppCompatActivity implements
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
         if(mFrameLayout.getVisibility() == View.VISIBLE){
             showLayout();
         }
+//        super.onBackPressed();
     }
     private void initImageLoader() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
