@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,6 +112,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
             holder.mprofileImage = convertView.findViewById(R.id.profile_photo);
             holder.dm =convertView.findViewById(R.id.direct_message);
             holder.bookmark =convertView.findViewById(R.id.bookmark);
+            holder.messageLayout = convertView.findViewById(R.id.messageLayout);
 
 
             convertView.setTag(holder);
@@ -309,6 +311,15 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
                     holder.user = singleSnapshot.getValue(User.class);
                     holder.dm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(mContext, MessageActivity.class);
+                            i.putExtra("user_id", holder.photo.getUser_id());
+                            i.putExtra("user_name", holder.user.getUserName());
+                            mContext.startActivity(i);
+                        }
+                    });
+                    holder.messageLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, MessageActivity.class);
@@ -660,6 +671,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         GestureDetector detector;
         Photo photo;
         Boolean mProceslike = false;
+        RelativeLayout messageLayout;
 
 
 //        public void setPhotoLike(final String postKey, Photo photo, final ImageView likeblack){

@@ -1,10 +1,13 @@
 package com.example.taquio.trasearch.Utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -13,14 +16,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
+import com.example.taquio.trasearch.Models.Report;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.EditPostItem;
+import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -86,7 +93,7 @@ public class OtherUserViewPost extends Fragment {
         mCaption = view.findViewById(R.id.image_caption);
         mUsername = view.findViewById(R.id.username);
         mTimestamp = view.findViewById(R.id.image_time_posted);
-//        mEllipses = view.findViewById(R.id.ivEllipses);
+        mEllipses = view.findViewById(R.id.ivEllipses);
         mHeartRed = view.findViewById(R.id.image_heart_red);
         mHeartWhite = view.findViewById(R.id.image_heart);
         mProfileImage = view.findViewById(R.id.profile_photo);
@@ -96,14 +103,65 @@ public class OtherUserViewPost extends Fragment {
 
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
 //        mGestureDetector = new GestureDetector(getActivity(), new OtherUserViewPost.GestureListener());
+        mEllipses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                displayAlertDialog();
+            }
+        });
         setupFirebaseAuth();
         setupBottomNavigationView();
 
 
         return view;
     }
+    private void displayAlertDialog() {
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setTitle("CHOOSE AN ACTION");
+        builder.setItems(new CharSequence[]
+                        {"Report"},
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        switch (which) {
+                            case 0:
+                                LayoutInflater li = LayoutInflater.from(getContext());
+                                View promptView = li.inflate(R.layout.item_dialog, null);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setView(promptView);
+                                final EditText userInput = (EditText) promptView.findViewById(R.id.dialogDesc);
+                                builder.setCancelable(false);
+                                builder.setPositiveButton("Send", new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        Report report = new Report(userInput.getText().toString(),mPhoto.getImage_path());
+
+                                        myRef.child("Reports")
+                                                .child(mPhoto.getUser_id())
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child("report_details")
+                                                .setValue(report);
+                                        Toast.makeText(getContext(), "Reported", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int which)
+                                    {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.create().show();
+                                break;
+                        }
+                    }
+                });
+        builder.create().show();
+    }
     private void init(){
         try{
             UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
@@ -356,6 +414,49 @@ public class OtherUserViewPost extends Fragment {
         mUsername.setText(mCurrentUser.getUserName());
 //        mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getPhoto_description());
+
+        Query query = myRef.child("Users")
+                .orderByChild("userID")
+                .equalTo(mPhoto.getUser_id());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    final User user = singleSnapshot.getValue(User.class);
+
+                    mProfileImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                                    getActivity().getString(R.string.home_activity));
+                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                    mUsername.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                                    getActivity().getString(R.string.home_activity));
+                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
 //        mComments.setText("#" + mPhoto.getComments().size());
 //        if(mPhoto.getComments().size() > 0){

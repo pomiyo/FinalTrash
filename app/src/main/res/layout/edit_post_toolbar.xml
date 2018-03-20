@@ -34,7 +34,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="Edit"
+                    android:text="Save"
                     android:textColor="#ffff"
                     android:textSize="20sp"
                     />

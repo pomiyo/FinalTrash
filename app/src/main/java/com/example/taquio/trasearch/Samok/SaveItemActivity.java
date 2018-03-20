@@ -1,9 +1,10 @@
 package com.example.taquio.trasearch.Samok;
 
-import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.eschao.android.widget.elasticlistview.ElasticListView;
-import com.eschao.android.widget.elasticlistview.OnLoadListener;
-import com.eschao.android.widget.elasticlistview.OnUpdateListener;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
@@ -50,6 +49,7 @@ public class SaveItemActivity extends AppCompatActivity{
     private GridView gridView;
     FrameLayout mFrameLayout;
     RelativeLayout mRelativeLayout;
+    Toolbar savedToolbar;
 
 //    @Override
 //    public void onUpdate() {
@@ -71,10 +71,15 @@ public class SaveItemActivity extends AppCompatActivity{
         setContentView(R.layout.activity_save_item);
          mFrameLayout = findViewById(R.id.frame_container);
          mRelativeLayout = findViewById(R.id.relativeSave);
+        savedToolbar = findViewById(R.id.profileToolBar);
 
         mListView = findViewById(R.id.listView);
         gridView = findViewById(R.id.grid);
 
+        savedToolbar = (Toolbar) findViewById(R.id.profileToolBar);
+        setSupportActionBar(savedToolbar);
+        getSupportActionBar().setTitle("Saved");
+        savedToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
 //        try{
 //            mOnSelectedListener = (OnSelect) context;
 //        }catch (ClassCastException e){

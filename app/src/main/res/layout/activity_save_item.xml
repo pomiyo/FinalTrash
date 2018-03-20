@@ -29,13 +29,27 @@
             android:id="@+id/thistoolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <include layout="@layout/snippet_top_nexttoolbar"/>
+            <include layout="@layout/snippet_top_savedpost"/>
         </RelativeLayout>
         <RelativeLayout
+            android:id="@+id/blank"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/thistoolbar">
+            <TextView
+                android:textColor="@color/grey"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Only you can see what you've saved"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_below="@id/blank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:layout_marginTop="50dp">
+            android:layout_marginBottom="50dp">
             <GridView
                 android:id="@+id/grid"
                 android:layout_width="match_parent"

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -123,6 +125,7 @@ public class FriendsFragment extends Fragment {
 
                             }
                         }
+
                         viewHolder.setStatus(dataSnapshot.child("Email").getValue().toString());
                         viewHolder.setName(name);
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -138,8 +141,24 @@ public class FriendsFragment extends Fragment {
 
                                         if(which==0)
                                         {
-                                            startActivity(new Intent(getContext(), ViewProfile.class)
-                                                    .putExtra("user_id",list_user_Id));
+                                            Query userQuery = mUsersDatabase
+                                                    .orderByChild("userID")
+                                                    .equalTo(list_user_Id);
+                                            userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                                        final User user = singleSnapshot.getValue(User.class);
+                                                        startActivity(new Intent(getContext(), MyProfileActivity.class)
+                                                                .putExtra("intent_user",user));
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
                                         }
                                         if(which==1)
                                         {

@@ -26,21 +26,15 @@
                     android:src="@drawable/ic_backarrow"
                     android:layout_marginRight="20dp" />
 
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/string_share"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_marginRight="15dp"-->
-                    <!--android:textSize="20sp"-->
-                    <!--android:textColor="#ffff"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:id="@+id/tvShare"-->
-                    <!--/>-->
-
-
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saved"
+                    android:layout_toRightOf="@+id/backArrow"
+                    android:layout_marginLeft="50dp"
+                    android:textSize="20sp"
+                    android:textColor="#ffff"
+                    />
 
             </RelativeLayout>
 
