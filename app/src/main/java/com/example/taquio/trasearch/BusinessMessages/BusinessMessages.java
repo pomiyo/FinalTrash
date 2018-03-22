@@ -53,7 +53,7 @@ public class BusinessMessages extends AppCompatActivity {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.businessBottomNavViewBar);
         BusinessBottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BusinessBottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+        BusinessBottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
         menuItem.setChecked(true);

@@ -28,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAuth.signOut();
                 startActivity(new Intent(SettingsActivity.this,GuestSearch.class));
+                finish();
             }
         });
     }
