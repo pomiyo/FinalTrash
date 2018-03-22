@@ -71,7 +71,7 @@ public class GuestSearch extends AppCompatActivity {
 
         StrictMode.setThreadPolicy(policy);
 
-        floatBtn = findViewById(R.id.floatingButton);
+        floatBtn = findViewById(R.id.floating_button);
 
         floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +256,7 @@ public class GuestSearch extends AppCompatActivity {
 //                    if (dataSnapshot.hasChild("userType"))
 //                    {
                         String userType = dataSnapshot.getValue().toString();
-                        if(userType.equals("free"))
+                        if(userType.equals("non-business"))
                         {
                             startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
                             finish();
@@ -288,7 +288,7 @@ public class GuestSearch extends AppCompatActivity {
     {
         signIn = findViewById(R.id.guest_SignIn);
         reg = findViewById(R.id.guest_Reg);
-        searchExec = findViewById(R.id.searchExec);
-        searchText = findViewById(R.id.searchText);
+//        searchExec = findViewById(R.id.searchExec);
+//        searchText = findViewById(R.id.searchText);
     }
 }

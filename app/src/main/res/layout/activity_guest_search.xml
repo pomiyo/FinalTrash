@@ -52,20 +52,20 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="5dp"
                 android:textColorHint="#000000"/>
-            <Button
-                android:id="@+id/searchExec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="getArticles"
-                android:text="Search Article"/>
+            <!--<Button-->
+                <!--android:id="@+id/searchExec"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="getArticles"-->
+                <!--android:text="Search Article"/>-->
 
-            <Button
-                android:id="@+id/activateTHIS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Search Video"
-                android:onClick="getVideos"
-                />
+            <!--<Button-->
+                <!--android:id="@+id/activateTHIS"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Search Video"-->
+                <!--android:onClick="getVideos"-->
+                <!--/>-->
             <Button
                 android:id="@+id/guest_SignIn"
                 android:layout_width="250dp"
@@ -93,11 +93,20 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/floating_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+    <!--<include-->
+        <!--layout="@layout/floating_button"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true" />-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_piggy" />
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"

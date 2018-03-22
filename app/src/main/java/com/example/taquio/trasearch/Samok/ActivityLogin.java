@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
@@ -33,7 +34,8 @@ public class ActivityLogin extends AppCompatActivity {
     private static final String TAG = "ActivityLogin";
     ImageView btn_search;
     Button btn_register,btn_login;
-    EditText Lfield_email,Lfield_password,traSearch_bar;
+    EditText Lfield_email,Lfield_password;
+    TextView forgotPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference,mUserType;
     private DatabaseReference mUserRef;
@@ -47,6 +49,15 @@ public class ActivityLogin extends AppCompatActivity {
 
 
         refIDs();
+        forgotPassword = findViewById(R.id.tvforgot);
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ActivityLogin.this, PasswordActivity.class));
+                finish();
+            }
+        });
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override

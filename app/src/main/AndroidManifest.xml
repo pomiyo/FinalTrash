@@ -15,24 +15,30 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
-    <permission android:name="com.example.taquio.trasearch.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
-    <uses-permission android:name="com.example.taquio.trasearch.permission.MAPS_RECEIVE"/> 
-    <uses-permission android:name="com.google.android.providers.gsf.permissions.READ_GSERVICES"/>
-    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+
+    <permission
+        android:name="com.example.taquio.trasearch.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.taquio.trasearch.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permissions.READ_GSERVICES" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
-        android:name="com.example.taquio.trasearch.Samok.Trasearch"
+        android:name=".Samok.Trasearch"
         android:allowBackup="true"
         android:icon="@drawable/trasearchicon"
         android:label="@string/app_name"
         android:roundIcon="@drawable/trasearchicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme1">
-        <!--SPLASH ACTIVITY -->
+
+        <!-- SPLASH ACTIVITY -->
         <activity
-            android:name="com.example.taquio.trasearch.Samok.SplashActivity"
+            android:name=".Samok.SplashActivity"
             android:theme="@style/AppTheme2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,10 +47,10 @@
             </intent-filter>
         </activity>
 
-        <!--HOME ACTIVITY -->
-        <activity android:name="com.example.taquio.trasearch.Samok.HomeActivity2" />
+        <!-- HOME ACTIVITY -->
+        <activity android:name=".Samok.HomeActivity2" />
 
-        <service android:name="com.example.taquio.trasearch.Samok.FireBaseMessagingService">
+        <service android:name=".Samok.FireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -53,53 +59,55 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <!--<meta-data-->
-            <!--android:name="com.facebook.sdk.ApplicationId"-->
-            <!--android:value="@string/facebook_app_id" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.facebook.sdk.ApplicationId" -->
+        <!-- android:value="@string/facebook_app_id" /> -->
 
-        <!--<activity-->
-            <!--android:name="com.facebook.CustomTabActivity"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+        <!-- <activity -->
+        <!-- android:name="com.facebook.CustomTabActivity" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.VIEW" /> -->
 
-                <!--<data android:scheme="@string/fb_login_protocol_scheme" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
 
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyBgBgls2M2SoakI70MhTqnKlctI6kFlIl8" />-->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.version"-->
-            <!--android:value="@integer/google_play_services_version" />-->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.version"-->
-            <!--android:value="@integer/google_play_services_version" />-->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+
+
+        <!-- <data android:scheme="@string/fb_login_protocol_scheme" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+
+
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyBgBgls2M2SoakI70MhTqnKlctI6kFlIl8" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
 
         <activity
-            android:name="com.example.taquio.trasearch.Samok.RegisterActivity"
-            android:parentActivityName="com.example.taquio.trasearch.Samok.ChooseLayout" />
-
+            android:name=".Samok.RegisterActivity"
+            android:parentActivityName=".Samok.ChooseLayout" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-
-        <activity android:name="com.example.taquio.trasearch.Samok.ActivityLogin" />
-        <activity android:name="com.example.taquio.trasearch.Samok.MainActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.UserProfileActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.BusinessProfileActivity" />
-        <activity android:name="com.example.taquio.trasearch.Profile.ProfileActivity">
+        <activity android:name=".Samok.ActivityLogin" />
+        <activity android:name=".Samok.MainActivity" />
+        <activity android:name=".Samok.UserProfileActivity" />
+        <activity android:name=".Samok.BusinessProfileActivity" />
+        <activity android:name=".Profile.ProfileActivity">
             <intent-filter>
                 <action android:name="com.example.taquio.trasearch6_TARGET_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.taquio.trasearch.Nearby.NearbyActivity" />
+        <activity android:name=".Nearby.NearbyActivity" />
 
         <!-- <activity android:name=".LoginActivity"/> -->
         <!--
@@ -111,47 +119,50 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
 
-        <activity android:name="com.example.taquio.trasearch.Utils.Donate" />
+        <activity android:name=".Utils.Donate" />
         <activity
-            android:name="com.example.taquio.trasearch.Samok.ViewProfile"
-            android:parentActivityName="com.example.taquio.trasearch.Profile.ProfileActivity" />
+            android:name=".Samok.ViewProfile"
+            android:parentActivityName=".Profile.ProfileActivity" />
         <activity
-            android:name="com.example.taquio.trasearch.Messages.MessagesActivity"
-            android:parentActivityName="com.example.taquio.trasearch.Samok.HomeActivity2" />
-        <activity android:name="com.example.taquio.trasearch.Samok.GuestSearch" />
+            android:name=".Messages.MessagesActivity"
+            android:parentActivityName=".Samok.HomeActivity2" />
+        <activity android:name=".Samok.GuestSearch" />
         <activity
-            android:name="com.example.taquio.trasearch.Samok.MessageActivity"
-            android:parentActivityName="com.example.taquio.trasearch.Messages.MessagesActivity" />
+            android:name=".Samok.MessageActivity"
+            android:parentActivityName=".Messages.MessagesActivity" />
         <activity
-            android:name="com.example.taquio.trasearch.Samok.ChooseLayout"
-            android:parentActivityName="com.example.taquio.trasearch.Samok.GuestSearch" />
-        <activity android:name="com.example.taquio.trasearch.Samok.MyProfileActivity" />
+            android:name=".Samok.ChooseLayout"
+            android:parentActivityName=".Samok.GuestSearch" />
+        <activity android:name=".Samok.MyProfileActivity" />
         <activity
-            android:name="com.example.taquio.trasearch.Samok.EditProfileActivity"
-            android:parentActivityName="com.example.taquio.trasearch.Samok.MyProfileActivity" />
-        <activity android:name="com.example.taquio.trasearch.Camera.CameraActivity" />
-        <activity android:name="com.example.taquio.trasearch.Camera.NextActivity" />
-        <activity android:name="com.example.taquio.trasearch.BusinessHome.BusinessHome"></activity>
-        <activity android:name="com.example.taquio.trasearch.BusinessMessages.BusinessMessages"></activity>
-        <activity android:name="com.example.taquio.trasearch.BusinessProfile.BusinessProfile" />
-        <activity android:name="com.example.taquio.trasearch.Samok.BusinessRegActivity" />
+            android:name=".Samok.EditProfileActivity"
+            android:parentActivityName=".Samok.MyProfileActivity" />
+        <activity android:name=".Camera.CameraActivity" />
+        <activity android:name=".Camera.NextActivity" />
+        <activity android:name=".BusinessHome.BusinessHome" />
+        <activity android:name=".BusinessMessages.BusinessMessages" />
+        <activity android:name=".BusinessProfile.BusinessProfile" />
+        <activity android:name=".Samok.BusinessRegActivity" />
         <activity
-            android:name="com.example.taquio.trasearch.Samok.BusinessRegActivity2"
-            android:parentActivityName="com.example.taquio.trasearch.Samok.BusinessRegActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.SaveItemActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.EditPostItem" />
-        <activity android:name="com.example.taquio.trasearch.Samok.SettingsActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.ForVerification" />
-        <activity android:name="com.example.taquio.trasearch.Samok.GalleryActivity" />
-        <activity android:name="com.example.taquio.trasearch.Samok.MapActivity"></activity>
-                <meta-data android:name="com.google.android.maps.v2.API_KEY"
-                    android:value="AIzaSyByPbiE1UPZbzH4W4B_x_-FqRIb_zoV060"/>
-                <meta-data
-                    android:name="com.google.android.gms.version"
-                    android:value="@integer/google_play_services_version" />
+            android:name=".Samok.BusinessRegActivity2"
+            android:parentActivityName=".Samok.BusinessRegActivity" />
+        <activity android:name=".Samok.SaveItemActivity" />
+        <activity android:name=".Samok.EditPostItem" />
+        <activity android:name=".Samok.SettingsActivity" />
+        <activity android:name=".Samok.ForVerification" />
+        <activity android:name=".Samok.GalleryActivity" />
+        <activity android:name=".Samok.MapActivity" />
 
-        <activity android:name=".Samok.BusinessProfile2"/>
-        <activity android:name=".Utils.PaymentDetails"/>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyByPbiE1UPZbzH4W4B_x_-FqRIb_zoV060" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".Samok.BusinessProfile2" />
+        <activity android:name=".Utils.PaymentDetails" />
+        <activity android:name=".Samok.PasswordActivity"></activity>
     </application>
 
 </manifest>
