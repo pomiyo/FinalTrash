@@ -1,5 +1,6 @@
 package com.example.taquio.trasearch.Samok;
 
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,14 +14,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.HintRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,9 +36,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -45,9 +56,12 @@ public class RegisterActivity extends AppCompatActivity {
             ,field_name
             ,field_phonenumber;
     private Button btn_submit;
+    private TextView register_cancelBtn;
 //    private ImageButton chooseImage;
     private ImageView userProfileImage;
     private Uri filePath;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +76,32 @@ public class RegisterActivity extends AppCompatActivity {
             email = getIntent().getStringExtra("emailPass");
             field_email.setText(email);
         }
+
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                mVerificationInProgress = false;
+
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+
+            }
+        };
+
+        register_cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = "09236142618";
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                        phoneNumber,
+                        60,
+                        TimeUnit.SECONDS,
+                        this,
+                        mCallbacks);
+            }
+        });
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +274,7 @@ public class RegisterActivity extends AppCompatActivity {
                     {
                         regProgress.dismiss();
                         Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
-                        Intent startActivityIntent = new Intent(RegisterActivity.this, ForVerification.class);
+                        Intent startActivityIntent = new Intent(RegisterActivity.this, PhoneVerificationActivity.class);
                         startActivity(startActivityIntent);
                         finish();
                     }
@@ -260,6 +300,6 @@ public class RegisterActivity extends AppCompatActivity {
         field_cPassword = findViewById(R.id.field_cPassword);
         field_name = findViewById(R.id.field_name);
         field_phonenumber = findViewById(R.id.field_phonenumber);
-
+        register_cancelBtn = findViewById(R.id.register_cancelBtn);
     }
 }
