@@ -48,12 +48,7 @@
         </activity>
 
         <!-- HOME ACTIVITY -->
-        <activity android:name=".Samok.HomeActivity2" >
-            <intent-filter>
-                <action android:name="com.example.taqio" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Samok.HomeActivity2" />
 
         <service android:name=".Samok.FireBaseMessagingService">
             <intent-filter>
@@ -61,9 +56,9 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.version"-->
+            <!--android:value="@integer/google_play_services_version" />-->
 
 
 
@@ -78,6 +73,11 @@
         <activity android:name=".Samok.UserProfileActivity" />
 
         <activity android:name=".Profile.ProfileActivity">
+            <intent-filter>
+                <action android:name="com.example.taquio.trasearch_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity android:name=".Nearby.NearbyActivity" />
 
@@ -134,7 +134,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!--<activity android:name=".Samok.BusinessProfile2" />-->
+
         <activity android:name=".Utils.PaymentDetails" />
         <activity android:name=".Samok.ReportActivity" />
         <activity android:name=".Samok.UserJunkShopView" />
