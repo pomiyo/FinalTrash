@@ -77,31 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
             field_email.setText(email);
         }
 
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                mVerificationInProgress = false;
 
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-
-            }
-        };
-
-        register_cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = "09236142618";
-                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        phoneNumber,
-                        60,
-                        TimeUnit.SECONDS,
-                        this,
-                        mCallbacks);
-            }
-        });
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,7 +250,7 @@ public class RegisterActivity extends AppCompatActivity {
                     {
                         regProgress.dismiss();
                         Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
-                        Intent startActivityIntent = new Intent(RegisterActivity.this, PhoneVerificationActivity.class);
+                        Intent startActivityIntent = new Intent(RegisterActivity.this, HomeActivity2.class);
                         startActivity(startActivityIntent);
                         finish();
                     }
