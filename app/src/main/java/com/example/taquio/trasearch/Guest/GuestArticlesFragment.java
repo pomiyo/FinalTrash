@@ -1,0 +1,89 @@
+package com.example.taquio.trasearch.Guest;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.SearchLogic.ArticleData;
+import com.example.taquio.trasearch.SearchLogic.ArticleDataAdapter;
+import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
+import com.example.taquio.trasearch.SearchLogic.VideoHTTPRequest;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class GuestArticlesFragment extends Fragment {
+    private static final String TAG = "GuestArticlesFragment";
+    private String searchQuery;
+    private List<ArticleData> articleDataList = new LinkedList<>();
+    private RecyclerView recyclerView;
+    private ArticleDataAdapter mAdapter;
+
+    public GuestArticlesFragment() {}
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_guest_articles_fragment, container, false);
+        Log.d(TAG, "onCreateView: Did i just Render?");
+        GuestHome activity = (GuestHome)getActivity();
+        Bundle result = activity.sendVideoData();
+        searchQuery = result.getString("searchQuery");
+        if (!searchQuery.isEmpty()) {
+            articleDataList = getArticles(searchQuery);
+            recyclerView = (RecyclerView) view.findViewById(R.id.guestArticleRecyclerView);
+            mAdapter = new ArticleDataAdapter(articleDataList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(mAdapter);
+        }
+        return view;
+    }
+
+    public List<ArticleData> getArticles (final String searchQuery) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        List<ArticleData> article = new LinkedList<>();
+        Future<HashMap<Integer, ArticleData>> future = executor.submit(new Callable<HashMap<Integer, ArticleData>>() {
+            @Override
+            public HashMap<Integer, ArticleData> call() throws Exception {
+                ArticleHTTPRequest request = new ArticleHTTPRequest();
+                return request.sendGet(searchQuery);
+            }
+        });
+        executor.shutdown();
+        try {
+            ArticleHTTPRequest req = new ArticleHTTPRequest();
+            HashMap<Integer, ArticleData> articleDatas;
+            StringBuilder sb = new StringBuilder();
+            articleDatas = future.get();
+            articleDataList = req.convertToList(articleDatas);
+            for (ArticleData value: this.articleDataList) {
+                String name = value.getName();
+                sb.append(name + "\n");
+            }
+            Log.d(TAG, "getArticles: " + sb.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return articleDataList;
+    }
+}

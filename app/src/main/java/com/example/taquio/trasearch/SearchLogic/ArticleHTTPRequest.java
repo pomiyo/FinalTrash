@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,7 +21,7 @@ import org.json.simple.parser.JSONParser;
 public class ArticleHTTPRequest {
 
     private HashMap<Integer, ArticleData> unfilteredData = new HashMap<Integer, ArticleData>();
-
+    private HashMap<Integer, ArticleData> filteredData = new HashMap<Integer, ArticleData>();
 
     public HashMap<Integer, ArticleData> sendGet(String querySearch) throws Exception {
         String urlSource = "https://kgsearch.googleapis.com/v1/entities:search?languages=en&limit=30&types=WebSite&types=Book&types=EducationalOrganization&types=Organization&key=AIzaSyDUvqxt9hpw0CFfJG0fqsyoGbc96-h7hFk&query=";
@@ -37,8 +39,9 @@ public class ArticleHTTPRequest {
                 sb.append(inputLine);
             }
             this.jsonParser(sb.toString());
+            this.filterData();
 
-            return unfilteredData;
+            return filteredData;
         }
         finally {
             urlConnection.disconnect();
@@ -62,6 +65,10 @@ public class ArticleHTTPRequest {
             if (objectResult.containsKey("description")) {
                 articleData.setDescription(objectResult.get("description").toString());
             }
+            else {
+
+                articleData.setDescription("Not Available");
+            }
 
             articleData.setResultType(resultType.toArray());
 
@@ -70,14 +77,99 @@ public class ArticleHTTPRequest {
                 articleData.setArticleBody(objectDetailedDesc.get("articleBody").toString());
                 articleData.setArticleURL(objectDetailedDesc.get("url").toString());
             }
+            else {
+                articleData.setArticleBody("Not Available");
+                articleData.setArticleURL("Not Available");
+            }
 
             if (objectResult.containsKey("url")) {
                 articleData.setUrl(objectResult.get("url").toString());
+            }
+            else {
+                articleData.setUrl("Not Available");
             }
             this.unfilteredData.put(index, articleData);
             index++;
         }
 
+    }
+
+    public void filterData() {
+        DataFilter filters = new DataFilter();
+        String[] words = filters.getWordFilters();
+
+        int wordsIndex = 0;
+        int filteredDataIndex = 0;
+        do {
+            for (Integer index: this.unfilteredData.keySet()) {
+                ArticleData data = unfilteredData.get(index);
+
+                if (data.getName().toLowerCase().contains(words[wordsIndex])) {
+                    ArticleData filteredArticle = new ArticleData();
+                    filteredArticle.setName(data.getName());
+                    filteredArticle.setDescription(data.getDescription());
+                    filteredArticle.setArticleBody(data.getArticleBody());
+                    filteredArticle.setArticleURL(data.getArticleURL());
+                    filteredArticle.setUrl(data.getUrl());
+                    filteredArticle.setResultType(data.getResultType());
+
+                    this.filteredData.put(filteredDataIndex, filteredArticle);
+                    this.unfilteredData.remove(index);
+                    break;
+                }
+                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
+                    if (data.getArticleBody().toLowerCase().contains(words[wordsIndex])) {
+                        ArticleData filteredArticle = new ArticleData();
+                        filteredArticle.setName(data.getName());
+                        filteredArticle.setDescription(data.getDescription());
+                        filteredArticle.setArticleBody(data.getArticleBody());
+                        filteredArticle.setArticleURL(data.getArticleURL());
+                        filteredArticle.setUrl(data.getUrl());
+                        filteredArticle.setResultType(data.getResultType());
+
+                        this.filteredData.put(filteredDataIndex, filteredArticle);
+                        this.unfilteredData.remove(index);
+                        break;
+                    }
+                }
+                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
+                    if (data.getDescription().toLowerCase().contains(words[wordsIndex])) {
+                        ArticleData filteredArticle = new ArticleData();
+                        filteredArticle.setName(data.getName());
+                        filteredArticle.setDescription(data.getDescription());
+                        filteredArticle.setArticleBody(data.getArticleBody());
+                        filteredArticle.setArticleURL(data.getArticleURL());
+                        filteredArticle.setUrl(data.getUrl());
+                        filteredArticle.setResultType(data.getResultType());
+                        System.out.println("True in this word" + words[wordsIndex]);
+
+                        this.filteredData.put(filteredDataIndex, filteredArticle);
+                        this.unfilteredData.remove(index);
+                        break;
+                    }
+                }
+
+            }
+            filteredDataIndex++;
+            wordsIndex++;
+        }while(wordsIndex < words.length);
+    }
+
+    public HashMap<Integer, ArticleData> getUnfilteredData() {
+        return this.unfilteredData;
+    }
+
+    public HashMap<Integer, ArticleData> getFilteredData() {
+        return this.filteredData;
+    }
+
+    public List<ArticleData> convertToList(HashMap<Integer, ArticleData> filteredData) {
+        List<ArticleData> articleList = new LinkedList<>();
+        for(Integer index: filteredData.keySet()) {
+            ArticleData value = filteredData.get(index);
+            articleList.add(value);
+        }
+        return articleList;
     }
 }
 

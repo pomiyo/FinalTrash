@@ -24,6 +24,7 @@
     <color name="link_blue">#4d94ff</color>
     <color name="transparent">#00000000</color>
     <color name="fadedGreenBackground">	#f0ffff</color>
-
+    <color name="title">#222222</color>
+    <color name="channelTitle">#999999</color>
 
 </resources>

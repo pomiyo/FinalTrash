@@ -43,15 +43,14 @@
                 android:id="@+id/searchText"
                 android:layout_width="320dp"
                 android:layout_height="10dp"
-                android:layout_margin="6dp"
-                android:layout_weight="9"
-                android:background="@drawable/border"
-                android:drawableRight="@drawable/iconsearch"
-                android:hint="Search for recycling tutorials"
+                android:layout_weight="10"
+                android:background="@drawable/searchbox"
+                android:drawableLeft="@drawable/ic_search"
                 android:inputType="text"
-                android:paddingLeft="20dp"
-                android:paddingRight="5dp"
-                android:textColorHint="#000000"/>
+                android:paddingLeft="15dp"
+                android:textColorHint="#000000"
+                />
+
             <!--<Button-->
                 <!--android:id="@+id/searchExec"-->
                 <!--android:layout_width="wrap_content"-->
@@ -66,6 +65,25 @@
                 <!--android:text="Search Video"-->
                 <!--android:onClick="getVideos"-->
                 <!--/>-->
+            <RadioGroup
+                android:id="@+id/searchMethod"
+                android:layout_marginTop="15dp"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/webCrawl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Web Crawl"/>
+                <RadioButton
+                    android:id="@+id/databaseSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Database Search"
+                    android:checked="true"/>
+            </RadioGroup>
+
             <Button
                 android:id="@+id/guest_SignIn"
                 android:layout_width="250dp"
@@ -93,20 +111,12 @@
 
     </LinearLayout>
 
-    <!--<include-->
-        <!--layout="@layout/floating_button"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentTop="true" />-->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_piggy" />
+    <include
+        layout="@layout/floating_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
