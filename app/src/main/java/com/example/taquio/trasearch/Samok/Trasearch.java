@@ -3,6 +3,7 @@ package com.example.taquio.trasearch.Samok;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,7 +20,7 @@ import com.squareup.picasso.Picasso;
  * Created by taquio on 2/12/18.
  */
 
-public class Trasearch extends Application {
+public class Trasearch extends MultiDexApplication {
 
     private DatabaseReference userDatabase;
     private FirebaseAuth mAuth;

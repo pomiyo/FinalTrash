@@ -11,6 +11,17 @@ public class ArticleData {
     private String url;
     private Object[] resultType;
 
+    public ArticleData() {}
+
+    public ArticleData(String name, String description, String articleBody, String articleURL, String url, Object[] resultType) {
+        this.name = name;
+        this.description = description;
+        this.articleBody = articleBody;
+        this.articleURL = articleURL;
+        this.url = url;
+        this.resultType = resultType;
+    }
+
     public String getName() {
         return name;
     }

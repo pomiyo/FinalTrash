@@ -134,24 +134,26 @@ public class UnverifiedUsers extends Fragment {
                                 Log.d(TAG, "onDataChange: UserType: "+userType);
                                 if (userType.equals("admin"))
                                 {
+                                    if(dataSnapshot.hasChild("online"))
+                                    {
+                                        String isOnline =  dataSnapshot.child("online").getValue().toString();
+                                        if(isOnline.equals("online"))
+                                        {
+                                            viewHolder.setuserOnline(true);
+                                        }else
+                                        {
+                                            viewHolder.setuserOnline(false);
+                                        }
+                                    }
                                     String email = dataSnapshot.child("Email").getValue().toString();
                                     String Name = dataSnapshot.child("Name").getValue().toString();
                                     String profile_thuumb = dataSnapshot.child("Image_thumb").getValue().toString();
-                                    String isOnline =  dataSnapshot.child("online").getValue().toString();
                                     boolean isVerify = dataSnapshot.child("isVerify").getValue(Boolean.class);
                                     viewHolder.setEmail(email);
                                     viewHolder.setName(Name);
                                     viewHolder.setProfileImage(profile_thuumb,getContext());
 
                                     viewHolder.isVerify(isVerify);
-
-                                    if(isOnline.equals("online"))
-                                    {
-                                        viewHolder.setuserOnline(true);
-                                    }else
-                                    {
-                                        viewHolder.setuserOnline(false);
-                                    }
 
                                 }
                                 else if (userType.equals("business"))
@@ -182,7 +184,6 @@ public class UnverifiedUsers extends Fragment {
                                     String email = dataSnapshot.child("Email").getValue().toString();
                                     String Name = dataSnapshot.child("Name").getValue().toString();
                                     String profile_thuumb = dataSnapshot.child("Image_thumb").getValue().toString();
-                                    String isOnline =  dataSnapshot.child("online").getValue().toString();
                                     boolean isVerify = dataSnapshot.child("isVerify").getValue(Boolean.class);
                                     viewHolder.setEmail(email);
                                     viewHolder.setName(Name);
@@ -190,13 +191,18 @@ public class UnverifiedUsers extends Fragment {
 
                                     viewHolder.isVerify(isVerify);
 
-                                    if(isOnline.equals("online"))
+                                    if(dataSnapshot.hasChild("online"))
                                     {
-                                        viewHolder.setuserOnline(true);
-                                    }else
-                                    {
-                                        viewHolder.setuserOnline(false);
+                                        String isOnline =  dataSnapshot.child("online").getValue().toString();
+                                        if(isOnline.equals("online"))
+                                        {
+                                            viewHolder.setuserOnline(true);
+                                        }else
+                                        {
+                                            viewHolder.setuserOnline(false);
+                                        }
                                     }
+
                                 }
                                 else {
                                     Log.d(TAG, "onDataChange: NoType");

@@ -11,9 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.BusinessHome.BusinessHome;
+import com.example.taquio.trasearch.Guest.GuestHome;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.SearchLogic.ArticleData;
 import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
@@ -59,6 +62,9 @@ public class GuestSearch extends AppCompatActivity {
     private DatabaseReference searchItem;
     AdView mAdView;
     FloatingActionButton floatBtn;
+    RadioGroup searchMethod;
+    RadioButton webCrawl, databseSearch;
+    private boolean search_method;
 
 
     @Override
@@ -72,7 +78,29 @@ public class GuestSearch extends AppCompatActivity {
 
         StrictMode.setThreadPolicy(policy);
 
-        floatBtn = findViewById(R.id.floating_button);
+        searchMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.webCrawl) {
+                    search_method = true;
+                }
+                else if (checkedId == R.id.databaseSearch) {
+                    search_method = false;
+                }
+            }
+        });
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(GuestSearch.this, GuestHome.class);
+//                i.putExtra("searchMethod", search_method);
+                i.putExtra("searchMethod", search_method);
+                startActivity(i);
+                Log.d(TAG, "onClick: " + search_method);
+            }
+        });
+
+        floatBtn = findViewById(R.id.floatingButton);
 
         floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +109,10 @@ public class GuestSearch extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
-//        mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-//        mAdView.loadAd(adRequest);
+        MobileAds.initialize(GuestSearch.this, "ca-app-pub-3940256099942544~3347511713");
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        mAdView.loadAd(adRequest);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,73 +196,74 @@ public class GuestSearch extends AppCompatActivity {
 //        });
     }
 
-    public void getArticles(View view) {
-        final String sea = searchText.getText().toString();
-        ExecutorService executor = Executors.newCachedThreadPool();
 
-        Future<Map<Integer, ArticleData>> future = executor.submit(new Callable<Map<Integer, ArticleData>>() {
-            @Override
-            public Map<Integer, ArticleData> call() throws Exception {
-                ArticleHTTPRequest articleHTTPRequest = new ArticleHTTPRequest();
-                return articleHTTPRequest.sendGet(sea);
-            }
-        });
-        executor.shutdown();
-
-        try {
-            Map<Integer, ArticleData> articleData;
-            StringBuilder sb = new StringBuilder();
-            articleData = future.get();
-            for (Integer index: articleData.keySet()) {
-                ArticleData value = articleData.get(index);
-                String name = value.getName() + "\n";
-                sb.append(name);
-            }
-            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getVideos(View view){
-        final String sea = searchText.getText().toString();
-//        Toast.makeText(this, "YAWA" + sea, Toast.LENGTH_SHORT).show();
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        Future<Map<Integer, VideoData>>  future = executor.submit(new Callable<Map<Integer, VideoData>>() {
-            @Override
-            public Map<Integer, VideoData> call() throws Exception {
-//                StringBuilder sb = new StringBuilder();
-                VideoHTTPRequest request = new VideoHTTPRequest();
-//                Map<Integer, VideoData> videoDatas;
-//                videoDatas = request.sendGet(sea);
-//                for (Integer index: videoDatas.keySet()) {
-//                    VideoData value = videoDatas.get(index);
-//                    String title = value.getTitle();
-//                    sb.append(title);
-//                }
-                return request.sendGet(sea);
-            }
-        });
-        executor.shutdown();
-        try {
-            Map<Integer, VideoData> videoDatas;
-            StringBuilder sb = new StringBuilder();
-            videoDatas = future.get();
-            for (Integer index: videoDatas.keySet()) {
-                VideoData value = videoDatas.get(index);
-                String title = value.getTitle() + "\n";
-                sb.append(title);
-            }
-            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void getArticles(View view) {
+//        final String sea = searchText.getText().toString();
+//        ExecutorService executor = Executors.newCachedThreadPool();
+//
+//        Future<Map<Integer, ArticleData>> future = executor.submit(new Callable<Map<Integer, ArticleData>>() {
+//            @Override
+//            public Map<Integer, ArticleData> call() throws Exception {
+//                ArticleHTTPRequest articleHTTPRequest = new ArticleHTTPRequest();
+//                return articleHTTPRequest.sendGet(sea);
+//            }
+//        });
+//        executor.shutdown();
+//
+//        try {
+//            Map<Integer, ArticleData> articleData;
+//            StringBuilder sb = new StringBuilder();
+//            articleData = future.get();
+//            for (Integer index: articleData.keySet()) {
+//                ArticleData value = articleData.get(index);
+//                String name = value.getName() + "\n";
+//                sb.append(name);
+//            }
+//            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public void getVideos(View view){
+//        final String sea = searchText.getText().toString();
+////        Toast.makeText(this, "YAWA" + sea, Toast.LENGTH_SHORT).show();
+//        ExecutorService executor = Executors.newCachedThreadPool();
+//
+//        Future<Map<Integer, VideoData>>  future = executor.submit(new Callable<Map<Integer, VideoData>>() {
+//            @Override
+//            public Map<Integer, VideoData> call() throws Exception {
+////                StringBuilder sb = new StringBuilder();
+//                VideoHTTPRequest request = new VideoHTTPRequest();
+////                Map<Integer, VideoData> videoDatas;
+////                videoDatas = request.sendGet(sea);
+////                for (Integer index: videoDatas.keySet()) {
+////                    VideoData value = videoDatas.get(index);
+////                    String title = value.getTitle();
+////                    sb.append(title);
+////                }
+//                return request.sendGet(sea);
+//            }
+//        });
+//        executor.shutdown();
+//        try {
+//            Map<Integer, VideoData> videoDatas;
+//            StringBuilder sb = new StringBuilder();
+//            videoDatas = future.get();
+//            for (Integer index: videoDatas.keySet()) {
+//                VideoData value = videoDatas.get(index);
+//                String title = value.getTitle() + "\n";
+//                sb.append(title);
+//            }
+//            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @Override
@@ -257,23 +286,21 @@ public class GuestSearch extends AppCompatActivity {
 //                    if (dataSnapshot.hasChild("userType"))
 //                    {
                         String userType = dataSnapshot.getValue().toString();
-                        if(!userType.isEmpty()){
-                            if(userType.equals("non-business"))
-                            {
-                                startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
-                                finish();
-                            }
-                            if(userType.equals("admin"))
-                            {
-                                startActivity(new Intent(GuestSearch.this,AdminActivity.class));
-                                finish();
-                            }
-                            if(userType.equals("business"))
-                            {
-                                startActivity(new Intent(GuestSearch.this,BusinessHome.class));
-                                finish();
-                            }
-                        } else{
+                        if(userType.equals("non-business"))
+                        {
+                            startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
+                            finish();
+                        }
+                        else if(userType.equals("admin"))
+                        {
+                            startActivity(new Intent(GuestSearch.this,AdminActivity.class));
+                            finish();
+                        }
+                        else if(userType.equals("business"))
+                        {
+                            startActivity(new Intent(GuestSearch.this,BusinessHome.class));
+                            finish();
+                        }else{
                             Toast.makeText(GuestSearch.this,"UserType is null",Toast.LENGTH_LONG).show();
                         }
 //                    }
@@ -292,6 +319,9 @@ public class GuestSearch extends AppCompatActivity {
         signIn = findViewById(R.id.guest_SignIn);
         reg = findViewById(R.id.guest_Reg);
 //        searchExec = findViewById(R.id.searchExec);
-//        searchText = findViewById(R.id.searchText);
+        searchText = findViewById(R.id.searchText);
+        searchMethod = (RadioGroup) findViewById(R.id.searchMethod);
+        webCrawl = (RadioButton) findViewById(R.id.webCrawl);
+        databseSearch = (RadioButton) findViewById(R.id.databaseSearch);
     }
 }
