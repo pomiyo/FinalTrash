@@ -500,7 +500,6 @@ public class OtherUserViewPost extends Fragment {
 //
 //            }
 //        });
-
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
