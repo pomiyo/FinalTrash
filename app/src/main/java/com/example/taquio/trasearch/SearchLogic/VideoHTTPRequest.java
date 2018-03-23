@@ -3,6 +3,8 @@ package com.example.taquio.trasearch.SearchLogic;
 /**
  * Created by Del Mar on 3/14/2018.
  */
+import android.provider.MediaStore;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -10,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.net.HttpURLConnection;
+import java.util.LinkedList;
+import java.util.List;
 
 
 import org.json.simple.JSONArray;
@@ -131,5 +135,16 @@ public class VideoHTTPRequest {
 
     public HashMap<Integer, VideoData> getUnfilteredData() {
         return this.unfilteredData;
+    }
+
+    public HashMap<Integer, VideoData> getFilteredData() { return this.filteredData; }
+
+    public List<VideoData> convertToList(HashMap<Integer, VideoData> filteredData) {
+        List<VideoData> videoList = new LinkedList<>();
+        for(Integer index: filteredData.keySet()) {
+            VideoData value = filteredData.get(index);
+            videoList.add(value);
+        }
+        return videoList;
     }
 }

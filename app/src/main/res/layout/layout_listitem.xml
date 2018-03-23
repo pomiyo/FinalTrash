@@ -27,8 +27,9 @@
             android:layout_toRightOf="@+id/image"
             android:textColor="#000"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30dp"
-            android:textSize="17sp"/>
+            android:layout_marginLeft="20dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"/>
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>

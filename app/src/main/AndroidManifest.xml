@@ -59,36 +59,8 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <!-- <meta-data -->
-        <!-- android:name="com.facebook.sdk.ApplicationId" -->
-        <!-- android:value="@string/facebook_app_id" /> -->
 
 
-        <!-- <activity -->
-        <!-- android:name="com.facebook.CustomTabActivity" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.VIEW" /> -->
-
-
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
-
-
-        <!-- <data android:scheme="@string/fb_login_protocol_scheme" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-
-
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="AIzaSyBgBgls2M2SoakI70MhTqnKlctI6kFlIl8" /> -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.gms.version" -->
-        <!-- android:value="@integer/google_play_services_version" /> -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.gms.version" -->
-        <!-- android:value="@integer/google_play_services_version" /> -->
 
         <activity
             android:name=".Samok.RegisterActivity"
@@ -99,6 +71,7 @@
         <activity android:name=".Samok.ActivityLogin" />
         <activity android:name=".Samok.MainActivity" />
         <activity android:name=".Samok.UserProfileActivity" />
+
         <activity android:name=".Profile.ProfileActivity">
             <intent-filter>
                 <action android:name="com.example.taquio.trasearch6_TARGET_NOTIFICATION" />
@@ -107,6 +80,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Nearby.NearbyActivity" />
+
+        <activity android:name=".Samok.AdminActivity" />
 
         <!-- <activity android:name=".LoginActivity"/> -->
         <!--
@@ -159,16 +134,19 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Samok.UserJunkShopView" />
+        <!--<activity android:name=".Samok.BusinessProfile2" />-->
         <activity android:name=".Utils.PaymentDetails" />
+        <activity android:name=".Samok.ReportActivity" />
+        <activity android:name=".Samok.UserJunkShopView" />
         <activity android:name=".Samok.PasswordActivity"></activity>
-        <activity android:name=".Samok.AdminActivity"/>
         <activity android:name=".Samok.AdminVerification"/>
         <activity android:name=".Samok.BusMyProfileActivity"/>
         <activity android:name=".BusinessProfile.BusinessBuy"/>
         <activity android:name=".BusinessProfile.BusinessSell"/>
         <activity android:name=".BusinessProfile.BusinessEdit"/>
         <activity android:name=".Samok.BusinessAdd"/>
+        <activity android:name=".Guest.GuestHome"></activity>
+
     </application>
 
 </manifest>

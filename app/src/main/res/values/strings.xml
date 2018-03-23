@@ -136,6 +136,7 @@
 
     <!-- JSON values -->
     <string name="bitmap">bitmap</string>
+    <string name="title_activity_report">ReportActivity</string>
 
 
 </resources>

@@ -141,7 +141,11 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                        BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,taskSnapshot.getDownloadUrl().toString(),"none", "none", deviceToken,user_id, "business", false);
+
+                                        BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,taskSnapshot
+                                                .getDownloadUrl()
+                                                .toString(),"none", "none", deviceToken,user_id,"business", false);
+
                                         current_user_db.setValue(businessInfo);
                                         progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(),"Welcome to TraSearch!",Toast.LENGTH_LONG).show();
