@@ -18,7 +18,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -32,7 +34,7 @@ import java.util.TimeZone;
 public class FirebaseMethods {
 
     private static final String TAG = "FirebaseMethods";
-
+    private final Object timestamp = ServerValue.TIMESTAMP;
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -107,6 +109,9 @@ public class FirebaseMethods {
                 user.setPhoneNumber(ds.child(userID)
                         .getValue(User.class)
                         .getPhoneNumber());
+                user.setVerify(ds.child(userID)
+                        .getValue(User.class)
+                        .getVerify());
             }
         }
         /**
@@ -147,7 +152,7 @@ public class FirebaseMethods {
                     Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
 
                     //add the new photo to 'photos' node and 'user_photos' node
-                    addPhotoToDatabase(caption, firebaseUrl.toString());
+                    addPhotoToDatabase(caption, firebaseUrl.toString(), qty);
 
                     //navigate to the main feed so the user can see their photo
                     Intent intent = new Intent(mContext, HomeActivity2.class);
@@ -175,25 +180,25 @@ public class FirebaseMethods {
 
         }
     }
-    private void addPhotoToDatabase(String caption, String url){
+    private void addPhotoToDatabase(String caption, String url, String s){
         Log.d(TAG, "addPhotoToDatabase: adding photo to database.");
 
 //        String tags = StringManipulation.getTags(caption);
-        String tags = caption;
+
         String newPhotoKey = myRef.child("Photos").push().getKey();
         Photo photo = new Photo();
         photo.setPhoto_description(caption);
-        photo.setDate_created(getTimestamp());
+//        photo.setDate_created(ServerValue.TIMESTAMP);
         photo.setImage_path(url);
-        photo.setQuantity(tags);
+        photo.setQuantity(s);
         photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
         photo.setPhoto_id(newPhotoKey);
-
         //insert into database
         myRef.child("Users_Photos")
                 .child(FirebaseAuth.getInstance().getCurrentUser()
                         .getUid()).child(newPhotoKey).setValue(photo);
         myRef.child("Photos").child(newPhotoKey).setValue(photo);
+        myRef.child("Photos").child(newPhotoKey).child("date_created").setValue(ServerValue.TIMESTAMP);
 
     }
     public int getImageCount(DataSnapshot dataSnapshot){

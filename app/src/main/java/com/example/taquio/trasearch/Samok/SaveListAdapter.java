@@ -82,6 +82,16 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
         GestureDetector detector;
         Photo photo;
     }
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -119,13 +129,13 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
 
         holder.caption.setText(getItem(position).getPhoto_description());
 
-        String timestampDifference = getTimestampDifference(getItem(position));
-        if(!timestampDifference.equals("0")){
-            holder.timeDetla.setText(timestampDifference + " DAYS AGO");
-        }else{
-            holder.timeDetla.setText("TODAY");
-        }
-
+//        String timestampDifference = getTimestampDifference(getItem(position));
+//        if(!timestampDifference.equals("0")){
+//            holder.timeDetla.setText(timestampDifference + " DAYS AGO");
+//        }else{
+//            holder.timeDetla.setText("TODAY");
+//        }
+        holder.timeDetla.setText(getDate(holder.photo.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
         final ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(getItem(position).getImage_path(), holder.image);
 
@@ -539,28 +549,28 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
      * Returns a string representing the number of days ago the post was made
      * @return
      */
-    private String getTimestampDifference(Photo photo){
-        Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
-
-        String difference = "";
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.CANADA);
-        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));//google 'android list of timezones'
-        Date today = c.getTime();
-        sdf.format(today);
-        Date timestamp;
-        final String photoTimestamp = photo.getDate_created();
-        try{
-            timestamp = sdf.parse(photoTimestamp);
-            difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));
-        }catch (ParseException e){
-            Log.e(TAG, "getTimestampDifference: ParseException: " + e.getMessage() );
-            difference = "0";
-        }
-//        Long tsLong = System.currentTimeMillis()/1000;
-//        difference = tsLong.toString();
-        return difference;
-    }
+//    private String getTimestampDifference(Photo photo){
+//        Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
+//
+//        String difference = "";
+//        Calendar c = Calendar.getInstance();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.CANADA);
+//        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));//google 'android list of timezones'
+//        Date today = c.getTime();
+//        sdf.format(today);
+//        Date timestamp;
+//        final String photoTimestamp = photo.getDate_created();
+//        try{
+//            timestamp = sdf.parse(photoTimestamp);
+//            difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));
+//        }catch (ParseException e){
+//            Log.e(TAG, "getTimestampDifference: ParseException: " + e.getMessage() );
+//            difference = "0";
+//        }
+////        Long tsLong = System.currentTimeMillis()/1000;
+////        difference = tsLong.toString();
+//        return difference;
+//    }
 
     public interface OnFeedImageSelectedListener {
         void onImageSelected(Photo photo, int activityNumber);

@@ -112,6 +112,7 @@ public class ViewProfileFragment extends Fragment {
         message = view.findViewById(R.id.btnMessage);
         vProfile_sendFriequest_btn = view.findViewById(R.id.vProfile_sendFriequest_btn);
         declineRequest = view.findViewById(R.id.declineRequest);
+        mBackArrow = view.findViewById(R.id.backArrow);
 
         gridView = view.findViewById(R.id.gridView);
         bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
@@ -447,7 +448,6 @@ public class ViewProfileFragment extends Fragment {
 //        //setupGridView();
 
 
-
         return view;
     }
 
@@ -513,7 +513,7 @@ public class ViewProfileFragment extends Fragment {
                     photo.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
                     photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                     photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                    photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
+                    photo.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                     photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
 
@@ -611,14 +611,14 @@ public class ViewProfileFragment extends Fragment {
                     mContext.startActivity(i);
                 }
             });
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating back");
-//                getActivity().getSupportFragmentManager().popBackStack();
-//                getActivity().finish();
-//            }
-//        });
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().finish();
+            }
+        });
 
     }
 

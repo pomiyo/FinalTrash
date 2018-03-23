@@ -8,8 +8,14 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="#009688"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_backarrow"/>
 
         </LinearLayout>
 
@@ -18,32 +24,38 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_below="@+id/linearLayout1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="-50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="-30dp"
             android:background="@drawable/background"
             android:src="@drawable/images" />
-
-        <Button
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="80dp"
-            android:layout_toRightOf="@+id/viewedProfile"
-            android:background="@drawable/add_friend"
-            />
-        <Button
+    <Button
         android:id="@+id/declineRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="20dp"
         android:text="Decline Friend Request"
-            android:visibility="invisible"/>
+        android:visibility="gone"/>
     <Button
         android:id="@+id/vProfile_sendFriequest_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/declineRequest"
-        android:text="Send Friend REquest"
-        />
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Send Friend REquest"/>
+        <!--<Button-->
+            <!--android:layout_width="32dp"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="80dp"-->
+            <!--android:layout_toRightOf="@+id/viewedProfile"-->
+            <!--android:background="@drawable/add_friend"-->
+            <!--/>-->
+
+
+
 
         <LinearLayout
             android:id="@+id/relLog"
@@ -52,21 +64,19 @@
             android:layout_below="@+id/linearLayout1"
             android:background="@drawable/border_bottom_only"
             android:orientation="vertical">
-
             <LinearLayout
                 android:id="@+id/relLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-
                 <TextView
                     android:id="@+id/viewedName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Sean Daniel Del Mar"
+                    android:layout_marginLeft="40dp"
+                    android:text="Juan Cruz"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"/>
@@ -90,6 +100,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:layout_marginLeft="40dp"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginRight="1dp"

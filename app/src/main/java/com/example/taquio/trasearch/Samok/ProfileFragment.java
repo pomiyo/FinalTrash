@@ -39,9 +39,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -54,7 +57,9 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int ACTIVITY_NUM = 4;
     private static final int NUM_GRID_COLUMNS = 3;
+
     OnGridImageSelectedListener mOnGridImageSelectedListener;
+
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -63,16 +68,17 @@ public class ProfileFragment extends Fragment {
     private FirebaseMethods mFirebaseMethods;
     private FirebaseUser mUser;
     //widgets
-    private TextView mName, mEmail, mPhone;
+    private TextView mName, mEmail, mPhone, notVerifiedLabel, isVerifiedLabel;
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
     private GridView gridView;
     private Toolbar toolbar;
-    private ImageView profileMenu;
+    private ImageView profileMenu, mBackArrow;
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
-    private ImageView settings, mybookmarks;
+    private ImageView settings, mybookmarks, notVerified, isVerified;
     //vars
+    String verifier="";
     private int mFollowersCount = 0;
     private int mFollowingCount = 0;
     private int mPostsCount = 0;
@@ -82,6 +88,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d(TAG, "onCreateView: STARTING PROFILE FRAGMENT >>>>>>>");
+
 
         mProfilePhoto = view.findViewById(R.id.myProfile_image);
         mName = view.findViewById(R.id.myProfile_name);
@@ -94,6 +101,12 @@ public class ProfileFragment extends Fragment {
         settings = view.findViewById(R.id.accSetting);
         mybookmarks = view.findViewById(R.id.savebookmarks);
         bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
+        mBackArrow = view.findViewById(R.id.backArrow);
+        notVerified = view.findViewById(R.id.imNotVerify);
+        isVerified = view.findViewById(R.id.imVerify);
+
+        notVerifiedLabel = view.findViewById(R.id.notVerifiedLabel);
+        isVerifiedLabel = view.findViewById(R.id.verifiedLabel);
 
         mContext = getActivity();
 
@@ -105,10 +118,26 @@ public class ProfileFragment extends Fragment {
         setupFirebaseAuth();
         setupGridView();
 
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                if(getStringTag().equals("noAction")){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    ((MyProfileActivity)getActivity()).hideLayout();
+                    startActivity(new Intent(getContext(),HomeActivity2.class));
+                }
+                if(getStringTag().equals("action")){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().finish();
+                }
+            }
+        });
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mContext, SettingsActivity.class));
+
             }
         });
         Button editProfile = view.findViewById(R.id.myProfile_editBtn);
@@ -130,6 +159,14 @@ public class ProfileFragment extends Fragment {
         });
         return view;
     }
+    private String getStringTag(){
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            return bundle.getString("Action");
+        }else{
+            return null;
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -140,7 +177,16 @@ public class ProfileFragment extends Fragment {
         }
         super.onAttach(context);
     }
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
 
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
     private void setupGridView(){
         Log.d(TAG, "setupGridView: Setting up image grid.");
 
@@ -163,7 +209,7 @@ public class ProfileFragment extends Fragment {
                         photo.setQuantity(objectMap.get("quantity").toString());
                         photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                         photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                        photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
+                        photo.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                         photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
 //                        ArrayList<Comment> comments = new ArrayList<Comment>();
@@ -227,6 +273,16 @@ public class ProfileFragment extends Fragment {
         mName.setText(user.getName());
         mEmail.setText(user.getEmail());
         mPhone.setText(user.getPhoneNumber());
+//
+//        verifier = user.getVerify().toString();
+//
+//        if(verifier.equals("true")) {
+//            isVerified.setVisibility(View.VISIBLE);
+//            notVerified.setVisibility(View.GONE);
+//        }else if (verifier.equals("false")) {
+//            isVerified.setVisibility(View.GONE);
+//            notVerified.setVisibility(View.VISIBLE);
+//        }
     }
 
     /**

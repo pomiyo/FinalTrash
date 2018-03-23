@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:layout_marginTop="-20dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/garbagetr"
+        />
+
+    <TextView
+        android:layout_marginTop="-15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You currently have no items displayed."
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:layout_marginTop="5dp"
+        android:id="@+id/btnAddBuy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add new items"
+        android:textSize="10sp"
+        android:background="@drawable/btn"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+</LinearLayout>

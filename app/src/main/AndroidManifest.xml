@@ -99,7 +99,10 @@
         <activity android:name=".Samok.ActivityLogin" />
         <activity android:name=".Samok.MainActivity" />
         <activity android:name=".Samok.UserProfileActivity" />
+<<<<<<< HEAD
         <activity android:name=".Samok.BusinessProfileActivity" />
+=======
+>>>>>>> origin/roalde-develop
         <activity android:name=".Profile.ProfileActivity">
             <intent-filter>
                 <action android:name="com.example.taquio.trasearch6_TARGET_NOTIFICATION" />
@@ -108,7 +111,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Nearby.NearbyActivity" />
+<<<<<<< HEAD
         <activity android:name=".Samok.AdminActivity" />
+=======
+>>>>>>> origin/roalde-develop
 
         <!-- <activity android:name=".LoginActivity"/> -->
         <!--
@@ -161,9 +167,23 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+<<<<<<< HEAD
         <activity android:name=".Samok.BusinessProfile2" />
         <activity android:name=".Utils.PaymentDetails" />
         <activity android:name=".Samok.ReportActivity" />
+=======
+        <activity android:name=".Samok.UserJunkShopView" />
+        <activity android:name=".Utils.PaymentDetails" />
+        <activity android:name=".Samok.PasswordActivity"></activity>
+        <activity android:name=".Samok.AdminActivity"/>
+        <activity android:name=".Samok.AdminVerification"/>
+        <activity android:name=".Samok.BusMyProfileActivity"/>
+        <activity android:name=".BusinessProfile.BusinessBuy"/>
+        <activity android:name=".BusinessProfile.BusinessSell"/>
+        <activity android:name=".BusinessProfile.BusinessEdit"/>
+        <activity android:name=".Samok.BusinessAdd"/>
+        <activity android:name=".Guest.GuestHome"></activity>
+>>>>>>> origin/roalde-develop
     </application>
 
 </manifest>

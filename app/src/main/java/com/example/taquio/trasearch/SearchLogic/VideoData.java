@@ -11,6 +11,15 @@ public class VideoData {
     private String channelTitle;
     private String defaultThumbUrl;
 
+    public VideoData() {
+    }
+    public VideoData(String title, String videoId, String description, String channelTitle, String defaultThumbUrl) {
+        this.title = title;
+        this.videoId = videoId;
+        this.description = description;
+        this.channelTitle = channelTitle;
+        this.defaultThumbUrl = defaultThumbUrl;
+    }
     public String getTitle() {
         return title;
     }

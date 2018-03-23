@@ -86,6 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String uid = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
+
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -118,7 +119,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
-
+        ImageView backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: closing the activity");
+                finish();
+            }
+        });
         ediProfile_changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,6 +221,11 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public void uploadData(boolean Thispass
