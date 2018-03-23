@@ -6,7 +6,7 @@ package com.example.taquio.trasearch.BusinessProfile;
 
 public class Material {
 
-    String name;
+    private String name;
 
     public Material() {
 

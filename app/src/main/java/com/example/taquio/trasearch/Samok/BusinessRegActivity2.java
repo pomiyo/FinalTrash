@@ -89,59 +89,6 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(i,"Select Image"),0);
             }
         });
-
-        busRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            final String user_id = mAuth.getCurrentUser().getUid();
-                            final DatabaseReference current_user_db = databaseReference.child(user_id);
-
-                            if(imageUri != null) {
-                                final ProgressDialog progressDialog = new ProgressDialog(BusinessRegActivity2.this);
-                                progressDialog.setTitle("Creating account...");
-                                progressDialog.show();
-                                StorageReference reference = storageReference.child(STORAGE_PATH +  System.currentTimeMillis() + "." + imageUri);
-                                reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                        BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,taskSnapshot.getDownloadUrl().toString(),"none", "none", deviceToken,user_id,"business", true);
-                                        current_user_db.setValue(businessInfo);
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(),"Welcome to TraSearch!",Toast.LENGTH_LONG).show();
-
-                                        Intent i = new Intent(BusinessRegActivity2.this, BusinessHome.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(i);
-                                        BusinessRegActivity2.this.finish();
-                                    }
-                                }) .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                }) .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                        double totalProgress = (100*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                                        progressDialog.setMessage((int)totalProgress + " % ");
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getApplicationContext(),"Select image first",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
-            }
-        });
-
         busSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +121,59 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                 });
             }
         });
+        busRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            final String user_id = mAuth.getCurrentUser().getUid();
+                            final DatabaseReference current_user_db = databaseReference.child(user_id);
+
+                            if(imageUri != null) {
+                                final ProgressDialog progressDialog = new ProgressDialog(BusinessRegActivity2.this);
+                                progressDialog.setTitle("Creating account...");
+                                progressDialog.show();
+                                StorageReference reference = storageReference.child(STORAGE_PATH +  System.currentTimeMillis() + "." + imageUri);
+                                reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                        BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,taskSnapshot.getDownloadUrl().toString(),"none", "none", deviceToken,user_id, "business", false);
+                                        current_user_db.setValue(businessInfo);
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(),"Welcome to TraSearch!",Toast.LENGTH_LONG).show();
+
+                                        Intent i = new Intent(BusinessRegActivity2.this, BusinessHome.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(i);
+                                        BusinessRegActivity2.this.finish();
+                                    }
+                                }) .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                                    }
+                                }) .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                        double totalProgress = (100*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                        progressDialog.setMessage((int)totalProgress + " % ");
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getApplicationContext(),"Select image first",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
 
     }
 

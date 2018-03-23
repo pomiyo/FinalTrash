@@ -21,13 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.example.taquio.trasearch.Models.Comment;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.Models.UserSettings;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,15 +48,14 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-
 /**
  * Created by Edward 2018.
  */
 
-public class ViewProfileFragment extends Fragment {
+public class BusViewProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
-    private static final int ACTIVITY_NUM = 4;
+    private static final int ACTIVITY_NUM = 2;
     private static final int NUM_GRID_COLUMNS = 3;
     OnGridImageSelectedListener mOnGridImageSelectedListener;
     TextView name,email,phoneNo;
@@ -95,7 +94,7 @@ public class ViewProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_viewprofile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_busviewprofile, container, false);
 
 
         mfriend_status = 0;
@@ -112,10 +111,9 @@ public class ViewProfileFragment extends Fragment {
         message = view.findViewById(R.id.btnMessage);
         vProfile_sendFriequest_btn = view.findViewById(R.id.vProfile_sendFriequest_btn);
         declineRequest = view.findViewById(R.id.declineRequest);
-        mBackArrow = view.findViewById(R.id.backArrow);
 
         gridView = view.findViewById(R.id.gridView);
-        bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
+        bottomNavigationView = view.findViewById(R.id.businessBottomNavViewBar);
 
         mContext = getActivity();
         Log.d(TAG, "onCreateView: stared.");
@@ -448,6 +446,7 @@ public class ViewProfileFragment extends Fragment {
 //        //setupGridView();
 
 
+
         return view;
     }
 
@@ -611,17 +610,16 @@ public class ViewProfileFragment extends Fragment {
                     mContext.startActivity(i);
                 }
             });
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating back");
-                getActivity().getSupportFragmentManager().popBackStack();
-                getActivity().finish();
-            }
-        });
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: navigating back");
+//                getActivity().getSupportFragmentManager().popBackStack();
+//                getActivity().finish();
+//            }
+//        });
 
     }
-
         /**
      * BottomNavigationView setup
      */
