@@ -1,6 +1,5 @@
 package com.example.taquio.trasearch.Utils;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,21 +12,20 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.BusinessHome.BusinessHome;
-import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.Report;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
-import com.example.taquio.trasearch.Samok.EditPostItem;
+import com.example.taquio.trasearch.Samok.BusMyProfileActivity;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
 import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.example.taquio.trasearch.Samok.MyProfileActivity;
@@ -41,20 +39,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Created by Edward on 24/02/2018.
  */
 
-public class OtherUserViewPost extends Fragment {
+public class BusOtherUserViewPost extends Fragment {
 
     private static final String TAG = "ViewPostFragment";
 
@@ -67,12 +62,11 @@ public class OtherUserViewPost extends Fragment {
     //widgets
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes, mComments;
-    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, dm, mBookmark;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes, mItem;
+    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, mBookmark, dm;
     //vars
     private Photo mPhoto;
     private int mActivityNumber = 0;
-    private Context mContext = getActivity();
     private String photoUsername = "";
     private String profilePhotoUrl = "";
     private GestureDetector mGestureDetector;
@@ -81,7 +75,8 @@ public class OtherUserViewPost extends Fragment {
     private StringBuilder mUsers;
     private String mLikesString = "";
     private User mCurrentUser;
-    public OtherUserViewPost(){
+    private RelativeLayout mlayout;
+    public BusOtherUserViewPost(){
         super();
         setArguments(new Bundle());
     }
@@ -89,9 +84,9 @@ public class OtherUserViewPost extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_usersview_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_bus_otherview_post, container, false);
         mPostImage = view.findViewById(R.id.post_image);
-        bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
+        bottomNavigationView = view.findViewById(R.id.businessBottomNavViewBar);
         mBackArrow = view.findViewById(R.id.backArrow);
         mBackLabel = view.findViewById(R.id.tvBackLabel);
         mCaption = view.findViewById(R.id.image_caption);
@@ -102,7 +97,9 @@ public class OtherUserViewPost extends Fragment {
         mHeartWhite = view.findViewById(R.id.image_heart);
         mProfileImage = view.findViewById(R.id.profile_photo);
         mLikes = view.findViewById(R.id.image_likes);
-        mBookmark = view.findViewById(R.id.bookmark);
+        mItem = view.findViewById(R.id.item_quantity);
+//        mBookmark = view.findViewById(R.id.bookmark);
+        mlayout = view.findViewById(R.id.messageLayout);
         dm = view.findViewById(R.id.direct_message);
 //        mComment = view.findViewById(R.id.speech_bubble);
 //        mComments = view.findViewById(R.id.image_comments_link);
@@ -420,17 +417,18 @@ public class OtherUserViewPost extends Fragment {
         mUsername.setText(mCurrentUser.getUserName());
 //        mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getPhoto_description());
-        mBookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myRef.child("Bookmarks")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child(mPhoto.getPhoto_id())
-                        .child(mPhoto.getUser_id())
-                        .child("photo_post")
-                        .setValue(mPhoto.getImage_path());
-            }
-        });
+        mItem.setText(mPhoto.getQuantity());
+//        mBookmark.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                myRef.child("Bookmarks")
+//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                        .child(mPhoto.getPhoto_id())
+//                        .child(mPhoto.getUser_id())
+//                        .child("photo_post")
+//                        .setValue(mPhoto.getImage_path());
+//            }
+//        });
         Query query = myRef.child("Users")
                 .orderByChild("userID")
                 .equalTo(mPhoto.getUser_id());
@@ -444,7 +442,7 @@ public class OtherUserViewPost extends Fragment {
                     mProfileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            Intent intent = new Intent(getActivity(), BusMyProfileActivity.class);
                             intent.putExtra(getActivity().getString(R.string.calling_activity),
                                     getActivity().getString(R.string.home_activity));
                             intent.putExtra(getActivity().getString(R.string.intent_user), user);
@@ -454,7 +452,7 @@ public class OtherUserViewPost extends Fragment {
                     mUsername.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            Intent intent = new Intent(getActivity(), BusMyProfileActivity.class);
                             intent.putExtra(getActivity().getString(R.string.calling_activity),
                                     getActivity().getString(R.string.home_activity));
                             intent.putExtra(getActivity().getString(R.string.intent_user), user);
@@ -462,6 +460,15 @@ public class OtherUserViewPost extends Fragment {
                         }
                     });
                     dm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getContext(), MessageActivity.class);
+                            i.putExtra("user_id", mPhoto.getUser_id());
+                            i.putExtra("user_name", user.getUserName());
+                            getContext().startActivity(i);
+                        }
+                    });
+                    mlayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
@@ -510,7 +517,7 @@ public class OtherUserViewPost extends Fragment {
                 }
                 if(getTheTag().equals("fromHome")){
                     getActivity().getSupportFragmentManager().popBackStack();
-                    ((HomeActivity2) getActivity()).showLayout();
+                    ((BusinessHome) getActivity()).showLayout();
                 }
             }
         });

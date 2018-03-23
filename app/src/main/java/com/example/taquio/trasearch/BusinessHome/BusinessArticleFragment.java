@@ -23,13 +23,12 @@ public class BusinessArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.business_home_articles_fragment, container, false);
-
-        btn = view.findViewById(R.id.buttonAdd);
+        btn = (Button) view.findViewById(R.id.addBtn);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), BusinessAdd.class);
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), BusinessAdd.class);
                 startActivity(i);
             }
         });

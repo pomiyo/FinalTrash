@@ -1,10 +1,13 @@
 package com.example.taquio.trasearch.Samok;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Del Mar on 2/24/2018.
  */
 
-public class BusinessInfo {
+public class BusinessInfo implements Parcelable {
 
     String bsnEmail;
     String bsnBusinessName;
@@ -17,21 +20,54 @@ public class BusinessInfo {
     String deviceToken;
     String userId;
     String userType;
-    boolean isVerify;
+    Boolean isVerify;
 
-    public BusinessInfo(String bsnEmail, String bsnBusinessName, String bsnLocation, String bsnMobile, String bsnPhone, String imagePermit, String image, String image_thumb, String deviceToken, String userId, String userType, boolean isVerify) {
-        this.bsnEmail = bsnEmail;
-        this.bsnBusinessName = bsnBusinessName;
-        this.bsnLocation = bsnLocation;
-        this.bsnMobile = bsnMobile;
-        this.bsnPhone = bsnPhone;
-        this.imagePermit = imagePermit;
-        this.image = image;
-        this.image_thumb = image_thumb;
-        this.deviceToken = deviceToken;
-        this.userId = userId;
-        this.userType = userType;
-        this.isVerify = isVerify;
+   BusinessInfo(String bsnMail, String bsnBusinessName, String bsnLocation, String bsnMobile, String bsnPhone, String s, String none, String none1, String deviceToken, String user_id, String business, boolean b){}
+
+    protected BusinessInfo(Parcel in) {
+        bsnEmail = in.readString();
+        bsnBusinessName = in.readString();
+        bsnLocation = in.readString();
+        bsnMobile = in.readString();
+        bsnPhone = in.readString();
+        imagePermit = in.readString();
+        image = in.readString();
+        image_thumb = in.readString();
+        deviceToken = in.readString();
+        userId = in.readString();
+        userType = in.readString();
+        byte tmpIsVerify = in.readByte();
+        isVerify = tmpIsVerify == 0 ? null : tmpIsVerify == 1;
+    }
+
+    public static final Creator<BusinessInfo> CREATOR = new Creator<BusinessInfo>() {
+        @Override
+        public BusinessInfo createFromParcel(Parcel in) {
+            return new BusinessInfo(in);
+        }
+
+        @Override
+        public BusinessInfo[] newArray(int size) {
+            return new BusinessInfo[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "BusinessInfo{" +
+                "bsnEmail='" + bsnEmail + '\'' +
+                ", bsnBusinessName='" + bsnBusinessName + '\'' +
+                ", bsnLocation='" + bsnLocation + '\'' +
+                ", bsnMobile='" + bsnMobile + '\'' +
+                ", bsnPhone='" + bsnPhone + '\'' +
+                ", imagePermit='" + imagePermit + '\'' +
+                ", image='" + image + '\'' +
+                ", image_thumb='" + image_thumb + '\'' +
+                ", deviceToken='" + deviceToken + '\'' +
+                ", userId='" + userId + '\'' +
+                ", userType='" + userType + '\'' +
+                ", isVerify=" + isVerify +
+                '}';
     }
 
     public String getBsnEmail() {
@@ -122,11 +158,32 @@ public class BusinessInfo {
         this.userType = userType;
     }
 
-    public boolean isVerify() {
+    public Boolean getVerify() {
         return isVerify;
     }
 
-    public void setVerify(boolean verify) {
+    public void setVerify(Boolean verify) {
         isVerify = verify;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(bsnEmail);
+        parcel.writeString(bsnBusinessName);
+        parcel.writeString(bsnLocation);
+        parcel.writeString(bsnMobile);
+        parcel.writeString(bsnPhone);
+        parcel.writeString(imagePermit);
+        parcel.writeString(image);
+        parcel.writeString(image_thumb);
+        parcel.writeString(deviceToken);
+        parcel.writeString(userId);
+        parcel.writeString(userType);
+        parcel.writeByte((byte) (isVerify == null ? 0 : isVerify ? 1 : 2));
     }
 }

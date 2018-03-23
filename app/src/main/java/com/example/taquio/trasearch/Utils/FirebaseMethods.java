@@ -109,6 +109,9 @@ public class FirebaseMethods {
                 user.setPhoneNumber(ds.child(userID)
                         .getValue(User.class)
                         .getPhoneNumber());
+                user.setVerify(ds.child(userID)
+                        .getValue(User.class)
+                        .getVerify());
             }
         }
         /**

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +20,10 @@ import com.example.taquio.trasearch.Utils.UniversalImageLoader;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -26,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class EditPostItem extends AppCompatActivity {
-
+    private static final String TAG = "EditPostItem";
     private DatabaseReference mReference;
     private ImageView close;
     private TextView save, username;
@@ -34,6 +39,7 @@ public class EditPostItem extends AppCompatActivity {
     private String captionHolder, qtyholder;
     private CircleImageView profphoto;
     private SquareImageView postedphoto;
+    String time;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +70,8 @@ public class EditPostItem extends AppCompatActivity {
         final User muser = (User) b.get("user");
        final Photo mphoto = (Photo) b.get("photo");
 
+        Log.d(TAG, "Editing : " + muser);
+        Log.d(TAG, "Editing Photo: " + mphoto);
 
                             UniversalImageLoader.setImage(muser.getImage(),profphoto, null,"");
                             UniversalImageLoader.setImage(mphoto.getImage_path(),postedphoto, null,"");
@@ -77,23 +85,26 @@ public class EditPostItem extends AppCompatActivity {
 
                             photo.setPhoto_description(caption.getText().toString());
                             photo.setQuantity(qty.getText().toString());
+                            photo.setDate_created(mphoto.getDate_createdLong());
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!caption.equals(mphoto.getPhoto_description()))
-                {
+//                if(!caption.equals(mphoto.getPhoto_description()))
+//                {
+
                     mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
                             .child(mphoto.getPhoto_id())
 //                            .setValue(photo);
                             .child("caption")
-                            .setValue( caption.getText().toString());
+                            .setValue(caption.getText().toString());
 
                     mReference.child("Photos")
                             .child(mphoto.getPhoto_id())
 //                            .setValue(photo);
                             .child("caption")
-                            .setValue( caption.getText().toString());
+                            .setValue(caption.getText().toString());
 
                     mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
@@ -107,12 +118,23 @@ public class EditPostItem extends AppCompatActivity {
 //                            .setValue(photo);
                             .child("quantity")
                             .setValue(qty.getText().toString());
+                    Log.d(TAG, "Na change: " + caption.getText().toString());
                     Toast.makeText(getApplicationContext(),"Successfully Edited!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(context, HomeActivity2.class));
-                }
+//                }
             }
         });
 
 
+    }
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 }

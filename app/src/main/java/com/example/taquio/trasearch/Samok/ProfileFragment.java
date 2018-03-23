@@ -68,16 +68,17 @@ public class ProfileFragment extends Fragment {
     private FirebaseMethods mFirebaseMethods;
     private FirebaseUser mUser;
     //widgets
-    private TextView mName, mEmail, mPhone;
+    private TextView mName, mEmail, mPhone, notVerifiedLabel, isVerifiedLabel;
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
     private GridView gridView;
     private Toolbar toolbar;
-    private ImageView profileMenu;
+    private ImageView profileMenu, mBackArrow;
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
-    private ImageView settings, mybookmarks;
+    private ImageView settings, mybookmarks, notVerified, isVerified;
     //vars
+    String verifier="";
     private int mFollowersCount = 0;
     private int mFollowingCount = 0;
     private int mPostsCount = 0;
@@ -87,6 +88,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d(TAG, "onCreateView: STARTING PROFILE FRAGMENT >>>>>>>");
+
 
         mProfilePhoto = view.findViewById(R.id.myProfile_image);
         mName = view.findViewById(R.id.myProfile_name);
@@ -99,6 +101,12 @@ public class ProfileFragment extends Fragment {
         settings = view.findViewById(R.id.accSetting);
         mybookmarks = view.findViewById(R.id.savebookmarks);
         bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
+        mBackArrow = view.findViewById(R.id.backArrow);
+        notVerified = view.findViewById(R.id.imNotVerify);
+        isVerified = view.findViewById(R.id.imVerify);
+
+        notVerifiedLabel = view.findViewById(R.id.notVerifiedLabel);
+        isVerifiedLabel = view.findViewById(R.id.verifiedLabel);
 
         mContext = getActivity();
 
@@ -110,6 +118,21 @@ public class ProfileFragment extends Fragment {
         setupFirebaseAuth();
         setupGridView();
 
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                if(getStringTag().equals("noAction")){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    ((MyProfileActivity)getActivity()).hideLayout();
+                    startActivity(new Intent(getContext(),HomeActivity2.class));
+                }
+                if(getStringTag().equals("action")){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().finish();
+                }
+            }
+        });
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +158,14 @@ public class ProfileFragment extends Fragment {
             }
         });
         return view;
+    }
+    private String getStringTag(){
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            return bundle.getString("Action");
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -242,6 +273,16 @@ public class ProfileFragment extends Fragment {
         mName.setText(user.getName());
         mEmail.setText(user.getEmail());
         mPhone.setText(user.getPhoneNumber());
+//
+//        verifier = user.getVerify().toString();
+//
+//        if(verifier.equals("true")) {
+//            isVerified.setVisibility(View.VISIBLE);
+//            notVerified.setVisibility(View.GONE);
+//        }else if (verifier.equals("false")) {
+//            isVerified.setVisibility(View.GONE);
+//            notVerified.setVisibility(View.VISIBLE);
+//        }
     }
 
     /**

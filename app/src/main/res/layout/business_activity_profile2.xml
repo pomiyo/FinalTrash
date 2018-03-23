@@ -15,20 +15,30 @@
 
             <include layout="@layout/business_profile_include"/>
 
-            <Button
-                android:id="@+id/route"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="19dp"
-                android:layout_marginRight="19dp"
-                android:layout_marginTop="69dp"
-                android:text="get direction" />
 
         </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/bProfileRel2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:orientation="horizontal"
+            android:gravity="center">
 
+            <include layout="@layout/layout_business_top_tabs"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="34"
+            android:orientation="horizontal">
+
+            <include layout="@layout/layout_business_center_viewpager"/>
+
+        </LinearLayout>
+        
         <LinearLayout
             android:id="@+id/bProfileRel2"
             android:layout_width="match_parent"

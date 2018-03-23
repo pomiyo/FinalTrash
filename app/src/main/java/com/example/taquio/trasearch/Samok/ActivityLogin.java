@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,7 +102,7 @@ public class ActivityLogin extends AppCompatActivity {
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             String userType = dataSnapshot.child("userType").getValue().toString();
                                                             Log.d(TAG, "onDataChange: UserType: "+userType);
-                                                            if(dataSnapshot.child("userType").getValue().toString().equals("free"))
+                                                            if(dataSnapshot.child("userType").getValue().toString().equals("non-business"))
                                                             {
                                                                 Log.d(TAG, "signInWithEmail:success");
                                                                 mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
@@ -119,6 +120,15 @@ public class ActivityLogin extends AppCompatActivity {
                                                                 startActivity(startActivityIntent);
                                                                 ActivityLogin.this.finish();
                                                             }
+                                                            else if(dataSnapshot.child("userType").getValue().toString().equals("business"))
+                                                            {
+                                                                Log.d(TAG, "signInWithEmail:success");
+                                                                mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+//
+                                                                Intent startActivityIntent = new Intent(ActivityLogin.this, BusinessHome.class);
+                                                                startActivity(startActivityIntent);
+                                                                ActivityLogin.this.finish();
+                                                            }
                                                         }
 
                                                         @Override
@@ -127,7 +137,9 @@ public class ActivityLogin extends AppCompatActivity {
                                                         }
                                                     });
                                                 }else{
-
+                                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                                    Toast.makeText(ActivityLogin.this, "Authentication failed.",
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -215,20 +227,23 @@ public class ActivityLogin extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String userType = dataSnapshot.getValue().toString();
-                    if(userType.equals("free"))
-                    {
-                        startActivity(new Intent(ActivityLogin.this,HomeActivity2.class));
-                        finish();
-                    }
-                    else if(userType.equals("admin"))
-                    {
-                        startActivity(new Intent(ActivityLogin  .this,AdminActivity.class));
-                        finish();
-                    }
-                    else if(userType.equals("business"))
-                    {
-                        startActivity(new Intent(ActivityLogin.this,BusinessProfileActivity.class));
-                        finish();
+                    if(!userType.isEmpty()){
+
+                        if(userType.equals("non-business"))
+                        {
+                            startActivity(new Intent(ActivityLogin.this,HomeActivity2.class));
+                            finish();
+                        }
+                        if(userType.equals("admin"))
+                        {
+                            startActivity(new Intent(ActivityLogin  .this,AdminActivity.class));
+                            finish();
+                        }
+                        if(userType.equals("business"))
+                        {
+                            startActivity(new Intent(ActivityLogin.this,BusinessHome.class));
+                            finish();
+                        }
                     }else{
                         Toast.makeText(ActivityLogin.this,"UserType is null",Toast.LENGTH_LONG).show();
                     }

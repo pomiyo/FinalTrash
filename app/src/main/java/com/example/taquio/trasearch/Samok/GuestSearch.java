@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.SearchLogic.ArticleData;
 import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
@@ -256,21 +257,23 @@ public class GuestSearch extends AppCompatActivity {
 //                    if (dataSnapshot.hasChild("userType"))
 //                    {
                         String userType = dataSnapshot.getValue().toString();
-                        if(userType.equals("non-business"))
-                        {
-                            startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
-                            finish();
-                        }
-                        else if(userType.equals("admin"))
-                        {
-                            startActivity(new Intent(GuestSearch.this,AdminActivity.class));
-                            finish();
-                        }
-                        else if(userType.equals("business"))
-                        {
-                            startActivity(new Intent(GuestSearch.this,BusinessProfileActivity.class));
-                            finish();
-                        }else{
+                        if(!userType.isEmpty()){
+                            if(userType.equals("non-business"))
+                            {
+                                startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
+                                finish();
+                            }
+                            if(userType.equals("admin"))
+                            {
+                                startActivity(new Intent(GuestSearch.this,AdminActivity.class));
+                                finish();
+                            }
+                            if(userType.equals("business"))
+                            {
+                                startActivity(new Intent(GuestSearch.this,BusinessHome.class));
+                                finish();
+                            }
+                        } else{
                             Toast.makeText(GuestSearch.this,"UserType is null",Toast.LENGTH_LONG).show();
                         }
 //                    }
