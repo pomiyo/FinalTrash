@@ -98,7 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
-                            Intent busprofileIntent = new Intent(v.getContext(), BusinessProfile2.class);
+                            Intent busprofileIntent = new Intent(v.getContext(), UserJunkShopView.class);
                             busprofileIntent.putExtra("busprofile", holder.shop);
                             v.getContext().startActivity(busprofileIntent);
                         }
@@ -106,8 +106,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.lin.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
-                            Intent busprofileIntent = new Intent(v.getContext(), BusinessProfile2.class);
+//                            Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
+                            Intent busprofileIntent = new Intent(v.getContext(), UserJunkShopView.class);
                             busprofileIntent.putExtra("busprofile", holder.shop);
                             v.getContext().startActivity(busprofileIntent);
                         }
@@ -116,7 +116,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                        @Override
 //                        public void onClick(View v) {
 //                            Toast.makeText(context, "Lets go to Profile!" + holder.shop, Toast.LENGTH_LONG).show();
-//                            Intent busprofileIntent = new Intent(v.getContext(), BusinessProfile2.class);
+//                            Intent busprofileIntent = new Intent(v.getContext(), UserJunkShopView.class);
 //                            busprofileIntent.putExtra("busprofile", holder.shop);
 //                            v.getContext().startActivity(busprofileIntent);
 //

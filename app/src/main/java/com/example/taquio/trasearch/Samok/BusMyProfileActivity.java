@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Utils.BusViewProfileFragment;
 import com.example.taquio.trasearch.Utils.ViewPostFragment;
 import com.example.taquio.trasearch.Utils.ViewProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,38 +27,30 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Del Mar on 2/7/2018.
  */
 
-public class MyProfileActivity extends AppCompatActivity implements
-        ProfileFragment.OnGridImageSelectedListener ,
-        ViewProfileFragment.OnGridImageSelectedListener{
+public class BusMyProfileActivity extends AppCompatActivity implements BusViewProfileFragment.OnGridImageSelectedListener{
 
     private static final String TAG = "ProfileActivity";
-    private Context mContext = MyProfileActivity.this;
+    private Context mContext = BusMyProfileActivity.this;
     private ProgressBar mProgressbar;
     private CircleImageView profilePhoto;
     private FirebaseDatabase mfirebaseDatabase;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase;
-    FrameLayout frame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_busview_profile);
         init();
         profilePhoto = findViewById(R.id.myProfile_image);
-        frame = findViewById(R.id.container);
-
 
     }
-    public void hideLayout(){
-        Log.d(TAG, "hideLayout: hiding layout");
-        frame.setVisibility(View.GONE);
-    }
+
     @Override
     public void onGridImageSelected(Photo photo, int activityNumber) {
         Log.d(TAG, "onGridImageSelected: selected an image gridview: " + photo.toString());
 
-        ViewPostFragment fragment = new ViewPostFragment();
+        BusViewPostFragment fragment = new BusViewPostFragment();
         Bundle args = new Bundle();
         args.putParcelable(getString(R.string.photo), photo);
         args.putInt(getString(R.string.activity_number), activityNumber);
@@ -81,7 +72,7 @@ public class MyProfileActivity extends AppCompatActivity implements
             User user = intent.getParcelableExtra("intent_user");
             if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                 Log.d(TAG, "init: inflating view profile");
-                ViewProfileFragment fragment = new ViewProfileFragment();
+                BusViewProfileFragment fragment = new BusViewProfileFragment();
                 Bundle args = new Bundle();
                 args.putParcelable(getString(R.string.intent_user),
                         intent.getParcelableExtra("intent_user"));
@@ -102,7 +93,7 @@ public class MyProfileActivity extends AppCompatActivity implements
 
                 if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                     Log.d(TAG, "init: inflating view profile");
-                    ViewProfileFragment fragment = new ViewProfileFragment();
+                    BusViewProfileFragment fragment = new BusViewProfileFragment();
                     Bundle args = new Bundle();
                     args.putParcelable(getString(R.string.intent_user),
                             intent.getParcelableExtra(getString(R.string.intent_user)));
@@ -119,34 +110,27 @@ public class MyProfileActivity extends AppCompatActivity implements
                      IT MEAN ANG E INFLATE NGA LAYOUT KAY
                      IYAHANG PROFILE VIEW
                     */
-                    Log.d(TAG, "init: inflating Profile");
-                    ProfileFragment fragment = new ProfileFragment();
-                    Bundle args = new Bundle();
-                    args.putString("Action", "action");
-                    fragment.setArguments(args);
-
-                    FragmentTransaction transaction = MyProfileActivity.this.getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container, fragment);
-                    transaction.addToBackStack(getString(R.string.profile_fragment));
-                    transaction.commit();
+//                    Log.d(TAG, "init: inflating Profile");
+//                    ProfileFragment fragment = new ProfileFragment();
+//                    FragmentTransaction transaction = BusMyProfileActivity.this.getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.container, fragment);
+//                    transaction.addToBackStack(getString(R.string.profile_fragment));
+//                    transaction.commit();
                 }
             }else{
                 Toast.makeText(mContext, "something went wrong", Toast.LENGTH_SHORT).show();
             }
 
         }else{
-            Log.d(TAG, "init: inflating Profile");
-            ProfileFragment fragment = new ProfileFragment();
-            Bundle args = new Bundle();
-            args.putString("Action", "noAction");
-            fragment.setArguments(args);
-
-            FragmentTransaction transaction = MyProfileActivity.this.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container, fragment);
-            transaction.addToBackStack(getString(R.string.profile_fragment));
-            transaction.commit();
+//            Log.d(TAG, "init: inflating Profile");
+//            ProfileFragment fragment = new ProfileFragment();
+//            FragmentTransaction transaction = BusMyProfileActivity.this.getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.container, fragment);
+//            transaction.addToBackStack(getString(R.string.profile_fragment));
+//            transaction.commit();
         }
     }
+
 
 
     @Override

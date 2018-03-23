@@ -22,12 +22,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.Samok.EditPostItem;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
+import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.example.taquio.trasearch.Samok.SaveItemActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +68,7 @@ public class ViewPostFragment extends Fragment{
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
     private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes, mItem;
-    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, mComment;
+    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, mBookmark, dm;
     //vars
     private Photo mPhoto;
     private int mActivityNumber = 0;
@@ -101,6 +103,8 @@ public class ViewPostFragment extends Fragment{
         mProfileImage = view.findViewById(R.id.profile_photo);
         mLikes = view.findViewById(R.id.image_likes);
         mItem = view.findViewById(R.id.item_quantity);
+        mBookmark = view.findViewById(R.id.bookmark);
+        dm = view.findViewById(R.id.direct_message);
 
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
 //        mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
@@ -439,7 +443,17 @@ public class ViewPostFragment extends Fragment{
 //            mLikes.setText(mLikesString);
             mCaption.setText(mPhoto.getPhoto_description());
             mItem.setText(mPhoto.getQuantity());
-
+        mBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myRef.child("Bookmarks")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(mPhoto.getPhoto_id())
+                        .child(mPhoto.getUser_id())
+                        .child("photo_post")
+                        .setValue(mPhoto.getImage_path());
+            }
+        });
         Query query = myRef.child("Users")
                 .orderByChild("userID")
                 .equalTo(mPhoto.getUser_id());
@@ -470,6 +484,16 @@ public class ViewPostFragment extends Fragment{
                             getActivity().startActivity(intent);
                         }
                     });
+                    dm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getContext(), MessageActivity.class);
+                            i.putExtra("user_id", mPhoto.getUser_id());
+                            i.putExtra("user_name", user.getUserName());
+                            getContext().startActivity(i);
+                        }
+                    });
+
 
                 }
             }
@@ -503,12 +527,13 @@ public class ViewPostFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back");
-                SaveItemActivity backToSave = new SaveItemActivity();
-                HomeActivity2 backToHome = new HomeActivity2();
-                if(getActivity().getSupportFragmentManager().findFragmentByTag("fromSave")!=null){
-                    getActivity().getSupportFragmentManager().popBackStackImmediate("fromSave",0);
-                }
+                if(getTheTag().equals("fromProfile")){
                     getActivity().getSupportFragmentManager().popBackStack();
+                }
+                if(getTheTag().equals("fromHome")){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    ((HomeActivity2) getActivity()).showLayout();
+                }
             }
         });
 
@@ -562,11 +587,20 @@ public class ViewPostFragment extends Fragment{
 //        }
 //        return difference;
 //    }
+    private String getTheTag(){
+        Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            return bundle.getString("theCall");
 
+        }else{
+            return "";
+        }
+    }
     /**
      * retrieve the activity number from the incoming bundle from profileActivity interface
      * @return
      */
+
     private int getActivityNumFromBundle(){
         Log.d(TAG, "getActivityNumFromBundle: arguments: " + getArguments());
 

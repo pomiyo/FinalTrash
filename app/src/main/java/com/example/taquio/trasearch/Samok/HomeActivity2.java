@@ -230,6 +230,7 @@ public class HomeActivity2 extends AppCompatActivity implements
             Bundle args = new Bundle();
             args.putParcelable(getString(R.string.photo), item);
             args.putInt(getString(R.string.activity_number), i);
+            args.putString("theCall", "fromHome");
 
             fragment.setArguments(args);
 

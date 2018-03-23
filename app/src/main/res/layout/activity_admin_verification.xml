@@ -60,15 +60,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="50dp"
         android:weightSum="10">
+
         <Button
             android:id="@+id/ver_UploadExec"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:enabled="false"
-            android:text="Upload"/>
+            android:text="Upload" />
         <Button
             android:id="@+id/ver_Skipbtn"
             android:layout_width="match_parent"

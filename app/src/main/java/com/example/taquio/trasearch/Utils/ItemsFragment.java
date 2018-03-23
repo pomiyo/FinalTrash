@@ -211,7 +211,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
                 //sort for newest to oldest
                 Collections.sort(mPhotos, new Comparator<Photo>() {
                     public int compare(Photo o1, Photo o2) {
-                        return String.valueOf(o2.getDate_created()).compareTo(String.valueOf(o1.getDate_created()));
+                        return String.valueOf(o2.getDate_createdLong()).compareTo(String.valueOf(o1.getDate_createdLong()));
                     }
                 });
 
@@ -261,6 +261,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
                 //add the new photos to the paginated list
                 for(int i = resultsCount; i < resultsCount + iterations; i++){
                     mPaginatedPhotos.add(mPhotos.get(i));
+                    Log.d(TAG, "tan awon: " + mPaginatedPhotos.get(i).getPhoto_description());
                 }
 
                 resultsCount = resultsCount + iterations;

@@ -14,14 +14,14 @@
     </RelativeLayout>
 
 
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:layout_below="@+id/relativee1">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
     <RelativeLayout
         android:layout_width="wrap_content"

@@ -1,4 +1,5 @@
-package com.example.taquio.trasearch.Utils;
+package com.example.taquio.trasearch.Samok;
+
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,24 +14,22 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.BusinessHome.BusinessHome;
-import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
-import com.example.taquio.trasearch.Models.Report;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
-import com.example.taquio.trasearch.Samok.EditPostItem;
-import com.example.taquio.trasearch.Samok.HomeActivity2;
-import com.example.taquio.trasearch.Samok.MessageActivity;
-import com.example.taquio.trasearch.Samok.MyProfileActivity;
+import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
+import com.example.taquio.trasearch.Utils.FirebaseMethods;
+import com.example.taquio.trasearch.Utils.Likes;
+import com.example.taquio.trasearch.Utils.SquareImageView;
+import com.example.taquio.trasearch.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,23 +40,19 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
- * Created by Edward on 24/02/2018.
+ * Created by Edward 2018.
  */
 
-public class OtherUserViewPost extends Fragment {
+public class BusViewPostFragment extends Fragment{
 
     private static final String TAG = "ViewPostFragment";
-
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -67,12 +62,11 @@ public class OtherUserViewPost extends Fragment {
     //widgets
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes, mComments;
-    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, dm, mBookmark;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes, mItem;
+    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, mBookmark, dm;
     //vars
     private Photo mPhoto;
     private int mActivityNumber = 0;
-    private Context mContext = getActivity();
     private String photoUsername = "";
     private String profilePhotoUrl = "";
     private GestureDetector mGestureDetector;
@@ -80,8 +74,10 @@ public class OtherUserViewPost extends Fragment {
     private Boolean mLikedByCurrentUser;
     private StringBuilder mUsers;
     private String mLikesString = "";
-    private User mCurrentUser;
-    public OtherUserViewPost(){
+    private User mCurrentUser, thisUser;
+    private Context mContext = getActivity();
+    private RelativeLayout mlayout;
+    public BusViewPostFragment(){
         super();
         setArguments(new Bundle());
     }
@@ -89,9 +85,10 @@ public class OtherUserViewPost extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_usersview_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_busview_post, container, false);
+
         mPostImage = view.findViewById(R.id.post_image);
-        bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
+        bottomNavigationView = view.findViewById(R.id.businessBottomNavViewBar);
         mBackArrow = view.findViewById(R.id.backArrow);
         mBackLabel = view.findViewById(R.id.tvBackLabel);
         mCaption = view.findViewById(R.id.image_caption);
@@ -102,13 +99,13 @@ public class OtherUserViewPost extends Fragment {
         mHeartWhite = view.findViewById(R.id.image_heart);
         mProfileImage = view.findViewById(R.id.profile_photo);
         mLikes = view.findViewById(R.id.image_likes);
-        mBookmark = view.findViewById(R.id.bookmark);
+        mItem = view.findViewById(R.id.item_quantity);
+//        mBookmark = view.findViewById(R.id.bookmark);
+        mlayout = view.findViewById(R.id.messageLayout);
         dm = view.findViewById(R.id.direct_message);
-//        mComment = view.findViewById(R.id.speech_bubble);
-//        mComments = view.findViewById(R.id.image_comments_link);
-
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
-//        mGestureDetector = new GestureDetector(getActivity(), new OtherUserViewPost.GestureListener());
+//        mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
+
         mEllipses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +116,6 @@ public class OtherUserViewPost extends Fragment {
         setupFirebaseAuth();
         setupBottomNavigationView();
 
-
         return view;
     }
     private void displayAlertDialog() {
@@ -127,42 +123,60 @@ public class OtherUserViewPost extends Fragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 //        builder.setTitle("CHOOSE AN ACTION");
         builder.setItems(new CharSequence[]
-                        {"Report"},
+                        {"Update"},
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
                         switch (which) {
                             case 0:
-                                LayoutInflater li = LayoutInflater.from(getContext());
-                                View promptView = li.inflate(R.layout.item_dialog, null);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setView(promptView);
-                                final EditText userInput = (EditText) promptView.findViewById(R.id.dialogDesc);
-                                builder.setCancelable(false);
-                                builder.setPositiveButton("Send", new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        Report report = new Report(userInput.getText().toString(),mPhoto.getImage_path());
+                                Query query1 = myRef.child("Users")
+                                                .orderByChild("userID")
+                                                .equalTo(mPhoto.getUser_id());
+                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
-                                        myRef.child("Reports")
-                                                .child(mPhoto.getUser_id())
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .child("report_details")
-                                                .setValue(report);
-                                        Toast.makeText(getContext(), "Reported", Toast.LENGTH_LONG).show();
+                                            thisUser = singleSnapshot.getValue(User.class);
+
+                                            Intent i = new Intent(getContext(), EditPostItem.class);
+                                            i.putExtra("user", thisUser);
+                                            i.putExtra("photo", mPhoto);
+                                            getContext().startActivity(i);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
                                     }
                                 });
-                                builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                builder.create().show();
                                 break;
+//                            case 1:
+//                                Query query = myRef.child("Photos").child(mPhoto.getPhoto_id());
+//                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+//                                            myRef.child("Photos")
+//                                                    .child(mPhoto.getPhoto_id())
+//                                                    .removeValue();
+//                                            myRef.child("Users_Photos")
+//                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                                    .child(mPhoto.getPhoto_id())
+//                                                    .removeValue();
+//
+//                                        }
+//                                        startActivity(new Intent(getContext(), HomeActivity2.class));
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+//                            break;
                         }
                     }
                 });
@@ -170,6 +184,7 @@ public class OtherUserViewPost extends Fragment {
     }
     private void init(){
         try{
+            //mPhoto = getPhotoFromBundle();
             UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
             Log.d(TAG, "init: GETTING BUNDLE >>>>>>>>>>>>> " +getPhotoFromBundle().getImage_path() );
 
@@ -179,7 +194,7 @@ public class OtherUserViewPost extends Fragment {
 
             Query query = FirebaseDatabase.getInstance().getReference()
                     .child("Photos")
-                    .orderByChild(getString(R.string.field_photo_id))
+                    .orderByKey()
                     .equalTo(photo_id);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -187,14 +202,14 @@ public class OtherUserViewPost extends Fragment {
                     for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
                         Photo newPhoto = new Photo();
                         Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
-
+                        Log.d(TAG, "init: GETTING >> " +singleSnapshot.getValue());
                         newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
                         newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
                         newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                         newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
                         newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                         newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
-//
+
 //                        List<Comment> commentsList = new ArrayList<Comment>();
 //                        for (DataSnapshot dSnapshot : singleSnapshot
 //                                .child(getString(R.string.field_comments)).getChildren()){
@@ -363,13 +378,13 @@ public class OtherUserViewPost extends Fragment {
 //                .child(getString(R.string.field_likes))
 //                .child(newLikeID)
 //                .setValue(like);
-//
 //        myRef.child("Likes")
 //                .child(mPhoto.getUser_id())
 //                .child(newLikeID)
 //                .child(mPhoto.getPhoto_id())
 //                .child("user_id")
 //                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//
 //
 //        mHeart.toggleLike();
 //        getLikesString();
@@ -416,21 +431,26 @@ public class OtherUserViewPost extends Fragment {
 //            mTimestamp.setText("TODAY");
 //        }
         mTimestamp.setText(getDate(mPhoto.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
-        UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-        mUsername.setText(mCurrentUser.getUserName());
-//        mLikes.setText(mLikesString);
-        mCaption.setText(mPhoto.getPhoto_description());
-        mBookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myRef.child("Bookmarks")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child(mPhoto.getPhoto_id())
-                        .child(mPhoto.getUser_id())
-                        .child("photo_post")
-                        .setValue(mPhoto.getImage_path());
-            }
-        });
+//        if(mCurrentUser.getImage().equals("default"))
+//        {
+//            UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "drawable://" );
+//        }else {
+            UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
+            mUsername.setText(mCurrentUser.getUserName());
+//            mLikes.setText(mLikesString);
+            mCaption.setText(mPhoto.getPhoto_description());
+            mItem.setText(mPhoto.getQuantity());
+//        mBookmark.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                myRef.child("Bookmarks")
+//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                        .child(mPhoto.getPhoto_id())
+//                        .child(mPhoto.getUser_id())
+//                        .child("photo_post")
+//                        .setValue(mPhoto.getImage_path());
+//            }
+//        });
         Query query = myRef.child("Users")
                 .orderByChild("userID")
                 .equalTo(mPhoto.getUser_id());
@@ -444,7 +464,7 @@ public class OtherUserViewPost extends Fragment {
                     mProfileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            Intent intent = new Intent(getActivity(), BusMyProfileActivity.class);
                             intent.putExtra(getActivity().getString(R.string.calling_activity),
                                     getActivity().getString(R.string.home_activity));
                             intent.putExtra(getActivity().getString(R.string.intent_user), user);
@@ -454,7 +474,7 @@ public class OtherUserViewPost extends Fragment {
                     mUsername.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+                            Intent intent = new Intent(getActivity(), BusMyProfileActivity.class);
                             intent.putExtra(getActivity().getString(R.string.calling_activity),
                                     getActivity().getString(R.string.home_activity));
                             intent.putExtra(getActivity().getString(R.string.intent_user), user);
@@ -462,6 +482,15 @@ public class OtherUserViewPost extends Fragment {
                         }
                     });
                     dm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getContext(), MessageActivity.class);
+                            i.putExtra("user_id", mPhoto.getUser_id());
+                            i.putExtra("user_name", user.getUserName());
+                            getContext().startActivity(i);
+                        }
+                    });
+                    mlayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
@@ -478,10 +507,7 @@ public class OtherUserViewPost extends Fragment {
 
             }
         });
-
-
-
-
+//        }
 //        mComments.setText("#" + mPhoto.getComments().size());
 //        if(mPhoto.getComments().size() > 0){
 //            mComments.setText("View all " + mPhoto.getComments().size() + " comments");
@@ -505,25 +531,16 @@ public class OtherUserViewPost extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back");
-                if(getTheTag().equals("fromProfile")){
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
+                 if(getTheTag().equals("fromProfile")){
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
                 if(getTheTag().equals("fromHome")){
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    ((HomeActivity2) getActivity()).showLayout();
-                }
+                getActivity().getSupportFragmentManager().popBackStack();
+                ((HomeActivity2) getActivity()).showLayout();
+            }
             }
         });
 
-//        mComment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating back");
-//                mOnCommentThreadSelectedListener.onCommentThreadSelectedListener(mPhoto);
-//
-//            }
-//        });
-//
 //        if(mLikedByCurrentUser){
 //            mHeartWhite.setVisibility(View.GONE);
 //            mHeartRed.setVisibility(View.VISIBLE);
@@ -662,11 +679,6 @@ public class OtherUserViewPost extends Fragment {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-
-       /*
-    ------------------------------------ Firebase ---------------------------------------------
-     */
-
     @Override
     public void onStop() {
         super.onStop();
@@ -700,7 +712,7 @@ public class OtherUserViewPost extends Fragment {
 ////                                &&
 ////                                singleSnapshot.getValue(Like.class).getUser_id()
 ////                                        .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                ){
+//                            ){
 //
 //                            myRef.child("Photos")
 //                                    .child(mPhoto.getPhoto_id())
@@ -742,6 +754,63 @@ public class OtherUserViewPost extends Fragment {
 //            });
 //            return true;
 //        }
+//        @Override
+//        public boolean onDoubleTap(MotionEvent e) {
+//            Log.d(TAG, "onDoubleTap: double tap detected.");
+//
+//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+//            Query query = reference
+//                    .child(getString(R.string.dbname_photos))
+//                    .child(mPhoto.getPhoto_id())
+//                    .child(getString(R.string.field_likes));
+//            query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//
+//                        String keyID = singleSnapshot.getKey();
+//
+//                        //case1: Then user already liked the photo
+//                        if(mLikedByCurrentUser &&
+//                                singleSnapshot.getValue(Like.class).getUser_id()
+//                                        .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+//
+//                            myRef.child(getString(R.string.dbname_photos))
+//                                    .child(mPhoto.getPhoto_id())
+//                                    .child(getString(R.string.field_likes))
+//                                    .child(keyID)
+//                                    .removeValue();
+/////
+//                            myRef.child(getString(R.string.dbname_user_photos))
+//                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                    .child(mPhoto.getPhoto_id())
+//                                    .child(getString(R.string.field_likes))
+//                                    .child(keyID)
+//                                    .removeValue();
+//
+//                            mHeart.toggleLike();
+//                            getLikesString();
+//                        }
+//                        //case2: The user has not liked the photo
+//                        else if(!mLikedByCurrentUser){
+//                            //add new like
+//                            addNewLike();
+//                            break;
+//                        }
+//                    }
+//                    if(!dataSnapshot.exists()){
+//                        //add new like
+//                        addNewLike();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
 
+//            return true;
+//        }
 //    }
 }

@@ -60,7 +60,7 @@ public class NextActivity extends AppCompatActivity {
         mqty = findViewById(R.id.caption);
 
         setupFirebaseAuth();
-
+        setImage();
         ImageView backArrow = findViewById(R.id.ivBackArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class NextActivity extends AppCompatActivity {
             }
         });
 
-        setImage();
+
     }
 
 

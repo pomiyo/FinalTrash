@@ -1,6 +1,5 @@
 package com.example.taquio.trasearch.Utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,16 +19,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taquio.trasearch.Samok.EditPostItem;
-import com.example.taquio.trasearch.Samok.HomeActivity2;
-import com.example.taquio.trasearch.Samok.MessageActivity;
-import com.example.taquio.trasearch.Models.Comment;
-import com.example.taquio.trasearch.Models.Like;
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.Report;
 import com.example.taquio.trasearch.Models.User;
-import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.BusMyProfileActivity;
+import com.example.taquio.trasearch.Samok.EditPostItem;
+import com.example.taquio.trasearch.Samok.HomeActivity2;
+import com.example.taquio.trasearch.Samok.MessageActivity;
+import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,26 +39,23 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
 
 
 /**
  * Created by Edward 2018.
  */
 
-public class MainFeedListAdapter extends ArrayAdapter<Photo> {
+public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
 
 
-    private static final String TAG = "MainFeedListAdapter";
+    private static final String TAG = "BusinessMainFeedListAda";
     OnLoadMoreItemsListener mOnLoadMoreItemsListener;
     private LayoutInflater mInflater;
     private int mLayoutResource;
@@ -72,7 +67,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
 
-    public MainFeedListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Photo> objects) {
+    public BusinessMainFeedListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Photo> objects) {
         super(context, resource, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLayoutResource = resource;
@@ -173,7 +168,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 //        getLikesString(holder);
 
         //set the caption
-
+        holder.caption.setText(getItem(position).getPhoto_description());
 
         //set the comment
 //        List<Comment> comments = getItem(position).getComments();
@@ -200,8 +195,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 //        }else{
 //            holder.timeDetla.setText("TODAY");
 //        }
-        holder.caption.setText(getItem(position).getPhoto_description());
-        holder.timeDetla.setText(getDate(holder.photo.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
+            holder.timeDetla.setText(getDate(holder.photo.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
 //        if(holder.photo.getUser_id().equals(currentUser.getUid())){
 //            holder.dm.setVisibility(View.GONE);
 //            holder.dm.setEnabled(false);
@@ -209,6 +203,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         //set the profile image
         final ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(getItem(position).getImage_path(), holder.image);
+
 
         //get the profile image and username
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -231,7 +226,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             Log.d(TAG, "onClick: navigating to profile of: " +
                                     holder.user.getUserName());
 
-                            Intent intent = new Intent(mContext, MyProfileActivity.class);
+                            Intent intent = new Intent(mContext, BusMyProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
                                     mContext.getString(R.string.home_activity));
                             intent.putExtra(mContext.getString(R.string.intent_user), holder.user);
@@ -242,24 +237,23 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                         @Override
                         public void onClick(View v) {
                             
-                            ((HomeActivity2)mContext).onImageSelected(getItem(position),0, holder.photo.getUser_id());
+                            ((BusinessHome)mContext).onImageSelected(getItem(position),0, holder.photo.getUser_id());
                            //another thing?
-                            ((HomeActivity2)mContext).hideLayout();
+                            ((BusinessHome)mContext).hideLayout();
                         }
                     });
-                    holder.bookmark.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            mReference.child("Bookmarks")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(holder.photo.getPhoto_id())
-                                    .child(holder.photo.getUser_id())
-                                    .child("photo_post")
-                                    .setValue(holder.photo.getImage_path());
-
-                        }
-                    });
+//                    holder.bookmark.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            mReference.child("Bookmarks")
+//                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                    .child(holder.photo.getPhoto_id())
+//                                    .child(holder.photo.getUser_id())
+//                                    .child("photo_post")
+//                                    .setValue(holder.photo.getImage_path());
+//
+//                        }
+//                    });
                     imageLoader.displayImage(singleSnapshot.getValue(User.class).getImage(),
                             holder.mprofileImage);
                     holder.mprofileImage.setOnClickListener(new View.OnClickListener() {
@@ -268,7 +262,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             Log.d(TAG,  "onClick: navigating to profile of: " +
                                     holder.user.getUserName());
 
-                            Intent intent = new Intent(mContext, MyProfileActivity.class);
+                            Intent intent = new Intent(mContext, BusMyProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
                                     mContext.getString(R.string.home_activity));
                             intent.putExtra(mContext.getString(R.string.intent_user), holder.user);
@@ -320,15 +314,15 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             mContext.startActivity(i);
                         }
                     });
-//                    holder.messageLayout.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent i = new Intent(mContext, MessageActivity.class);
-//                            i.putExtra("user_id", holder.photo.getUser_id());
-//                            i.putExtra("user_name", holder.user.getUserName());
-//                            mContext.startActivity(i);
-//                        }
-//                    });
+                    holder.messageLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(mContext, MessageActivity.class);
+                            i.putExtra("user_id", holder.photo.getUser_id());
+                            i.putExtra("user_name", holder.user.getUserName());
+                            mContext.startActivity(i);
+                        }
+                    });
                 }
 
             }
@@ -351,14 +345,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
         return convertView;
     }
-
-
     private void displayAlertDialog(final ViewHolder holder) {
 
         if(holder.photo.getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            Log.d(TAG, "kuhaon ang para edit: " + holder.user);
-            Log.d(TAG, "kuhaon ang para edit: " + holder.photo);
+
             builder.setItems(new CharSequence[]
                             {"Update"},
                     new DialogInterface.OnClickListener() {
