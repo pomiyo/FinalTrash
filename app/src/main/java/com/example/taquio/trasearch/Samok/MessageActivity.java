@@ -218,15 +218,11 @@ public class  MessageActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseReference mSeen = mRootRef.child("Chat")
-                .child(mCurrentUserId)
-                .child(mChatUser)
-                .child("seen");
-        ValueEventListener valueEventListener = mSeen.addValueEventListener(new ValueEventListener() {
+
+        mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.d(TAG, "onDataChange: Else" + dataSnapshot.getValue().toString());
-                if (!dataSnapshot.getValue(Boolean.class))
+                if (!dataSnapshot.hasChild(mChatUser))
                 {
                     Log.d(TAG, "onDataChange: Else");
                     Map chatAddMap = new HashMap();
@@ -257,6 +253,41 @@ public class  MessageActivity extends AppCompatActivity {
 
             }
         });
+//        ValueEventListener valueEventListener = mSeen.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                Log.d(TAG, "onDataChange: Else" + dataSnapshot.getValue().toString());
+//                if (!dataSnapshot.getValue(Boolean.class))
+//                {
+//                    Log.d(TAG, "onDataChange: Else");
+//                    Map chatAddMap = new HashMap();
+//                    chatAddMap.put("seen", true);
+//                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+//
+//                    Map chatUserMap = new HashMap();
+//                    chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
+////                    chatUserMap.put("Chat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+//
+//                    mRootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+//                        @Override
+//                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//
+//                            if (databaseError != null) {
+//
+//                                Log.d("CHAT_LOG", databaseError.getMessage());
+//
+//                            }
+//
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
         mChatSendBtn.setOnClickListener(new View.OnClickListener() {

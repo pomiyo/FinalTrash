@@ -48,7 +48,12 @@
         </activity>
 
         <!-- HOME ACTIVITY -->
-        <activity android:name=".Samok.HomeActivity2" />
+        <activity android:name=".Samok.HomeActivity2" >
+            <intent-filter>
+                <action android:name="com.example.taqio" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".Samok.FireBaseMessagingService">
             <intent-filter>
@@ -73,11 +78,6 @@
         <activity android:name=".Samok.UserProfileActivity" />
 
         <activity android:name=".Profile.ProfileActivity">
-            <intent-filter>
-                <action android:name="com.example.taquio.trasearch6_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity android:name=".Nearby.NearbyActivity" />
 
