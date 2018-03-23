@@ -38,6 +38,7 @@
             <include layout="@layout/layout_business_center_viewpager"/>
 
         </LinearLayout>
+        
         <LinearLayout
             android:id="@+id/bProfileRel2"
             android:layout_width="match_parent"
