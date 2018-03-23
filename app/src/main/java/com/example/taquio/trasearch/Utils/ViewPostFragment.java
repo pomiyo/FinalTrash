@@ -109,6 +109,9 @@ public class ViewPostFragment extends Fragment{
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
 //        mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
 
+
+        setupFirebaseAuth();
+        setupBottomNavigationView();
         mEllipses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,9 +119,6 @@ public class ViewPostFragment extends Fragment{
                 displayAlertDialog();
             }
         });
-        setupFirebaseAuth();
-        setupBottomNavigationView();
-
         return view;
     }
     private void displayAlertDialog() {
@@ -446,12 +446,12 @@ public class ViewPostFragment extends Fragment{
         mBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String bookmark_id = myRef.push().getKey();
                 myRef.child("Bookmarks")
+                        .child(bookmark_id)
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child(mPhoto.getPhoto_id())
-                        .child(mPhoto.getUser_id())
-                        .child("photo_post")
-                        .setValue(mPhoto.getImage_path());
+                        .setValue(mPhoto.getPhoto_id());
             }
         });
         Query query = myRef.child("Users")

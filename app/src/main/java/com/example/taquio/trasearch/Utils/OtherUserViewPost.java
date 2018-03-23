@@ -109,6 +109,9 @@ public class OtherUserViewPost extends Fragment {
 
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
 //        mGestureDetector = new GestureDetector(getActivity(), new OtherUserViewPost.GestureListener());
+
+        setupFirebaseAuth();
+        setupBottomNavigationView();
         mEllipses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,9 +119,6 @@ public class OtherUserViewPost extends Fragment {
                 displayAlertDialog();
             }
         });
-        setupFirebaseAuth();
-        setupBottomNavigationView();
-
 
         return view;
     }
@@ -144,12 +144,11 @@ public class OtherUserViewPost extends Fragment {
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {
-                                        Report report = new Report(userInput.getText().toString(),mPhoto.getImage_path());
+                                        String report_id = myRef.push().getKey();
+                                        Report report = new Report(userInput.getText().toString(),report_id, mPhoto.getPhoto_id());
 
                                         myRef.child("Reports")
-                                                .child(mPhoto.getUser_id())
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .child("report_details")
                                                 .setValue(report);
                                         Toast.makeText(getContext(), "Reported", Toast.LENGTH_LONG).show();
                                     }
@@ -423,12 +422,11 @@ public class OtherUserViewPost extends Fragment {
         mBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String bookmark_id = myRef.push().getKey();
                 myRef.child("Bookmarks")
+                        .child(bookmark_id)
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child(mPhoto.getPhoto_id())
-                        .child(mPhoto.getUser_id())
-                        .child("photo_post")
-                        .setValue(mPhoto.getImage_path());
+                        .setValue(mPhoto.getPhoto_id());
             }
         });
         Query query = myRef.child("Users")

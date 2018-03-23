@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.Models.Bookmark;
 import com.example.taquio.trasearch.Samok.EditPostItem;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
 import com.example.taquio.trasearch.Samok.MessageActivity;
@@ -251,12 +252,41 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                         @Override
                         public void onClick(View v) {
 
-                            mReference.child("Bookmarks")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(holder.photo.getPhoto_id())
-                                    .child(holder.photo.getUser_id())
-                                    .child("photo_post")
-                                    .setValue(holder.photo.getImage_path());
+                            FirebaseDatabase.getInstance().getReference().child("Bookmarks")
+                                    .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                                        for (DataSnapshot snap : ds.getChildren()){
+                                            if(snap.getValue(Bookmark.class).getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                                String bookmark_id = mReference.push().getKey();
+//                                                if(snap.hasChild(holder.photo.getPhoto_id())){
+//
+//                                                    mReference.child("Bookmarks")
+//                                                            .child(ds.getValue(Bookmark.class).getBookmark_id())
+//                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                                            .removeValue();
+//
+//                                                }else{
+                                                    mReference.child("Bookmarks")
+                                                            .child(bookmark_id)
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .setValue(holder.photo.getPhoto_id());
+//                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                    }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
 
                         }
                     });
@@ -398,12 +428,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                                     {
                                         public void onClick(DialogInterface dialog, int id)
                                         {
-                                            Report report = new Report(userInput.getText().toString(),holder.photo.getImage_path());
+                                            String report_id = mReference.push().getKey();
+                                            Report report = new Report(userInput.getText().toString(),report_id, holder.photo.getPhoto_id().toString());
 
                                             mReference.child("Reports")
-                                                    .child(holder.photo.getUser_id())
                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                    .child("report_details")
                                                     .setValue(report);
                                         }
                                     });
