@@ -286,7 +286,7 @@ public class GuestSearch extends AppCompatActivity {
 //                    if (dataSnapshot.hasChild("userType"))
 //                    {
                         String userType = dataSnapshot.getValue().toString();
-                        if(userType.equals("free"))
+                        if(userType.equals("non-business"))
                         {
                             startActivity(new Intent(GuestSearch.this,HomeActivity2.class));
                             finish();
