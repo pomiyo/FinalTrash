@@ -52,7 +52,7 @@
 
         <service android:name=".Samok.FireBaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
@@ -73,11 +73,6 @@
         <activity android:name=".Samok.UserProfileActivity" />
 
         <activity android:name=".Profile.ProfileActivity">
-            <intent-filter>
-                <action android:name="com.example.taquio.trasearch_TARGET_NOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity android:name=".Nearby.NearbyActivity" />
 
@@ -96,7 +91,8 @@
         <activity android:name=".Utils.Donate" />
         <activity
             android:name=".Samok.ViewProfile"
-            android:parentActivityName=".Profile.ProfileActivity" />
+            android:parentActivityName=".Profile.ProfileActivity" >
+        </activity>
         <activity
             android:name=".Messages.MessagesActivity"
             android:parentActivityName=".Samok.HomeActivity2" />
@@ -107,7 +103,12 @@
         <activity
             android:name=".Samok.ChooseLayout"
             android:parentActivityName=".Samok.GuestSearch" />
-        <activity android:name=".Samok.MyProfileActivity" />
+        <activity android:name=".Samok.MyProfileActivity" >
+            <intent-filter>
+                <action android:name="com.example.taquio.Samok.Trasearch_TARGET_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Samok.EditProfileActivity"
             android:parentActivityName=".Samok.MyProfileActivity" />
