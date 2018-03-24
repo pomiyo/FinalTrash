@@ -42,7 +42,7 @@ public class ForVerification extends AppCompatActivity {
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser().getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("ForVerification");
 
         ver_Skipbtn.setOnClickListener(new View.OnClickListener() {
             @Override

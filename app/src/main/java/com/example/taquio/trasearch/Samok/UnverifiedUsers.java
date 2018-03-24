@@ -178,7 +178,7 @@ public class UnverifiedUsers extends Fragment {
 //                                            viewHolder.setuserOnline(false);
 //                                        }
                                 }
-                                else if(userType.equals("free"))
+                                else if(userType.equals("non-business"))
                                 {
                                     Log.d(TAG, "onDataChange: Free Type");
                                     String email = dataSnapshot.child("Email").getValue().toString();

@@ -33,7 +33,7 @@ public class AdminVerification extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_verification);
         mAuth = FirebaseAuth.getInstance();
-        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        userDatabase = FirebaseDatabase.getInstance().getReference().child("ForVerification");
 
         ver_ID = findViewById(R.id.ver_ID);
         ver_Selfie = findViewById(R.id.ver_Selfie);

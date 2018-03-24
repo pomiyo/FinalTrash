@@ -41,6 +41,7 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
                 for(DataSnapshot singleSnapshot:dataSnapshot.getChildren())
                 {
                     user[0] = singleSnapshot.getValue(User.class);
+                    Log.d(TAG, "onDataChange: "+user[0]);
                 }
             }
 
