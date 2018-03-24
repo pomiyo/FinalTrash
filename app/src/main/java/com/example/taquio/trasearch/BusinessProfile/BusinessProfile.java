@@ -1,5 +1,6 @@
 package com.example.taquio.trasearch.BusinessProfile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.BusMyProfileActivity;
+import com.example.taquio.trasearch.Samok.HomeActivity2;
+import com.example.taquio.trasearch.Samok.MyProfileActivity;
+import com.example.taquio.trasearch.Samok.SettingsActivity;
 import com.example.taquio.trasearch.Utils.BusinessBottomNavigationViewHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,9 +51,11 @@ public class BusinessProfile extends AppCompatActivity {
     TextView tvName, tvEmail, tvMobile, tvPhone, tvLocation;
     Button btnEdit, btnBuy, btnSell;
     ImageView verify, notVerify;
+    private ImageView mBackArrow, settings;
     CircleImageView profPicImage;
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
+
     String user_id;
     String verifier;
     @Override
@@ -56,6 +64,7 @@ public class BusinessProfile extends AppCompatActivity {
         setContentView(R.layout.business_activity_profile2);
 
         setupBottomNavigationView();
+
 
 //        setupViewPager();
         tvName = (TextView) findViewById(R.id.busEditUser);
@@ -66,7 +75,31 @@ public class BusinessProfile extends AppCompatActivity {
         btnEdit = (Button) findViewById(R.id.busBtnEdit);
         btnSell = (Button) findViewById(R.id.btnSell);
         btnBuy = (Button) findViewById(R.id.btnBuy);
+        mBackArrow = findViewById(R.id.backArrow);
+        settings = findViewById(R.id.accSetting);
 
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                if(getStringTag().equals("noAction")){
+//                    getApplicationContext()getSupportFragmentManager().popBackStack();
+//                    (BusMyProfileActivity);
+                    startActivity(new Intent(getApplicationContext(),BusinessHome.class));
+                }
+//                if(getStringTag().equals("action")){
+//                    getApplicationContext().getApplicationContext().getSupportFragmentManager().popBackStack();
+//                    getApplicationContext().finish();
+//                }
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, SettingsActivity.class));
+
+            }
+        });
         verify = (ImageView) findViewById(R.id.imVerify);
         notVerify = (ImageView) findViewById(R.id.imNotVerify);
         profPicImage = (CircleImageView) findViewById(R.id.busImageView10);
@@ -147,7 +180,14 @@ public class BusinessProfile extends AppCompatActivity {
         });
 //        setupViewPager(mViewPager);
     }
-
+    private String getStringTag(){
+        Bundle bundle = getIntent().getBundleExtra("Action");
+        if(bundle != null){
+            return bundle.getString("Action");
+        }else{
+            return null;
+        }
+    }
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new BusinessBuyFragment(), "Buy");

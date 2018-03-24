@@ -9,12 +9,11 @@ import android.os.Parcelable;
 
 public class Bookmark implements Parcelable {
 
-    private String bookmark_id, photo_id, user_id;
+    private String photo_id, user_id;
 
-    Bookmark(){}
+    public Bookmark(String photo_id, String uid){}
 
     protected Bookmark(Parcel in) {
-        bookmark_id = in.readString();
         photo_id = in.readString();
         user_id = in.readString();
     }
@@ -34,18 +33,9 @@ public class Bookmark implements Parcelable {
     @Override
     public String toString() {
         return "Bookmark{" +
-                "bookmark_id='" + bookmark_id + '\'' +
-                ", photo_id='" + photo_id + '\'' +
+                "photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 '}';
-    }
-
-    public String getBookmark_id() {
-        return bookmark_id;
-    }
-
-    public void setBookmark_id(String bookmark_id) {
-        this.bookmark_id = bookmark_id;
     }
 
     public String getPhoto_id() {
@@ -70,9 +60,8 @@ public class Bookmark implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(bookmark_id);
-        dest.writeString(photo_id);
-        dest.writeString(user_id);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(photo_id);
+        parcel.writeString(user_id);
     }
 }

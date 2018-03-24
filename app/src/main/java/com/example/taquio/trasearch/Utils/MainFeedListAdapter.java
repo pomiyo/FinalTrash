@@ -68,6 +68,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
     private Context mContext;
     private DatabaseReference mReference;
     private String currentUsername = "";
+    private boolean isBookmark = false;
 
     //firebase
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -225,6 +226,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                     Log.d(TAG, "onDataChange: found user: "
                             + singleSnapshot.getValue(User.class).getUserName());
 
+                    holder.user = singleSnapshot.getValue(User.class);
+
                     holder.username.setText(singleSnapshot.getValue(User.class).getUserName());
                     holder.username.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -248,48 +251,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             ((HomeActivity2)mContext).hideLayout();
                         }
                     });
-                    holder.bookmark.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
 
-                            FirebaseDatabase.getInstance().getReference().child("Bookmarks")
-                                    .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    for(DataSnapshot ds: dataSnapshot.getChildren()){
-                                        for (DataSnapshot snap : ds.getChildren()){
-                                            if(snap.getValue(Bookmark.class).getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                                                String bookmark_id = mReference.push().getKey();
-//                                                if(snap.hasChild(holder.photo.getPhoto_id())){
-//
-//                                                    mReference.child("Bookmarks")
-//                                                            .child(ds.getValue(Bookmark.class).getBookmark_id())
-//                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                                            .removeValue();
-//
-//                                                }else{
-                                                    mReference.child("Bookmarks")
-                                                            .child(bookmark_id)
-                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                            .setValue(holder.photo.getPhoto_id());
-//                                                }
-                                            }
-                                        }
-
-                                    }
-
-                                    }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
-                        }
-                    });
                     imageLoader.displayImage(singleSnapshot.getValue(User.class).getImage(),
                             holder.mprofileImage);
                     holder.mprofileImage.setOnClickListener(new View.OnClickListener() {
@@ -306,18 +268,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                         }
                     });
 
-
-                    holder.user = singleSnapshot.getValue(User.class);
-//                    holder.comment.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            ((HomeActivity2)mContext).onCommentThreadSelected(getItem(position),
-//                                    mContext.getString(R.string.home_activity));
-////
-////                            //another thing?
-//                            ((HomeActivity2)mContext).hideLayout();
-//                        }
-//                    });
                 }
 
             }
@@ -327,6 +277,65 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
             }
         });
+
+
+        holder.bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isBookmark = true;
+                if(isBookmark){
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                               if(dataSnapshot==null){
+//                                        String bookmark_id = mReference.push().getKey();
+//                                            mReference.child("Bookmarks")
+//                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                                    .child(holder.photo.getPhoto_id())
+//                                                    .child("bookmark_id")
+//                                                    .setValue(bookmark_id);
+//                                        }
+                                    if(dataSnapshot!=null){
+
+                                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                            Log.d(TAG, "get childe: "+ ds.getValue());
+
+                                            if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(ds.getKey())) {
+
+                                                if(!ds.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getKey().equals(holder.photo.getPhoto_id())){
+                                                    Log.d(TAG, "hasChild: " + holder.photo.getPhoto_id());
+                                                    String bookmark_id = mReference.push().getKey();
+                                                    mReference.child("Bookmarks")
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(holder.photo.getPhoto_id())
+                                                            .child("bookmark_id")
+                                                            .setValue(bookmark_id);
+                                                    isBookmark=false;
+                                                }else{
+                                                    mReference.child("Bookmarks")
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(holder.photo.getPhoto_id())
+                                                            .removeValue();
+                                                    isBookmark=false;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+
+            }
+        });
+
 
         //get the user object
         Query userQuery = mReference
@@ -350,15 +359,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             mContext.startActivity(i);
                         }
                     });
-//                    holder.messageLayout.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent i = new Intent(mContext, MessageActivity.class);
-//                            i.putExtra("user_id", holder.photo.getUser_id());
-//                            i.putExtra("user_name", holder.user.getUserName());
-//                            mContext.startActivity(i);
-//                        }
-//                    });
                 }
 
             }
@@ -429,11 +429,21 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                                         public void onClick(DialogInterface dialog, int id)
                                         {
                                             String report_id = mReference.push().getKey();
-                                            Report report = new Report(userInput.getText().toString(),report_id, holder.photo.getPhoto_id().toString());
-
                                             mReference.child("Reports")
                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                    .setValue(report);
+                                                    .child(holder.photo.getPhoto_id())
+                                                    .child("message_report")
+                                                    .setValue(userInput.getText().toString());
+                                            mReference.child("Reports")
+                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    .child(holder.photo.getPhoto_id())
+                                                    .child("report_id")
+                                                    .setValue(report_id);
+                                            mReference.child("Reports")
+                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    .child(holder.photo.getPhoto_id())
+                                                    .child("reported_user_id")
+                                                    .setValue(holder.photo.getUser_id());
                                         }
                                     });
                                     builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
