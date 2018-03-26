@@ -73,7 +73,7 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: closing the gallery fragment.");
-
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 

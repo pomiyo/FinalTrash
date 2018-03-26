@@ -22,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -76,34 +78,34 @@ public class EditPostItem extends AppCompatActivity {
                             UniversalImageLoader.setImage(muser.getImage(),profphoto, null,"");
                             UniversalImageLoader.setImage(mphoto.getImage_path(),postedphoto, null,"");
                             username.setText(muser.getUserName());
-                            photo_desc.setText(mphoto.getPhoto_description());
-                            qty.setText(mphoto.getQuantity());
 
-                            captionHolder = photo_desc.getText().toString();
-                            qtyholder = qty.getText().toString();
-
-                            final Photo photo = new Photo(photo_desc.getText().toString(), mphoto.getDate_createdLong()
-                                                    ,mphoto.getImage_path(), mphoto.getPhoto_id(),mphoto.getUser_id(),qty.getText().toString());
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(!photo_desc.equals(mphoto.getPhoto_description()))
-//                {
+                Map postDetails = new HashMap();
+                postDetails.put("date_created",mphoto.getDate_createdLong());
+                postDetails.put("image_path",mphoto.getImage_path());
+                postDetails.put("photo_description",photo_desc.getText().toString());
+                postDetails.put("photo_id", mphoto.getPhoto_id());
+                postDetails.put("quantity",qty.getText().toString());
+                postDetails.put("user_id",mphoto.getUser_id());
+
 
                     mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
                             .child(mphoto.getPhoto_id())
-                            .setValue(photo);
+                            .setValue(postDetails);
 
                     mReference.child("Photos")
                             .child(mphoto.getPhoto_id())
-                            .setValue(photo);
+                            .child(mphoto.getUser_id())
+                            .setValue("userID");
 
-                    Log.d(TAG, "Na change: " + photo_desc.getText().toString());
-                    Toast.makeText(getApplicationContext(),"Successfully Edited!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(context, HomeActivity2.class));
-//                }
+                    Log.d(TAG, "Na change: " + postDetails);
+                    Toast.makeText(EditPostItem.this,"Successfully Edited!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(EditPostItem.this, HomeActivity2.class));
+
             }
         });
 
