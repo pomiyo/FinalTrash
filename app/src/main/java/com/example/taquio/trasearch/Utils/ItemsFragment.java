@@ -59,6 +59,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
         Log.d(TAG, "ElasticListView: updating list view...");
 
         getKeys();
+        getPhotos();
     }
 
     @Override
@@ -105,9 +106,6 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     Log.d(TAG, "getKeys: found user: " + singleSnapshot
                             .getChildren());
-
-//                    mFollowing.add(singleSnapshot
-//                            .child(getString(R.string.field_user_id)).getValue().toString());
                     mAllUsers.add(singleSnapshot.getKey());
                 }
 
@@ -135,9 +133,9 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "ItemsFragment check key: " + dataSnapshot.getValue());
                     for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
 
-                        Log.d(TAG, "onDataChange: oyyyy" + singleSnapshot.getValue());
                         Photo newPhoto = new Photo();
                         Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
@@ -149,17 +147,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
                         newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
                         Log.d(TAG, "getPhotos: photo: " + newPhoto.getPhoto_id());
-//                        List<Comment> commentsList = new ArrayList<Comment>();
-//                        for (DataSnapshot dSnapshot : singleSnapshot
-//                                .child(getString(R.string.field_comments)).getChildren()){
-//                            Map<String, Object> object_map = (HashMap<String, Object>) dSnapshot.getValue();
-//                            Comment comment = new Comment();
-//                            comment.setUser_id(object_map.get(getString(R.string.field_user_id)).toString());
-//                            comment.setComment(object_map.get(getString(R.string.field_comment)).toString());
-//                            comment.setDate_created(object_map.get(getString(R.string.field_date_created)).toString());
-//                            commentsList.add(comment);
-//                        }
-//                        newPhoto.setComments(commentsList);
+
                         mPhotos.add(newPhoto);
                     }
                     if(count >= mAllUsers.size() - 1){
@@ -179,9 +167,6 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
     }
 
     private void clearAll(){
-        if(mFollowing != null){
-            mFollowing.clear();
-        }
         if(mPhotos != null){
             mPhotos.clear();
             if(adapter != null){
@@ -266,6 +251,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
 
                 resultsCount = resultsCount + iterations;
                 adapter.notifyDataSetChanged();
+
             }
         }catch (IndexOutOfBoundsException e){
             Log.e(TAG, "displayPhotos: IndexOutOfBoundsException:" + e.getMessage() );

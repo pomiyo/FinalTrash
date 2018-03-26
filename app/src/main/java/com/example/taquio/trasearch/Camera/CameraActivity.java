@@ -79,7 +79,6 @@ public class CameraActivity extends AppCompatActivity {
 
 
     }
-
     public int getTask(){
         Log.d(TAG, "getTask: TASK:" +getIntent().getFlags()+"");
         return getIntent().getFlags();
@@ -133,15 +132,5 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "checkPermissions: \n Permission was granted for: " + permission);
             return true;
         }
-    }
-
-    private void setupBottomNavigationView() {
-        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
     }
 }

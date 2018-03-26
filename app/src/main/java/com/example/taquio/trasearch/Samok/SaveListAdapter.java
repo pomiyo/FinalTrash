@@ -119,8 +119,8 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
         else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.photo = getItem(position);
-        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
+//        holder.photo = getItem(position);
+//        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
         holder.users = new StringBuilder();
         holder.liker = new Likes(holder.likeblack, holder.likegreen);
 
