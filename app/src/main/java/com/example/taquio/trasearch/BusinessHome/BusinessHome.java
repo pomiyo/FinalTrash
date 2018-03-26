@@ -17,10 +17,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.taquio.trasearch.Guest.GuestHome;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Samok.ActivityLogin;
@@ -63,6 +65,7 @@ public class BusinessHome extends AppCompatActivity
     private ViewPager mViewPager;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private TextView notifications_badgeText;
+    private EditText searchText;
     @Override
     public void onLoadMoreItems() {
         Log.d(TAG, "onLoadMoreItems: displaying more photos");
@@ -88,6 +91,15 @@ public class BusinessHome extends AppCompatActivity
         initImageLoader();
         setupBottomNavigationView();
         setupViewPager();
+
+        searchText = (EditText) findViewById(R.id.searchV);
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BusinessHome.this, GuestHome.class);
+                startActivity(i);
+            }
+        });
 
         floating = (FloatingActionButton) findViewById(R.id.floatingButton);
 
@@ -178,8 +190,8 @@ public class BusinessHome extends AppCompatActivity
     }
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BusinessVideoFragment());
-        adapter.addFragment(new BusinessArticleFragment());
+//        adapter.addFragment(new BusinessVideoFragment());
+//        adapter.addFragment(new BusinessArticleFragment());
         adapter.addFragment(new BusinessItemsFragment());
         ViewPager viewPager = (ViewPager) findViewById(R.id.businessHomeContainer);
         viewPager.setAdapter(adapter);
@@ -187,9 +199,9 @@ public class BusinessHome extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.busHomeTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Videos");
-        tabLayout.getTabAt(1).setText("Articles");
-        tabLayout.getTabAt(2).setText("Items");
+//        tabLayout.getTabAt(0).setText("Videos");
+//        tabLayout.getTabAt(1).setText("Articles");
+        tabLayout.getTabAt(0).setText("Items");
     }
 
     private void setupBottomNavigationView() {
