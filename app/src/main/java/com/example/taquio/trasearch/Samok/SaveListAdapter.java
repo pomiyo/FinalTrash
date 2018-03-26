@@ -119,12 +119,12 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
         else{
             holder = (ViewHolder) convertView.getTag();
         }
+
+        getCurrentUsername();
 //        holder.photo = getItem(position);
 //        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
         holder.users = new StringBuilder();
         holder.liker = new Likes(holder.likeblack, holder.likegreen);
-
-        getCurrentUsername();
         getLikesString(holder);
 
         holder.caption.setText(getItem(position).getPhoto_description());
