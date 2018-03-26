@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +46,7 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
                         .setContentTitle(notification_title)
                         .setContentText(notification_message);
 
-        mUserDatabase.child(from_user_id).addValueEventListener(new ValueEventListener() {
+        mUserDatabase.child(from_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String deviceToken = dataSnapshot.child("device_token").getValue().toString(),
@@ -83,7 +84,6 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
                 mBuilder.setContentIntent(resultPendingIntent);
-
                 int mNotificationId = (int) System.currentTimeMillis();
                 NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
@@ -94,5 +94,6 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
 
             }
         });
+
     }
 }
