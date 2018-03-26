@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.Models.Bookmark;
 import com.example.taquio.trasearch.Samok.EditPostItem;
 import com.example.taquio.trasearch.Samok.HomeActivity2;
 import com.example.taquio.trasearch.Samok.MessageActivity;
@@ -31,6 +32,7 @@ import com.example.taquio.trasearch.Models.Report;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.SaveListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -67,6 +69,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
     private Context mContext;
     private DatabaseReference mReference;
     private String currentUsername = "";
+    private boolean isBookmark = false;
 
     //firebase
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -105,8 +108,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
             holder.image = convertView.findViewById(R.id.post_image);
             holder.caption = convertView.findViewById(R.id.image_caption);
             holder.timeDetla = convertView.findViewById(R.id.image_time_posted);
-            holder.likegreen = convertView.findViewById(R.id.image_heart_red);
-            holder.likeblack = convertView.findViewById(R.id.image_heart);
+//            holder.red = convertView.findViewById(R.id.bookmarkfill);
+//            holder.nored = convertView.findViewById(R.id.bookmarknofill);
             holder.likes = convertView.findViewById(R.id.image_likes);
             holder.ellipsis = convertView.findViewById(R.id.ivEllipses);
             holder.mprofileImage = convertView.findViewById(R.id.profile_photo);
@@ -122,90 +125,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         }
 
         holder.photo = getItem(position);
-//        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
-        holder.users = new StringBuilder();
-//        holder.liker = new Likes(holder.likeblack, holder.likegreen);
-//        final String newLikeID = mReference.push().getKey();
-//        final Like like = new Like();
-//        like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-//
-//        holder.likeblack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.mProceslike =true;
-//                mReference.child("Photos")
-//                        .child(holder.photo.getPhoto_id())
-//                        .child(mContext.getString(R.string.field_likes))
-//                        .addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                if(holder.mProceslike){
-//                                    if(dataSnapshot.child(newLikeID).hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-//                                        mReference.child("Photos")
-//                                                .child(holder.photo.getPhoto_id())
-//                                                .child(mContext.getString(R.string.field_likes))
-//                                                .child(newLikeID)
-//                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                                        holder.mProceslike = false;
-//                                    }else{
-//                                        mReference.child("Photos")
-//                                                .child(holder.photo.getPhoto_id())
-//                                                .child(mContext.getString(R.string.field_likes))
-//                                                .child(newLikeID)
-//                                                .setValue(like);
-//                                    }
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//            }
-//        });
-//        holder.setPhotoLike(newLikeID, holder.photo, holder.likeblack);
-        //get the current users username (need for checking likes string)
-        getCurrentUsername();
-
-        //get likes string
-//        getLikesString(holder);
-
-        //set the caption
-
-
-        //set the comment
-//        List<Comment> comments = getItem(position).getComments();
-//        holder.comments.setText("#" + comments.size());
-//        holder.comments.setText("View all " + comments.size() + " comments");
-//        holder.comments.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getPhoto_id());
-//                ((HomeActivity2)mContext).onCommentThreadSelected(getItem(position),
-//                        mContext.getString(R.string.home_activity));
-////
-////                //going to need to do something else?
-//                ((HomeActivity2)mContext).hideLayout();
-//                ((HomeActivity2) mContext).finish();
-//            }
-//        });
-
-
-        //set the time it was posted
-//        String timestampDifference = getTimestampDifference(getItem(position));
-//        if(!timestampDifference.equals("0")){
-//            holder.timeDetla.setText(timestampDifference + " DAYS AGO");
-//        }else{
-//            holder.timeDetla.setText("TODAY");
-//        }
         holder.caption.setText(getItem(position).getPhoto_description());
         holder.timeDetla.setText(getDate(holder.photo.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
-//        if(holder.photo.getUser_id().equals(currentUser.getUid())){
-//            holder.dm.setVisibility(View.GONE);
-//            holder.dm.setEnabled(false);
-//        }
+
+
+
         //set the profile image
         final ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(getItem(position).getImage_path(), holder.image);
@@ -223,6 +147,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
                     Log.d(TAG, "onDataChange: found user: "
                             + singleSnapshot.getValue(User.class).getUserName());
+
+                    holder.user = singleSnapshot.getValue(User.class);
 
                     holder.username.setText(singleSnapshot.getValue(User.class).getUserName());
                     holder.username.setOnClickListener(new View.OnClickListener() {
@@ -247,19 +173,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             ((HomeActivity2)mContext).hideLayout();
                         }
                     });
-                    holder.bookmark.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
 
-                            mReference.child("Bookmarks")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(holder.photo.getPhoto_id())
-                                    .child(holder.photo.getUser_id())
-                                    .child("photo_post")
-                                    .setValue(holder.photo.getImage_path());
-
-                        }
-                    });
                     imageLoader.displayImage(singleSnapshot.getValue(User.class).getImage(),
                             holder.mprofileImage);
                     holder.mprofileImage.setOnClickListener(new View.OnClickListener() {
@@ -276,24 +190,76 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                         }
                     });
 
-
-                    holder.user = singleSnapshot.getValue(User.class);
-//                    holder.comment.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            ((HomeActivity2)mContext).onCommentThreadSelected(getItem(position),
-//                                    mContext.getString(R.string.home_activity));
-////
-////                            //another thing?
-//                            ((HomeActivity2)mContext).hideLayout();
-//                        }
-//                    });
                 }
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        holder.bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks")
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    Toast.makeText(getContext(), "Datasnapshot " + dataSnapshot.getValue(), Toast.LENGTH_LONG).show();
+
+                                    if(!dataSnapshot.exists()){
+
+                                        mReference.child("Bookmarks")
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child(holder.photo.getPhoto_id())
+                                                .setValue("photoID");
+                                        Toast.makeText(getContext(), "Saved",Toast.LENGTH_SHORT).show();
+                                    }
+                                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                            Log.d(TAG, "snap: " + snapshot.getKey() );
+                                            if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(snapshot.getKey())){
+                                                Log.d(TAG, "comparator: " + snapshot.child(snapshot.getKey()).hasChild(holder.photo.getPhoto_id()));
+                                                Log.d(TAG, "kompara: " + snapshot.child(snapshot.getKey()));
+                                                Log.d(TAG, "tocompare: " + snapshot.child(snapshot.getKey()).child(holder.photo.getPhoto_id()).getKey().equals(holder.photo.getPhoto_id()));
+
+                                                for(DataSnapshot sp: snapshot.getChildren()){
+                                                    Log.d(TAG, "child: " + sp.getKey());
+                                                    if(sp.getKey().equals(holder.photo.getPhoto_id())){
+                                                        Log.d(TAG, "removemark: " + holder.photo.getPhoto_id() );
+
+                                                        isBookmark = true;
+                                                        mReference.child("Bookmarks")
+                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                .child(holder.photo.getPhoto_id())
+                                                                .removeValue();
+                                                        Toast.makeText(getContext(), "Unsave",Toast.LENGTH_SHORT).show();
+                                                    }
+
+                                                }
+                                                if(!isBookmark){
+                                                    Log.d(TAG, "addmark: " + holder.photo.getPhoto_id() );
+                                                    mReference.child("Bookmarks")
+                                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                            .child(holder.photo.getPhoto_id())
+                                                            .setValue("photoID");
+                                                    Toast.makeText(getContext(), "Saved",Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
 
             }
         });
@@ -320,15 +286,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                             mContext.startActivity(i);
                         }
                     });
-//                    holder.messageLayout.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent i = new Intent(mContext, MessageActivity.class);
-//                            i.putExtra("user_id", holder.photo.getUser_id());
-//                            i.putExtra("user_name", holder.user.getUserName());
-//                            mContext.startActivity(i);
-//                        }
-//                    });
                 }
 
             }
@@ -398,13 +355,18 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                                     {
                                         public void onClick(DialogInterface dialog, int id)
                                         {
-                                            Report report = new Report(userInput.getText().toString(),holder.photo.getImage_path());
+                                            mReference.child("Reports")
+                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    .child(holder.photo.getUser_id())
+                                                    .child("report_message")
+                                                    .setValue(userInput.getText().toString());
 
                                             mReference.child("Reports")
-                                                    .child(holder.photo.getUser_id())
                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                    .child("report_details")
-                                                    .setValue(report);
+                                                    .child(holder.photo.getUser_id())
+                                                    .child("postID")
+                                                    .setValue(holder.photo.getPhoto_id());
+                                            Toast.makeText(mContext, "Reported", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                     builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
@@ -442,194 +404,6 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         }
     }
 
-//    private void addNewLike(final ViewHolder holder){
-//        Log.d(TAG, "addNewLike: adding new like");
-//
-//        String newLikeID = mReference.push().getKey();
-//        Like like = new Like();
-//        like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//
-//        mReference.child("Photos")
-//                .child(holder.photo.getPhoto_id())
-//                .child(mContext.getString(R.string.field_likes))
-//                .child(newLikeID)
-//                .setValue(like);
-//
-//        mReference.child("Users_Photos")
-//                .child(holder.photo.getUser_id())
-//                .child(holder.photo.getPhoto_id())
-//                .child(mContext.getString(R.string.field_likes))
-//                .child(newLikeID)
-//                .setValue(like);
-//        mReference.child("Likes")
-//                .child(holder.photo.getUser_id())
-//                .child(newLikeID)
-//                .child(holder.photo.getPhoto_id())
-//                .child("user_id")
-//                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//
-//
-//        holder.liker.toggleLike();
-////       `
-//    }
-
-    private void getCurrentUsername(){
-        Log.d(TAG, "getCurrentUsername: retrieving user account settings");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference
-                .child("Users")
-                .orderByChild("userID")
-//                .orderByKey()
-                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    currentUsername = singleSnapshot.getValue(User.class).getUserName();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-//    private void getLikesString(final ViewHolder holder){
-//        Log.d(TAG, "getLikesString: getting likes string");
-//
-//        Log.d(TAG, "getLikesString: photo id: " + holder.photo.getPhoto_id());
-//        try{
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//        Query query = reference
-//                .child("Photos")
-//                .child(holder.photo.getPhoto_id())
-//                .child(mContext.getString(R.string.field_likes));
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                holder.users = new StringBuilder();
-//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//
-//                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//                    Query query = reference
-//                            .child("Users")
-//                            .orderByKey()
-//                            .equalTo(singleSnapshot.getValue(Like.class).getUser_id());
-//                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                                Log.d(TAG, "onDataChange: found like: " +
-//                                        singleSnapshot.getValue(User.class).getUserName());
-//
-//                                holder.users.append(singleSnapshot.getValue(User.class).getUserName());
-//                                holder.users.append(",");
-//                            }
-//
-//                            String[] splitUsers = holder.users.toString().split(",");
-//
-//                            //ed, edward
-//                            holder.likeByCurrentUser = holder.users.toString().contains(currentUsername + ",");
-//
-//                            int length = splitUsers.length;
-//
-//                            holder.likesString = length + " interested!";
-
-//                                if(length == 1){
-//                                    holder.likesString = "Liked by " + splitUsers[0];
-//                                }
-//                                else if(length == 2){
-//                                    holder.likesString = "Liked by " + splitUsers[0]
-//                                            + " and " + splitUsers[1];
-//                                }
-//                                else if(length == 3){
-//                                    holder.likesString = "Liked by " + splitUsers[0]
-//                                            + ", " + splitUsers[1]
-//                                            + " and " + splitUsers[2];
-//
-//                                }
-//                                else if(length == 4){
-//                                    holder.likesString = "Liked by " + splitUsers[0]
-//                                            + ", " + splitUsers[1]
-//                                            + ", " + splitUsers[2]
-//                                            + " and " + splitUsers[3];
-//                                }
-//                                else if(length > 4){
-//                                    holder.likesString = "Liked by " + splitUsers[0]
-//                                            + ", " + splitUsers[1]
-//                                            + ", " + splitUsers[2]
-//                                            + " and " + (splitUsers.length - 3) + " others";
-//                                }
-//                            Log.d(TAG, "onDataChange: likes string: " + holder.likesString);
-//                            //setup likes string
-//                            setupLikesString(holder, holder.likesString);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                }
-//                if(!dataSnapshot.exists()){
-//                    holder.likesString = "";
-//                    holder.likeByCurrentUser = false;
-//                    //setup likes string
-//                    setupLikesString(holder, holder.likesString);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        }catch (NullPointerException e){
-//            Log.e(TAG, "getLikesString: NullPointerException: " + e.getMessage() );
-//            holder.likesString = "";
-//            holder.likeByCurrentUser = false;
-//            //setup likes string
-//            setupLikesString(holder, holder.likesString);
-//
-//        }
-//    }
-
-
-//    private void setupLikesString(final ViewHolder holder, String likesString){
-//        Log.d(TAG, "setupLikesString: likes string:" + holder.likesString);
-//
-//        Log.d(TAG, "setupLikesString: photo id: " + holder.photo.getPhoto_id());
-//        if(holder.likeByCurrentUser){
-//            Log.d(TAG, "setupLikesString: photo is liked by current user");
-//            holder.likeblack.setVisibility(View.GONE);
-//            holder.likegreen.setVisibility(View.VISIBLE);
-//            holder.likegreen.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    return holder.detector.onTouchEvent(event);
-//                }
-//            });
-//        }else{
-//            Log.d(TAG, "setupLikesString: photo is not liked by current user");
-//            holder.likeblack.setVisibility(View.VISIBLE);
-//            holder.likegreen.setVisibility(View.GONE);
-//            holder.likeblack.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    return holder.detector.onTouchEvent(event);
-//                }
-//            });
-//        }
-//        holder.likes.setText(likesString);
-//    }
-
-    /**
-     * Returns a string representing the number of days ago the post was made
-     * @return
-     */
     private String getTimestampDifference(Photo photo){
         Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
 
@@ -666,7 +440,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         String likesString;
         TextView username, timeDetla, caption, likes;
         SquareImageView image;
-        ImageView likegreen, likeblack, comment, dm, ellipsis, bookmark;
+        ImageView red, nored,comment, dm, ellipsis, bookmark;
         User user  = new User();
         StringBuilder users;
         String mLikesString;
@@ -677,112 +451,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         Boolean mProceslike = false;
         RelativeLayout messageLayout;
 
-
-//        public void setPhotoLike(final String postKey, Photo photo, final ImageView likeblack){
-//            mReference.child("Photos")
-//                    .child(photo.getPhoto_id())
-//                    .child(mContext.getString(R.string.field_likes))
-//                    .addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                if(dataSnapshot.child(postKey).hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-//                                        likeblack.setImageResource(R.drawable.likegreen);
-//                                }else{
-//                                    likeblack.setImageResource(R.drawable.likewhite);
-//                                }
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//        }
     }
 
-//    public class GestureListener extends GestureDetector.SimpleOnGestureListener{
-//
-//        ViewHolder mHolder;
-//        public GestureListener(ViewHolder holder) {
-//            mHolder = holder;
-//        }
-//
-//        @Override
-//        public boolean onDown(MotionEvent e) {
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onSingleTapConfirmed(MotionEvent e) {
-//
-//            Log.d(TAG, "SingleTapDetected: clicked on photo: " + mHolder.photo.getPhoto_id());
-//
-//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//            Query query = reference
-//                    .child("Photos")
-//                    .child(mHolder.photo.getPhoto_id())
-//                    .child(mContext.getString(R.string.field_likes));
-//            query.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//
-//                        String keyID = singleSnapshot.getKey();
-//
-//                        //case1: Then user already liked the photo
-//                        if(mHolder.likeByCurrentUser
-////                                && singleSnapshot.getValue(Like.class).getUser_id()
-////                                        .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                ){
-//
-//                            mReference.child("Photos")
-//                                    .child(mHolder.photo.getPhoto_id())
-//                                    .child(mContext.getString(R.string.field_likes))
-//                                    .child(keyID)
-//                                    .removeValue();
-//                            mReference.child("Users_Photos")
-////                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                    .child(mHolder.photo.getUser_id())
-//                                    .child(mHolder.photo.getPhoto_id())
-//                                    .child(mContext.getString(R.string.field_likes))
-//                                    .child(keyID)
-//                                    .removeValue();
-//                            mReference.child("Likes")
-//                                    .child(mHolder.photo.getUser_id())
-//                                    .child(keyID)
-//                                    .removeValue();
-//                            mReference.child("Bookmarks")
-//                                    .child(mHolder.photo.getUser_id())
-//                                    .child(mHolder.photo.getPhoto_id())
-//                                    .child("photo_post")
-//                                    .removeValue();
-//
-//                            mHolder.liker.toggleLike();
-//                            getLikesString(mHolder);
-//                        }
-//                        //case2: The user has not liked the photo
-//                        else if(!mHolder.likeByCurrentUser){
-//                            //add new like
-//                            addNewLike(mHolder);
-//                            break;
-//                        }
-//                    }
-//                    if(!dataSnapshot.exists()){
-//                        //add new like
-//                        addNewLike(mHolder);
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-//
-//            return true;
-//        }
-//    }
 
 }
 

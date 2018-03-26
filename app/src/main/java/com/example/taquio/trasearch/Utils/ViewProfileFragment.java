@@ -527,16 +527,16 @@ public class ViewProfileFragment extends Fragment {
                         comments.add(comment);
                     }
 
-                    photo.setComments(comments);
-
-                    List<Like> likesList = new ArrayList<Like>();
-                    for (DataSnapshot dSnapshot : singleSnapshot
-                            .child(getString(R.string.field_likes)).getChildren()){
-                        Like like = new Like();
-                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                        likesList.add(like);
-                    }
-                    photo.setLikes(likesList);
+//                    photo.setComments(comments);
+//
+//                    List<Like> likesList = new ArrayList<Like>();
+//                    for (DataSnapshot dSnapshot : singleSnapshot
+//                            .child(getString(R.string.field_likes)).getChildren()){
+//                        Like like = new Like();
+//                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+//                        likesList.add(like);
+//                    }
+//                    photo.setLikes(likesList);
                     photos.add(photo);
                 }
                 setupImageGrid(photos);

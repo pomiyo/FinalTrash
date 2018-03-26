@@ -150,8 +150,26 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/bookmark"
+                    android:src="@drawable/bookmark_nofill"
                     android:visibility="visible" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/bookmarknofill"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="20dp"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:src="@drawable/bookmark_nofill"-->
+                    <!--android:visibility="visible" />-->
+                <!--<ImageView-->
+                    <!--android:id="@+id/bookmarkfill"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="20dp"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:src="@drawable/bookmark_fill"-->
+                    <!--android:visibility="invisible" />-->
 
             </RelativeLayout>
 
