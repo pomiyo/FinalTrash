@@ -6,9 +6,30 @@
     android:layout_height="match_parent"
     tools:context="com.example.taquio.trasearch.Samok.ReportViewActivity">
 
-    <fragment
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_container"/>
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/tabRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/message_top_tabs"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tabRelativeLayout">
+
+            <include layout="@layout/layout_messages_viewpager"/>
+
+        </RelativeLayout>
+
+        <include layout="@layout/layout_bottom_navigation_view"/>
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
