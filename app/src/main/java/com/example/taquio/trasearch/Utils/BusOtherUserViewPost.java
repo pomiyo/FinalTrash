@@ -106,6 +106,10 @@ public class BusOtherUserViewPost extends Fragment {
 
 //        mHeart = new Likes(mHeartWhite, mHeartRed);
 //        mGestureDetector = new GestureDetector(getActivity(), new OtherUserViewPost.GestureListener());
+
+        setupFirebaseAuth();
+        setupBottomNavigationView();
+
         mEllipses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,10 +117,6 @@ public class BusOtherUserViewPost extends Fragment {
                 displayAlertDialog();
             }
         });
-        setupFirebaseAuth();
-        setupBottomNavigationView();
-
-
         return view;
     }
     private void displayAlertDialog() {
@@ -141,12 +141,11 @@ public class BusOtherUserViewPost extends Fragment {
                                 {
                                     public void onClick(DialogInterface dialog, int id)
                                     {
-                                        Report report = new Report(userInput.getText().toString(),mPhoto.getImage_path());
+                                        String report_id = myRef.push().getKey();
+                                        Report report = new Report(userInput.getText().toString(),report_id, mPhoto.getPhoto_id());
 
                                         myRef.child("Reports")
-                                                .child(mPhoto.getUser_id())
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .child("report_details")
                                                 .setValue(report);
                                         Toast.makeText(getContext(), "Reported", Toast.LENGTH_LONG).show();
                                     }

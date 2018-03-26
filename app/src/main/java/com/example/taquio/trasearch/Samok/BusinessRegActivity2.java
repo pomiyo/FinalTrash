@@ -34,6 +34,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Del Mar on 2/20/2018.
@@ -57,6 +59,9 @@ public class BusinessRegActivity2 extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
     private static final String STORAGE_PATH = "images/";
+    Boolean flag = false;
+    DatabaseReference current_user_db;
+    Map userDetails;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,7 @@ public class BusinessRegActivity2 extends AppCompatActivity {
         busUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
@@ -92,97 +98,130 @@ public class BusinessRegActivity2 extends AppCompatActivity {
         busSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!flag){
+                    skipUpLoad();
+                }
+            }
+        });
 
-                        if(task.isSuccessful()) {
-                            final String user_id = mAuth.getCurrentUser().getUid();
-                            final DatabaseReference current_user_db = databaseReference.child(user_id);
+    }
+    private void skipUpLoad(){
+            mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+
+                    if (task.isSuccessful()) {
+
+                        final ProgressDialog progressDialog = new ProgressDialog(BusinessRegActivity2.this);
+                        progressDialog.setTitle("Creating account...");
+                        progressDialog.show();
+                        final String user_id = mAuth.getCurrentUser().getUid();
+                        current_user_db = databaseReference.child(user_id);
+                        userDetails = new HashMap();
+                        userDetails.put("bsnEmail", bsnMail);
+                        userDetails.put("bsnBusinessName", bsnBusinessName);
+                        userDetails.put("bsnLocation", bsnLocation);
+                        userDetails.put("bsnMobile", bsnMobile);
+                        userDetails.put("bsnPhone", bsnPhone);
+                        userDetails.put("imagePermit", "default");
+                        userDetails.put("image", "none");
+                        userDetails.put("image_thumb", "none");
+                        userDetails.put("deviceToken", deviceToken);
+                        userDetails.put("userId", user_id);
+                        userDetails.put("userType", "business");
+                        userDetails.put("isVerify", false);
+
+                        current_user_db.setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getApplicationContext(), "Welcome to TraSearch!", Toast.LENGTH_LONG).show();
+
+                                Intent i = new Intent(BusinessRegActivity2.this, BusinessHome.class);
+                                startActivity(i);
+                                BusinessRegActivity2.this.finish();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please select data first", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+    }
+    private void uploadData() {
+
+            mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+
+                        if (imageUri != null) {
                             final ProgressDialog progressDialog = new ProgressDialog(BusinessRegActivity2.this);
                             progressDialog.setTitle("Creating account...");
-
-                            BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,"none","none", "none", deviceToken,user_id,"business", false);
                             progressDialog.show();
-                            current_user_db.setValue(businessInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            StorageReference reference = storageReference.child(STORAGE_PATH + System.currentTimeMillis() + "." + imageUri);
+                            reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(getApplicationContext(),"Welcome to TraSearch!",Toast.LENGTH_LONG).show();
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    final String user_id = mAuth.getCurrentUser().getUid();
+                                    current_user_db = databaseReference.child(user_id);
+                                    userDetails = new HashMap();
+                                    userDetails.put("bsnEmail", bsnMail);
+                                    userDetails.put("bsnBusinessName", bsnBusinessName);
+                                    userDetails.put("bsnLocation", bsnLocation);
+                                    userDetails.put("bsnMobile", bsnMobile);
+                                    userDetails.put("bsnPhone", bsnPhone);
+                                    userDetails.put("imagePermit", taskSnapshot.getDownloadUrl().toString());
+                                    userDetails.put("image", "none");
+                                    userDetails.put("image_thumb", "none");
+                                    userDetails.put("deviceToken", deviceToken);
+                                    userDetails.put("userId", user_id);
+                                    userDetails.put("userType", "business");
+                                    userDetails.put("isVerify", false);
+
+                                    current_user_db.setValue(userDetails);
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Welcome to TraSearch!", Toast.LENGTH_LONG).show();
 
                                     Intent i = new Intent(BusinessRegActivity2.this, BusinessHome.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(i);
                                     BusinessRegActivity2.this.finish();
                                 }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double totalProgress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                    progressDialog.setMessage((int) totalProgress + " % ");
+                                }
                             });
                         } else {
-                            Toast.makeText(getApplicationContext(),"Please select data first",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Select image first", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
-            }
-        });
-        busRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                mAuth.createUserWithEmailAndPassword(bsnMail, bsnPass).addOnCompleteListener(BusinessRegActivity2.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            final String user_id = mAuth.getCurrentUser().getUid();
-                            final DatabaseReference current_user_db = databaseReference.child(user_id);
-
-                            if(imageUri != null) {
-                                final ProgressDialog progressDialog = new ProgressDialog(BusinessRegActivity2.this);
-                                progressDialog.setTitle("Creating account...");
-                                progressDialog.show();
-                                StorageReference reference = storageReference.child(STORAGE_PATH +  System.currentTimeMillis() + "." + imageUri);
-                                reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                        BusinessInfo businessInfo = new BusinessInfo(bsnMail,bsnBusinessName,bsnLocation,bsnMobile,bsnPhone,taskSnapshot.getDownloadUrl().toString(),"none", "none", deviceToken,user_id, "business", false);
-                                        current_user_db.setValue(businessInfo);
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(),"Welcome to TraSearch!",Toast.LENGTH_LONG).show();
-
-                                        Intent i = new Intent(BusinessRegActivity2.this, BusinessHome.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(i);
-                                        BusinessRegActivity2.this.finish();
-                                    }
-                                }) .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                }) .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                        double totalProgress = (100*taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                                        progressDialog.setMessage((int)totalProgress + " % ");
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getApplicationContext(),"Select image first",Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "ESelect image first", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
-        });
-
-
+                }
+            });
 
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 0 && resultCode == RESULT_OK) {
             imageUri = data.getData();
 
+            flag = true;
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),imageUri);
                 imagePermit.setImageBitmap(bitmap);
@@ -192,6 +231,16 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        busRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag){
+                    uploadData();
+                }
+
+            }
+        });
     }
 
     public String getActualImage(Uri uri) {

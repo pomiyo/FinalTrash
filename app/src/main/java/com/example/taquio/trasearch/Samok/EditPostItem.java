@@ -22,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,7 +37,7 @@ public class EditPostItem extends AppCompatActivity {
     private DatabaseReference mReference;
     private ImageView close;
     private TextView save, username;
-    private EditText caption, qty;
+    private EditText photo_desc, qty;
     private String captionHolder, qtyholder;
     private CircleImageView profphoto;
     private SquareImageView postedphoto;
@@ -53,7 +55,7 @@ public class EditPostItem extends AppCompatActivity {
         postedphoto = findViewById(R.id.post_image);
         username = findViewById(R.id.username);
 
-        caption = (EditText) findViewById(R.id.image_caption);
+        photo_desc = (EditText) findViewById(R.id.image_caption);
         qty = findViewById(R.id.item_qty);
 
         close = findViewById(R.id.ivCloseShare);
@@ -76,65 +78,37 @@ public class EditPostItem extends AppCompatActivity {
                             UniversalImageLoader.setImage(muser.getImage(),profphoto, null,"");
                             UniversalImageLoader.setImage(mphoto.getImage_path(),postedphoto, null,"");
                             username.setText(muser.getUserName());
-                            caption.setText(mphoto.getPhoto_description());
-                            qty.setText(mphoto.getQuantity());
-                            captionHolder = caption.getText().toString();
-                            qtyholder = qty.getText().toString();
 
-                            final Photo photo = new Photo();
-
-                            photo.setPhoto_description(caption.getText().toString());
-                            photo.setQuantity(qty.getText().toString());
-                            photo.setDate_created(mphoto.getDate_createdLong());
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(!caption.equals(mphoto.getPhoto_description()))
-//                {
+                Map postDetails = new HashMap();
+                postDetails.put("date_created",mphoto.getDate_createdLong());
+                postDetails.put("image_path",mphoto.getImage_path());
+                postDetails.put("photo_description",photo_desc.getText().toString());
+                postDetails.put("photo_id", mphoto.getPhoto_id());
+                postDetails.put("quantity",qty.getText().toString());
+                postDetails.put("user_id",mphoto.getUser_id());
+
 
                     mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
                             .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("caption")
-                            .setValue(caption.getText().toString());
+                            .setValue(postDetails);
 
                     mReference.child("Photos")
                             .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("caption")
-                            .setValue(caption.getText().toString());
-
-                    mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
-                            .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("quantity")
-                            .setValue(qty.getText().toString());
+                            .setValue("userID");
 
-                    mReference.child("Photos")
-                            .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("quantity")
-                            .setValue(qty.getText().toString());
-                    Log.d(TAG, "Na change: " + caption.getText().toString());
-                    Toast.makeText(getApplicationContext(),"Successfully Edited!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(context, HomeActivity2.class));
-//                }
+                    Log.d(TAG, "Na change: " + postDetails);
+                    Toast.makeText(EditPostItem.this,"Successfully Edited!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(EditPostItem.this, HomeActivity2.class));
+
             }
         });
 
 
-    }
-    public static String getDate(long milliSeconds, String dateFormat)
-    {
-        // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
-
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milliSeconds);
-        return formatter.format(calendar.getTime());
     }
 }

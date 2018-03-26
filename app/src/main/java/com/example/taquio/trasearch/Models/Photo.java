@@ -32,21 +32,17 @@ public class Photo implements Parcelable {
     private String photo_id;
     private String user_id;
     private String quantity;
-    private List<Like> likes;
-    private List<Comment> comments;
     public Photo() {
     }
 
     public Photo(String photo_description, Long date_created, String image_path, String photo_id,
-                 String user_id, String quantity, List<Like> likes, List<Comment> comments) {
+                 String user_id, String quantity) {
         this.photo_description = photo_description;
         this.date_created = date_created;
         this.image_path = image_path;
         this.photo_id = photo_id;
         this.user_id = user_id;
         this.quantity = quantity;
-        this.likes = likes;
-        this.comments = comments;
     }
 
     protected Photo(Parcel in) {
@@ -56,10 +52,6 @@ public class Photo implements Parcelable {
         photo_id = in.readString();
         user_id = in.readString();
         quantity = in.readString();
-    }
-
-    public static Creator<Photo> getCREATOR() {
-        return CREATOR;
     }
 
     @Override
@@ -75,14 +67,6 @@ public class Photo implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 
     public String getPhoto_description() {
@@ -141,13 +125,6 @@ public class Photo implements Parcelable {
         this.quantity = quantity;
     }
 
-    public List<Like> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<Like> likes) {
-        this.likes = likes;
-    }
 
     @Override
     public String toString() {
@@ -158,7 +135,6 @@ public class Photo implements Parcelable {
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", quantity='" + quantity + '\'' +
-                ", likes=" + likes +
                 '}';
     }
 }

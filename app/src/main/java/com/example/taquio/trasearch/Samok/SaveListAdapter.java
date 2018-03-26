@@ -119,8 +119,8 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
         else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.photo = getItem(position);
-        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
+//        holder.photo = getItem(position);
+//        holder.detector = new GestureDetector(mContext, new GestureListener(holder));
         holder.users = new StringBuilder();
         holder.liker = new Likes(holder.likeblack, holder.likegreen);
 
@@ -322,12 +322,11 @@ public class SaveListAdapter extends ArrayAdapter<Photo> {
                                     {
                                         public void onClick(DialogInterface dialog, int id)
                                         {
-                                            Report report = new Report(userInput.getText().toString(),holder.photo.getImage_path());
+                                            String report_id = mReference.push().getKey();
+                                            Report report = new Report(userInput.getText().toString(),report_id, holder.photo.getPhoto_id().toString());
 
                                             mReference.child("Reports")
-                                                    .child(holder.photo.getUser_id())
                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                    .child("report_details")
                                                     .setValue(report);
                                         }
                                     });

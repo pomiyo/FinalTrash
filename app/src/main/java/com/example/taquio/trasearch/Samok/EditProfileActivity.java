@@ -59,7 +59,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText ediProfile_mobile
             ,ediProfile_name
             ,ediProfile_email,
-            ediProfile_password;
+            ediProfile_password,
+            ediProfile_cpassword;
     private TextView ediProfile_changeImage;
     private CircleImageView ediProfile_image;
     private StorageReference mImageStorage;
@@ -86,39 +87,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String uid = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
-
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                ediProfile_name.setHint(dataSnapshot.child("Name").getValue().toString());
-                ediProfile_email.setHint(dataSnapshot.child("Email").getValue().toString());
-                ediProfile_mobile.setHint(dataSnapshot.child("PhoneNumber").getValue().toString());
-                mauthEmail = dataSnapshot.child("Email").getValue().toString();
-
-                Picasso.with(EditProfileActivity.this).load(dataSnapshot.child("Image").getValue().toString())
-                        .networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.man)
-                        .into(ediProfile_image, new Callback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError() {
-                                Picasso.with(EditProfileActivity.this)
-                                        .load(dataSnapshot
-                                                .child("Image").getValue().toString())
-                                        .placeholder(R.drawable.man)
-                                        .into(ediProfile_image);
-                            }
-                        });
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         ImageView backArrow = findViewById(R.id.backArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,14 +119,25 @@ public class EditProfileActivity extends AppCompatActivity {
                 String itsName = ediProfile_name.getText().toString(),
                         itsPass = ediProfile_password.getText().toString(),
                         itsEmail = ediProfile_email.getText().toString(),
-                        itsMobile = ediProfile_mobile.getText().toString();
+                        itsMobile = ediProfile_mobile.getText().toString(),
+                        itsCon = ediProfile_cpassword.getText().toString();
 
                 if(!TextUtils.isEmpty(itsName))
                 {name = true;}
-                if(!TextUtils.isEmpty(itsPass))
-                {password = true;}
+                if(!TextUtils.isEmpty(itsPass)&&!TextUtils.isEmpty(itsCon))
+                {
+                    if(!itsPass.equals(itsCon))
+                    {
+                        Toast.makeText(EditProfileActivity.this,"Password and Confirm Password didn't match",Toast.LENGTH_SHORT).show();
+                    }else
+                    {
+                        password = true;
+                        newPassword = itsPass;
+                    }
+                }
                 if(!TextUtils.isEmpty(itsEmail))
-                {email = true;}
+                {newEmail = itsEmail;
+                    email = true;}
                 if(!TextUtils.isEmpty(itsMobile))
                 {mobile = true;}
                 if(resultUri!=null)
@@ -187,8 +166,6 @@ public class EditProfileActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-
-
                                     AuthCredential credential = EmailAuthProvider
                                             .getCredential(mauthEmail, mauthPassword);
                                     mCurrentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -400,6 +377,7 @@ public class EditProfileActivity extends AppCompatActivity {
         ediProfile_changeImage = findViewById(R.id.ediProfile_changeImage);
         ediProfile_image = findViewById(R.id.ediProfile_image);
         ediProfile_saveChanges = findViewById(R.id.ediProfile_saveChanges);
+        ediProfile_cpassword = findViewById(R.id.ediProfile_cpassword);
 
 
     }
@@ -414,6 +392,39 @@ public class EditProfileActivity extends AppCompatActivity {
         {
             mDatabase.child("online").setValue("online");
         }
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                ediProfile_name.setHint(dataSnapshot.child("Name").getValue().toString());
+                ediProfile_email.setHint(dataSnapshot.child("Email").getValue().toString());
+                ediProfile_mobile.setHint(dataSnapshot.child("PhoneNumber").getValue().toString());
+                mauthEmail = dataSnapshot.child("Email").getValue().toString();
+
+                Picasso.with(EditProfileActivity.this).load(dataSnapshot.child("Image").getValue().toString())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .placeholder(R.drawable.man)
+                        .into(ediProfile_image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(EditProfileActivity.this)
+                                        .load(dataSnapshot
+                                                .child("Image").getValue().toString())
+                                        .placeholder(R.drawable.man)
+                                        .into(ediProfile_image);
+                            }
+                        });
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

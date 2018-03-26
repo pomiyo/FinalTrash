@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.eschao.android.widget.elasticlistview.ElasticListView;
+import com.example.taquio.trasearch.Models.Bookmark;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
@@ -76,15 +77,6 @@ public class SaveItemActivity extends AppCompatActivity{
         mListView = findViewById(R.id.listView);
         gridView = findViewById(R.id.grid);
 
-        savedToolbar = (Toolbar) findViewById(R.id.profileToolBar);
-        setSupportActionBar(savedToolbar);
-        getSupportActionBar().setTitle("Saved");
-        savedToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
-//        try{
-//            mOnSelectedListener = (OnSelect) context;
-//        }catch (ClassCastException e){
-//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
-//        }
 
         ImageView backArrow = findViewById(R.id.ivBackArrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -100,29 +92,28 @@ public class SaveItemActivity extends AppCompatActivity{
 //        getPhotos();
 
     }
-//    private void initListViewRefresh(){
-//        mListView.setHorizontalFadingEdgeEnabled(true);
-//        mListView.setAdapter(adapter);
-//        mListView.enableLoadFooter(true)
-//                .getLoadFooter().setLoadAction(LoadFooter.LoadAction.RELEASE_TO_LOAD);
-//        mListView.setOnUpdateListener(this)
-//                .setOnLoadListener(this);
-////        mListView.requestUpdate();
-//    }
     private void getSaveItems() {
         Log.d(TAG, "getKeys: searching for following");
         clearAll();
 
         Query query = FirebaseDatabase.getInstance().getReference()
-                .child("Bookmarks")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child("Bookmarks");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "getKeys: found user: " + singleSnapshot
-                            .getKey());
-                        thephotos.add(singleSnapshot.getKey());
+
+
+                    if(singleSnapshot.getKey().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                    {
+                        for (DataSnapshot ds : singleSnapshot.getChildren()){
+                            Log.d(TAG, "getKeys: found user: " + singleSnapshot
+                                    .getKey());
+                            thephotos.add(ds.getKey());
+                        }
+
+                    }
+
                 }
                 getPhotos(thephotos);
             }
@@ -139,44 +130,40 @@ public class SaveItemActivity extends AppCompatActivity{
         mPaginatedPhotos = new ArrayList<>();
         msaveUserId = new ArrayList<>();
     }
-    public  void getPhotos(ArrayList<String> thephotos) {
+    public  void getPhotos(final ArrayList<String> thephotos) {
         Log.d(TAG, "getPhotos: getting list of photos");
         final ArrayList<Photo> photos = new ArrayList<>();
         for (int i = 0; i < thephotos.size(); i++) {
+            final int index = i;
             Query query = FirebaseDatabase.getInstance().getReference()
-                    .child("Photos")
-                    .child(thephotos.get(i));
+                    .child("Users_Photos");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "Dara ayyy "+ dataSnapshot.getValue());
-//                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        Log.d(TAG, "singlesnashot value"+ dataSnapshot.getValue());
+                    Log.d(TAG, "Save Item Values "+ dataSnapshot.getValue());
 
-                            Photo newPhoto = new Photo();
-                            Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                            try {
-                                newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
-                                newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
-                                newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
-                                newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                                newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
-                                newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        for(DataSnapshot sp: ds.getChildren()){
+                            if(sp.getKey().equals(thephotos.get(index))){
+                                Photo newPhoto = new Photo();
+                                Log.d(TAG, "Getting: " +  ds.getValue());
+                                Map<String, Object> objectMap = (HashMap<String, Object>) sp.getValue();
+                                try {
+                                    newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
+                                    newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
+                                    newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+                                    newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+                                    newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
+                                    newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
-                                List<Like> likesList = new ArrayList<Like>();
-                                for (DataSnapshot dSnapshot : dataSnapshot
-                                        .child(getString(R.string.field_likes)).getChildren()) {
-                                    Like like = new Like();
-                                    like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                                    likesList.add(like);
+                                    photos.add(newPhoto);
+                                    Log.d(TAG, "photo checking : "+ photos.size());
+                                } catch (NullPointerException e) {
+                                    Log.e(TAG, "onDataChange: NullPointerException: " + e.getMessage());
                                 }
-                                newPhoto.setLikes(likesList);
-                                photos.add(newPhoto);
-                                Log.d(TAG, "photo checking : "+ photos.size());
-                            } catch (NullPointerException e) {
-                                Log.e(TAG, "onDataChange: NullPointerException: " + e.getMessage());
                             }
-//                    }
+                        }
+                    }
                     //setup our image grid
                     int gridWidth = getResources().getDisplayMetrics().widthPixels;
                     int imageWidth = gridWidth/NUM_GRID_COLUMNS;
@@ -218,6 +205,7 @@ public class SaveItemActivity extends AppCompatActivity{
         Bundle args = new Bundle();
         args.putParcelable(getString(R.string.photo), photo);
         args.putInt(getString(R.string.activity_number), i);
+        args.putString("theCall", "fromBookmark");
 
         fragment.setArguments(args);
 
@@ -238,104 +226,7 @@ public class SaveItemActivity extends AppCompatActivity{
         mRelativeLayout.setVisibility(View.VISIBLE);
         mFrameLayout.setVisibility(View.GONE);
     }
-//    @Override
-//    public void onAttach(Context context) {
-//        try{
-//            mOnGridImageSelectedListener = (SaveItemActivity.OnGridImageSelectedListener) getApplicationContext();
-//        }catch (ClassCastException e){
-//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
-//        }
-//        super.onAttach(context);
-//    }
 
-
-//
-//                        mPhotos.add(newPhoto);
-//                    }
-//                    if(count >= msaveUserId.size() - 1){
-//                        //display the photos
-//                        displayPhotos();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                    Log.d(TAG, "onCancelled: query cancelled.");
-//                }
-//            });
-//
-//        }
-//    }
-//    private void displayPhotos(){
-//        if(mPhotos != null){
-//
-//            try{
-//
-//                //sort for newest to oldest
-//                Collections.sort(mPhotos, new Comparator<Photo>() {
-//                    public int compare(Photo o1, Photo o2) {
-//                        return o2.getDate_created().compareTo(o1.getDate_created());
-//                    }
-//                });
-//
-//                //we want to load 10 at a time. So if there is more than 10, just load 10 to start
-//                int iterations = mPhotos.size();
-//                if(iterations > 10){
-//                    iterations = 10;
-//                }
-////
-//                resultsCount = 0;
-//                for(int i = 0; i < iterations; i++){
-//                    mPaginatedPhotos.add(mPhotos.get(i));
-//                    resultsCount++;
-//                    Log.d(TAG, "displayPhotos: adding a photo to paginated list: " + mPhotos.get(i).getPhoto_id());
-//                }
-//                adapter = new SaveListAdapter(this, R.layout.layout_save_items, mPaginatedPhotos);
-//                mListView.setAdapter(adapter);
-//
-//                // Notify update is done
-//                mListView.notifyUpdated();
-//
-//
-//            }catch (IndexOutOfBoundsException e){
-//                Log.e(TAG, "displayPhotos: IndexOutOfBoundsException:" + e.getMessage() );
-//            }catch (NullPointerException e){
-//                Log.e(TAG, "displayPhotos: NullPointerException:" + e.getMessage() );
-//            }
-//        }
-//    }
-//
-//    public void displayMorePhotos(){
-//        Log.d(TAG, "displayMorePhotos: displaying more photos");
-//
-//        try{
-//
-//            if(mPhotos.size() > resultsCount && mPhotos.size() > 0){
-//
-//                int iterations;
-//                if(mPhotos.size() > (resultsCount + 10)){
-//                    Log.d(TAG, "displayMorePhotos: there are greater than 10 more photos");
-//                    iterations = 10;
-//                }else{
-//                    Log.d(TAG, "displayMorePhotos: there is less than 10 more photos");
-//                    iterations = mPhotos.size() - resultsCount;
-//                }
-//
-//                //add the new photos to the paginated list
-//                for(int i = resultsCount; i < resultsCount + iterations; i++){
-//                    mPaginatedPhotos.add(mPhotos.get(i));
-//                }
-//
-//                resultsCount = resultsCount + iterations;
-//                adapter.notifyDataSetChanged();
-//            }
-//        }catch (IndexOutOfBoundsException e){
-//            Log.e(TAG, "displayPhotos: IndexOutOfBoundsException:" + e.getMessage() );
-//        }catch (NullPointerException e){
-//            Log.e(TAG, "displayPhotos: NullPointerException:" + e.getMessage() );
-//        }
-//    }
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottomNavViewBar);
@@ -344,11 +235,5 @@ public class SaveItemActivity extends AppCompatActivity{
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(4);
         menuItem.setChecked(true);
-
-//        Log.d(TAG, "setupBottomNavigationView: Start Notification Badge");
-//        BottomNavigationMenuView bottomNavigationMenuView =
-//                (BottomNavigationMenuView) bottomNavigationViewEx.getChildAt(0);
-//        View v = bottomNavigationMenuView.getChildAt(1);
-//        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
     }
 }

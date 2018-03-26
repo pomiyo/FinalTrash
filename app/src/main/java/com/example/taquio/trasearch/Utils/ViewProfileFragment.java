@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.Profile.ProfileActivity;
 import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.example.taquio.trasearch.Models.Comment;
 import com.example.taquio.trasearch.Models.Like;
@@ -37,6 +38,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -55,7 +59,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewProfileFragment extends Fragment {
 
-    private static final String TAG = "ProfileFragment";
+    private static final String TAG = "ViewProfileFragment";
     private static final int ACTIVITY_NUM = 4;
     private static final int NUM_GRID_COLUMNS = 3;
     OnGridImageSelectedListener mOnGridImageSelectedListener;
@@ -527,16 +531,16 @@ public class ViewProfileFragment extends Fragment {
                         comments.add(comment);
                     }
 
-                    photo.setComments(comments);
-
-                    List<Like> likesList = new ArrayList<Like>();
-                    for (DataSnapshot dSnapshot : singleSnapshot
-                            .child(getString(R.string.field_likes)).getChildren()){
-                        Like like = new Like();
-                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                        likesList.add(like);
-                    }
-                    photo.setLikes(likesList);
+//                    photo.setComments(comments);
+//
+//                    List<Like> likesList = new ArrayList<Like>();
+//                    for (DataSnapshot dSnapshot : singleSnapshot
+//                            .child(getString(R.string.field_likes)).getChildren()){
+//                        Like like = new Like();
+//                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+//                        likesList.add(like);
+//                    }
+//                    photo.setLikes(likesList);
                     photos.add(photo);
                 }
                 setupImageGrid(photos);
@@ -588,14 +592,34 @@ public class ViewProfileFragment extends Fragment {
 
 
         //User user = userSettings.getUser();
-        User user = userSettings.getUser();
+        final User user = userSettings.getUser();
         user_id = user.getUserID();
-        if(user.getImage().equals("default"))
-        {
-            UniversalImageLoader.setImage(user.getImage(), mProfilePhoto, null, "drawable://" );
-        }else {
-            UniversalImageLoader.setImage(user.getImage(), mProfilePhoto, null, "");
-        }
+//        if(user.getImage().equals("default"))
+//        {
+//            UniversalImageLoader.setImage(user.getImage(), mProfilePhoto, null, "drawable://" );
+//        }else {
+//            UniversalImageLoader.setImage(user.getImage(), mProfilePhoto, null, "");
+//        }
+
+        Picasso.with(getContext()).load(user.getImage())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .placeholder(R.drawable.man)
+                .into(mProfilePhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(getContext())
+                                .load(user.getImage())
+                                .placeholder(R.drawable.man)
+                                .into(mProfilePhoto);
+
+                    }
+                });
+
         final String nuser = user.getUserID();
         final String name = user.getUserName();
         mName.setText(user.getUserName());

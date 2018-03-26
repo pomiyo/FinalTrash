@@ -49,7 +49,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="70dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/bookmark"/>
+            android:src="@drawable/bookmark_fill"/>
         <LinearLayout
             android:id="@+id/relLog"
             android:layout_width="match_parent"

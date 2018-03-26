@@ -219,7 +219,7 @@ public class HomeActivity2 extends AppCompatActivity implements
 //       return val;
 //    }
 
-    public void onImageSelected( Photo item,  int i, final String user_id) {
+    public void onImageSelected(Photo item,  int i, final String user_id) {
 
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -243,6 +243,7 @@ public class HomeActivity2 extends AppCompatActivity implements
             Bundle args = new Bundle();
             args.putParcelable(getString(R.string.photo), item);
             args.putInt(getString(R.string.activity_number), i);
+            args.putString("theCall", "fromHome");
 
             fragment.setArguments(args);
 

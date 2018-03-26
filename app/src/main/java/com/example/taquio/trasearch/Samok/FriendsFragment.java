@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class FriendsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mFriendsDatabase
             ,mUsersDatabase;
+    private static final String TAG = "FriendsFragment";
 
     private String mCurrent_user_id;
 
@@ -141,14 +143,14 @@ public class FriendsFragment extends Fragment {
 
                                         if(which==0)
                                         {
-                                            Query userQuery = mUsersDatabase
-                                                    .orderByChild("userID")
-                                                    .equalTo(list_user_Id);
+                                            Log.d(TAG, "onClick: Open Profile");
+                                            Query userQuery = mUsersDatabase.orderByChild("userID").equalTo(list_user_Id);
                                             userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                                                         final User user = singleSnapshot.getValue(User.class);
+                                                        Log.d(TAG, "onDataChange: "+user);
                                                         startActivity(new Intent(getContext(), MyProfileActivity.class)
                                                                 .putExtra("intent_user",user));
                                                     }

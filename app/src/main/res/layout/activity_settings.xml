@@ -67,13 +67,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:id="@+id/btnGuide"
-            android:textSize="20dp"
-            android:padding="10dp"
-            android:text="Getting Started Guides"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
             android:id="@+id/btnTips"
             android:textSize="20dp"
             android:padding="10dp"
