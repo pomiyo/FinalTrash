@@ -19,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +82,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String busname = junklist.getBsnBusinessName();
            holder.address.setText(busname);
 
-        String busphoto = junklist.getImage();
-        UniversalImageLoader.setImage(junklist.getImage(),
-                holder.businessPhoto, null, "");
+        final String busphoto = junklist.getImage();
+//        UniversalImageLoader.setImage(junklist.getImage(),
+//                holder.businessPhoto, null, "");
 
-//        Picasso.with(context).load(busphoto)
-//                .networkPolicy(NetworkPolicy.OFFLINE)
-//                .placeholder(R.drawable.man);
+       Picasso.with(mcontext).load(junklist.getImage())
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                .placeholder(R.drawable.shop)
+                .into(holder.businessPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(mcontext)
+                                .load(busphoto)
+                                .placeholder(R.drawable.shop)
+                                .into(holder.businessPhoto);
+                    }
+                });
+
         Query query = mUserDatabase
                 .child("Users")
                 .orderByChild("userId")
