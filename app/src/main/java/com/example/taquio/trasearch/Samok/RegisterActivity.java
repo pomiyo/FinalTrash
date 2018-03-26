@@ -241,7 +241,7 @@ public class RegisterActivity extends AppCompatActivity {
             userDetails.put("PhoneNumber",phonenumber);
             userDetails.put("userID",mAuth.getCurrentUser().getUid());
             userDetails.put("userType","non-business");
-            userDetails.put("isVerify",false);
+            userDetails.put("isVerified",false);
 
             current_user_db.setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -250,7 +250,7 @@ public class RegisterActivity extends AppCompatActivity {
                     {
                         regProgress.dismiss();
                         Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
-                        Intent startActivityIntent = new Intent(RegisterActivity.this, HomeActivity2.class);
+                        Intent startActivityIntent = new Intent(RegisterActivity.this, ForVerification.class);
                         startActivity(startActivityIntent);
                         finish();
                     }

@@ -28,25 +28,14 @@
             android:layout_marginTop="-30dp"
             android:background="@drawable/background"
             android:src="@drawable/images" />
-    <Button
-        android:id="@+id/declineRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="130dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/declinefriend"
-        android:text="Decline Friend Request"
-        android:visibility="gone"/>
-    <Button
-        android:id="@+id/vProfile_sendFriequest_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="130dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/addfriend"
-        android:layout_gravity="center"
-        android:text="Send Friend REquest"/>
+    <!--<Button-->
+        <!--android:id="@+id/vProfile_sendFriequest_btn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="130dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="Send Friend REquest"/>-->
         <!--<Button-->
             <!--android:layout_width="32dp"-->
             <!--android:layout_height="32dp"-->
@@ -140,7 +129,15 @@
                     android:textSize="15dp"/>
 
             </LinearLayout>
-
+            <Button
+                android:id="@+id/btnMessage"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+                android:background="@drawable/btn"
+                android:text="Message"
+                android:textColor="@color/black"
+                android:padding="3dp"
+                android:layout_gravity="center"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,13 +146,29 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
+
+
                 <Button
-                    android:id="@+id/btnMessage"
+                    android:id="@+id/vProfile_sendFriequest_btn"
                     android:layout_width="200dp"
                     android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:background="@drawable/btn"
-                    android:text="Message"
-                    android:textColor="@color/black" />
+                    android:text="Send Friend Request"
+                    android:textColor="@color/black"
+                    android:padding="3dp"/>
+                <Button
+                    android:id="@+id/declineRequest"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/btn"
+                    android:text="Decline Request"
+                    android:textColor="@color/black"
+                    android:padding="3dp"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

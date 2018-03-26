@@ -28,14 +28,19 @@
             android:layout_height="200dp"
             android:layout_weight="5"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Valid ID" />
         <ImageView
             android:id="@+id/ver_Selfie"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_weight="5"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Selfie" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,39 +48,27 @@
         android:orientation="horizontal"
         android:paddingTop="50dp"
         android:weightSum="10">
-        <Button
-            android:id="@+id/ver_IDbtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:text="Choose Valid ID"/>
-        <Button
-            android:id="@+id/ver_Selfiebtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:text="Take a Selfie"/>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="10">
+        android:weightSum="10"
+        android:gravity="bottom">
 
         <Button
             android:id="@+id/ver_UploadExec"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:enabled="false"
-            android:text="Upload" />
+            android:text="Deny" />
         <Button
             android:id="@+id/ver_Skipbtn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:enabled="false"
-            android:text="Skip"/>
+            android:text="Accept"/>
     </LinearLayout>
 
 </LinearLayout>
