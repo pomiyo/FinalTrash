@@ -25,13 +25,14 @@ public class ReportActivity extends AppCompatActivity {
     private RecyclerView reported_list;
     private DatabaseReference mReportDatabase;
     private ImageView reported_Image;
+    private String clicked_userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
         reported_Image =findViewById(R.id.reported_Image);
-
+        clicked_userID = getIntent().getStringExtra("userID");
         reported_list = findViewById(R.id.reported_list);
         String user_id = getIntent().getStringExtra("userID");
 
@@ -57,7 +58,7 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final ReportedViewHolder viewHolder, Reports model, int position) {
                 String list_ids = getRef(position).getKey();
-                mReportDatabase.child(list_ids).addListenerForSingleValueEvent(new ValueEventListener() {
+                mReportDatabase.child(clicked_userID).child(list_ids).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d(TAG, "onDataChange: Photo Path: "+dataSnapshot.child("report_details").child("photo_path").getValue().toString());

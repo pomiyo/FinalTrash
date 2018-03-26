@@ -2,10 +2,13 @@ package com.example.taquio.trasearch.Samok;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,7 @@ public class ReportViewFragment extends Fragment {
     private static final String TAG = "ReportViewFragment";
     private View mMainView;
     private RecyclerView reportView_list;
+    private String clicked_userID,postID;
     private DatabaseReference mReportDatabase,mUserDatabase,mPostDatabase;
     public ReportViewFragment() {
         // Required empty public constructor
@@ -45,8 +49,9 @@ public class ReportViewFragment extends Fragment {
         // Inflate the layout for this fragment
         mMainView = inflater.inflate(R.layout.fragment_report_view, container, false);
         reportView_list = mMainView.findViewById(R.id.reportView_list);
-
-        mReportDatabase = FirebaseDatabase.getInstance().getReference().child("Reports");
+        clicked_userID = getActivity().getIntent().getStringExtra("userID");
+        Log.d(TAG, "onCreateView: String Extra: "+clicked_userID);
+        mReportDatabase = FirebaseDatabase.getInstance().getReference().child("Reports").child(clicked_userID);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mPostDatabase = FirebaseDatabase.getInstance().getReference().child("Users_Photos");
 
@@ -61,103 +66,86 @@ public class ReportViewFragment extends Fragment {
 
         FirebaseRecyclerAdapter<ReportView,ReportViewViewHolder> reportViewViewHolderFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ReportView, ReportViewViewHolder>(
                 ReportView.class,
-                R.layout.reported_sigle,
+                R.layout.reportview_single,
                 ReportViewViewHolder.class,
                 mReportDatabase
         ) {
             @Override
             protected void populateViewHolder(final ReportViewViewHolder viewHolder, ReportView model, int position) {
-                String list_id = getRef(position).getKey();
+                final String list_id = getRef(position).getKey();
+                Log.d(TAG, "populateViewHolder: List ID: "+list_id);
+                final String email,url,photoDesc,reportMsg;
+                final Intent emailIntent = new Intent(Intent.ACTION_VIEW);
 
-                mUserDatabase.child(list_id).addChildEventListener(new ChildEventListener() {
+                mUserDatabase.child(list_id).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                    public void onDataChange(DataSnapshot dataSnapshot) {
                         String Name = dataSnapshot.child("Name").getValue().toString();
                         viewHolder.setPoster(Name);
                     }
 
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
 
-                mPostDatabase.child(list_id).addChildEventListener(new ChildEventListener() {
+                mReportDatabase.child(list_id).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String URL = dataSnapshot.child("image_path").getValue().toString(),
-                                photoDesc = dataSnapshot.child("photo_description").getValue().toString();
-                        Long date = (Long) dataSnapshot.child("date_created").getValue();
-                        viewHolder.setImage(URL,getContext());
-                        viewHolder.setDate(date);
-                        viewHolder.setPostDesc(photoDesc);
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                mReportDatabase.child(list_id).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String reportMsg = dataSnapshot.getValue().toString();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "onDataChange: on ReportDB: "+list_id);
+                        final String reportMsg ;
+                               reportMsg = dataSnapshot.child("report_message").getValue().toString();
+                        postID = dataSnapshot.child("postID").getValue().toString();
+                        Log.d(TAG, "onDataChange: Post ID: "+postID);
                         viewHolder.setReportMsg(reportMsg);
-                    }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        mPostDatabase.child(list_id).child(postID).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    }
+                                    String URL = dataSnapshot.child("image_path").getValue().toString(),
+                                            photoDesc = dataSnapshot.child("photo_description").getValue().toString();
+                                    Long date = (Long) dataSnapshot.child("date_created").getValue();
+                                    viewHolder.setImage(URL,getContext());
+                                    viewHolder.setDate(date);
+                                    viewHolder.setPostDesc(photoDesc);
+//                                emailIntent.putExtra(Intent.EXTRA_EMAIL, "edmar.greg@gmail.com");
+//                                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "TraSearch App Report");
+//                                emailIntent.setType("text/plain");
+//                                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, URL+"\nReport Message: "+reportMsg);
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                String to = "edmar.greg@gmail.com";
+                                String subject= "TraSearch App Report";
+                                String body=URL+"\nReport Message: "+reportMsg;
+                                String mailTo = "mailto:" + to +
+                                        "?&subject=" + Uri.encode(subject) +
+                                        "&body=" + Uri.encode(body);
+                                emailIntent.setData(Uri.parse(mailTo));
+                            }
 
-                    }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
+
                 });
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(emailIntent);
+                    }
+                });
+
             }
+
         };
         reportView_list.setAdapter(reportViewViewHolderFirebaseRecyclerAdapter);
     }
@@ -179,22 +167,22 @@ public class ReportViewFragment extends Fragment {
         public void setPoster(String poster)
         {
             TextView reportView_poster = itemView.findViewById(R.id.reportView_poster);
-            reportView_poster.setText("Posted By: "+poster);
+            reportView_poster.setText("Posted By:\t\t"+poster);
         }
         public void setPostDesc (String postDesc)
         {
             TextView reportView_photoDesc = itemView.findViewById(R.id.reportView_photoDesc);
-            reportView_photoDesc.setText(postDesc);
+            reportView_photoDesc.setText("Post Description\t"+postDesc);
         }
         public void setDate (Long date)
         {
             TextView reportView_photoDate = itemView.findViewById(R.id.reportView_photoDate);
-            reportView_photoDate.setText(getDate(date,"MMM dd, yyyy E hh:mm aa"));
+            reportView_photoDate.setText("Date posted:\t"+getDate(date,"MMM dd, yyyy E hh:mm aa"));
         }
         public void setReportMsg (String reportMsg)
         {
             TextView reportView_reportMsg = itemView.findViewById(R.id.reportView_reportMsg);
-            reportView_reportMsg.setText(reportMsg);
+            reportView_reportMsg.setText("Report Message:\t"+reportMsg);
         }
     }
         public static String getDate(long milliSeconds, String dateFormat)
