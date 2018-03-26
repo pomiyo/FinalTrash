@@ -74,8 +74,9 @@ public class ReportFragment extends Fragment {
                                     @Override
                                     public void onClick(View v) {
                                         Log.d(TAG, "onClick: Passing: "+dataSnapshot.child("userID").getValue().toString());
-                                        startActivity(new Intent(getContext(),ReportActivity.class)
+                                        startActivity(new Intent(getContext(),ReportViewActivity.class)
                                         .putExtra("userID",dataSnapshot.child("userID").getValue().toString()));
+
                                     }
                                 });
                             }

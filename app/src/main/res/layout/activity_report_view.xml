@@ -27,9 +27,6 @@
             <include layout="@layout/layout_messages_viewpager"/>
 
         </RelativeLayout>
-
-        <include layout="@layout/layout_bottom_navigation_view"/>
-
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
