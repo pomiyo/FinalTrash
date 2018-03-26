@@ -142,6 +142,7 @@
         <activity android:name=".Samok.BusinessAdd" />
         <activity android:name=".Guest.GuestHome" />
         <activity android:name=".Samok.ReportViewActivity"></activity>
+        <!-- Sample Loacal Merging-->
     </application>
 
 </manifest>
