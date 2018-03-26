@@ -374,20 +374,32 @@ public class ViewPostFragment extends Fragment{
                     mProfileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+//                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+//                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+//                                    getActivity().getString(R.string.home_activity));
+//                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+//                            getActivity().startActivity(intent);
                             Intent intent = new Intent(getActivity(), MyProfileActivity.class);
-                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                            intent.putExtra("calling_your_own",
                                     getActivity().getString(R.string.home_activity));
-                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            Log.d(TAG, "onClick: Calling your OWN");
+                            intent.putExtra(getActivity().getString(R.string.intent_user),user);
                             getActivity().startActivity(intent);
                         }
                     });
                     mUsername.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+//                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+//                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+//                                    getActivity().getString(R.string.home_activity));
+//                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+//                            getActivity().startActivity(intent);
                             Intent intent = new Intent(getActivity(), MyProfileActivity.class);
-                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                            intent.putExtra("calling_your_own",
                                     getActivity().getString(R.string.home_activity));
-                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            Log.d(TAG, "onClick: Calling your OWN");
+                            intent.putExtra(getActivity().getString(R.string.intent_user),user);
                             getActivity().startActivity(intent);
                         }
                     });
