@@ -17,11 +17,9 @@
             android:layout_height="56dp"
             android:src="@drawable/man" />
         <LinearLayout
-
             android:id="@+id/chatSingleTextLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:orientation="vertical"
             android:weightSum="10">
             <TextView
@@ -40,10 +38,11 @@
                 android:id="@+id/chatSingleTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="left"
                 android:text="4:20"
                 android:textSize="13sp"/>
-        </LinearLayout>
+        </LinearLayout
+>
     </LinearLayout>
 
 

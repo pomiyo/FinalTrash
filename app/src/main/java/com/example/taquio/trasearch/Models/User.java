@@ -55,40 +55,40 @@ public class User implements Parcelable {
         return Email;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public void setEmail(String Email) {
+        this.Email = Email;
     }
 
     public String getName() {
         return Name;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
     public String getImage() {
         return Image;
     }
 
-    public void setImage(String image) {
-        Image = image;
+    public void setImage(String Image) {
+        this.Image = Image;
     }
 
     public String getImage_thumb() {
         return Image_thumb;
     }
 
-    public void setImage_thumb(String image_thumb) {
-        Image_thumb = image_thumb;
+    public void setImage_thumb(String Image_thumb) {
+        this.Image_thumb = Image_thumb;
     }
 
     public String getUserName() {
         return UserName;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setUserName(String UserName) {
+        this.UserName = UserName;
     }
 
     public String getDevice_token() {
@@ -103,16 +103,16 @@ public class User implements Parcelable {
         return PhoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+    public void setPhoneNumber(String PhoneNumber) {
+        this.PhoneNumber = PhoneNumber;
     }
 
     public Boolean getVerify() {
         return isVerify;
     }
 
-    public void setVerify(Boolean verify) {
-        isVerify = verify;
+    public void setVerify(Boolean isVerify) {
+        this.isVerify = isVerify;
     }
 
     @Override

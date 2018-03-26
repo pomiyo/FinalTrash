@@ -35,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        cmdFeedback = (TextView) findViewById(R.id.btnFeedback);
+        cmdFeedback = findViewById(R.id.btnFeedback);
         cmdFeedback.setText(Html.fromHtml("<a href=\"mailto:edward.sampayan@gmail.com\">Send Feedback</a>"));
         cmdFeedback.setMovementMethod(LinkMovementMethod.getInstance());
 

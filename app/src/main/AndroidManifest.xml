@@ -48,12 +48,7 @@
         </activity>
 
         <!-- HOME ACTIVITY -->
-        <activity android:name=".Samok.HomeActivity2" >
-            <intent-filter>
-                <action android:name="com.example.taqio" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Samok.HomeActivity2" />
 
         <service android:name=".Samok.FireBaseMessagingService">
             <intent-filter>
@@ -61,11 +56,9 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
 
         <activity
             android:name=".Samok.RegisterActivity"
@@ -76,11 +69,8 @@
         <activity android:name=".Samok.ActivityLogin" />
         <activity android:name=".Samok.MainActivity" />
         <activity android:name=".Samok.UserProfileActivity" />
-
-        <activity android:name=".Profile.ProfileActivity">
-        </activity>
+        <activity android:name=".Profile.ProfileActivity"></activity>
         <activity android:name=".Nearby.NearbyActivity" />
-
         <activity android:name=".Samok.AdminActivity" />
 
         <!-- <activity android:name=".LoginActivity"/> -->
@@ -96,7 +86,7 @@
         <activity android:name=".Utils.Donate" />
         <activity
             android:name=".Samok.ViewProfile"
-            android:parentActivityName=".Profile.ProfileActivity" />
+            android:parentActivityName=".Profile.ProfileActivity"></activity>
         <activity
             android:name=".Messages.MessagesActivity"
             android:parentActivityName=".Samok.HomeActivity2" />
@@ -107,7 +97,13 @@
         <activity
             android:name=".Samok.ChooseLayout"
             android:parentActivityName=".Samok.GuestSearch" />
-        <activity android:name=".Samok.MyProfileActivity" />
+        <activity android:name=".Samok.MyProfileActivity">
+            <intent-filter>
+                <action android:name="com.example.taquio.Samok.Trasearch_TARGET_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Samok.EditProfileActivity"
             android:parentActivityName=".Samok.MyProfileActivity" />
@@ -134,19 +130,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!--<activity android:name=".Samok.BusinessProfile2" />-->
         <activity android:name=".Utils.PaymentDetails" />
         <activity android:name=".Samok.ReportActivity" />
         <activity android:name=".Samok.UserJunkShopView" />
-        <activity android:name=".Samok.PasswordActivity"></activity>
-        <activity android:name=".Samok.AdminVerification"/>
-        <activity android:name=".Samok.BusMyProfileActivity"/>
-        <activity android:name=".BusinessProfile.BusinessBuy"/>
-        <activity android:name=".BusinessProfile.BusinessSell"/>
-        <activity android:name=".BusinessProfile.BusinessEdit"/>
-        <activity android:name=".Samok.BusinessAdd"/>
-        <activity android:name=".Guest.GuestHome"></activity>
-
+        <activity android:name=".Samok.PasswordActivity" />
+        <activity android:name=".Samok.AdminVerification" />
+        <activity android:name=".Samok.BusMyProfileActivity" />
+        <activity android:name=".BusinessProfile.BusinessBuy" />
+        <activity android:name=".BusinessProfile.BusinessSell" />
+        <activity android:name=".BusinessProfile.BusinessEdit" />
+        <activity android:name=".Samok.BusinessAdd" />
+        <activity android:name=".Guest.GuestHome" />
+        <activity android:name=".Samok.ReportViewActivity"></activity>
     </application>
 
 </manifest>

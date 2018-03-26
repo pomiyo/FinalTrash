@@ -75,9 +75,28 @@ public class MyProfileActivity extends AppCompatActivity implements
     }
     private void init(){
         Log.d(TAG, "init: PAG INFLATE SA FRAGMENT NGA PROFILE " + getString(R.string.profile_fragment));
-
+        Log.d(TAG, "init: "+getIntent().getStringExtra("formessage"));
         Intent intent = getIntent();
-        if(intent.hasExtra("intent_user")){
+        if(intent.hasExtra("formessage")&&intent.hasExtra("intent_user"))
+        {
+            User user = intent.getParcelableExtra("intent_user");
+            Log.d(TAG, "init: formessage Users"+user);
+            if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                Log.d(TAG, "init: inflating view profile");
+                ViewProfileFragment fragment = new ViewProfileFragment();
+                Bundle args = new Bundle();
+                args.putParcelable(getString(R.string.intent_user),
+                        intent.getParcelableExtra("intent_user"));
+
+                fragment.setArguments(args);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, fragment);
+                transaction.addToBackStack(getString(R.string.view_profile_fragment));
+                transaction.commit();
+            }
+        }
+        else if(intent.hasExtra("intent_user")){
             User user = intent.getParcelableExtra("intent_user");
             if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                 Log.d(TAG, "init: inflating view profile");
@@ -94,7 +113,8 @@ public class MyProfileActivity extends AppCompatActivity implements
                 transaction.commit();
             }
         }
-        if(intent.hasExtra(getString(R.string.calling_activity))){
+
+        else if(intent.hasExtra(getString(R.string.calling_activity))){
             Log.d(TAG, "init: searching for user object attached as intent extra"  );
             if(intent.hasExtra(getString(R.string.intent_user))){
                 User user = intent.getParcelableExtra(getString(R.string.intent_user));
