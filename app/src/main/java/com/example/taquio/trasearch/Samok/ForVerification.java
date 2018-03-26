@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -127,29 +128,25 @@ public class ForVerification extends AppCompatActivity {
                         ver_Selfiebtn.setEnabled(false);
                         String selfURL = task.getResult().getDownloadUrl().toString();
                         mUserDatabase.child(mCurrentUser).child("selfieURL").setValue(selfURL);
-                        ver_Skipbtn.setText("Finish");
-                        progressDialog.dismiss();
-                    }
-                }
-            });
-        }
-        if (IDD)
-        {
-            StorageReference filePath = mImageStorage.
-                    child("forVerification").
-                    child(mCurrentUser).
-                    child("ID");
+                        mUserDatabase.child(mCurrentUser).child("isVerified").setValue(false);
+                        StorageReference filePath = mImageStorage.
+                                child("forVerification").
+                                child(mCurrentUser).
+                                child("ID");
 
-            filePath.putFile(mID).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if(task.isSuccessful())
-                    {
-                        ver_Selfiebtn.setEnabled(false);
-                        String IDURL = task.getResult().getDownloadUrl().toString();
-                        mUserDatabase.child(mCurrentUser).child("IDURL").setValue(IDURL);
-                        ver_Skipbtn.setText("Finish");
-                        progressDialog.dismiss();
+                        filePath.putFile(mID).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if(task.isSuccessful())
+                                {
+                                    ver_Selfiebtn.setEnabled(false);
+                                    String IDURL = task.getResult().getDownloadUrl().toString();
+                                    mUserDatabase.child(mCurrentUser).child("IDURL").setValue(IDURL);
+                                    ver_Skipbtn.setText("Finish");
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -176,7 +173,12 @@ public class ForVerification extends AppCompatActivity {
                 mID = result.getUri();
                 ver_ID.setImageURI(mID);
                 isID=true;
-                ver_UploadExec.setEnabled(true);
+                if(isID&&isSelfie)
+                {
+                    ver_UploadExec.setEnabled(true);
+                }else{
+                    Toast.makeText(ForVerification.this,"You must choose a Selfie to upload",Toast.LENGTH_SHORT).show();
+                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -187,7 +189,12 @@ public class ForVerification extends AppCompatActivity {
                 selfie = result.getUri();
                 ver_Selfie.setImageURI(selfie);
                 isSelfie=true;
-                ver_UploadExec.setEnabled(true);
+                if(isID&&isSelfie)
+                {
+                    ver_UploadExec.setEnabled(true);
+                }else{
+                    Toast.makeText(ForVerification.this,"You must choose a Valid ID to upload",Toast.LENGTH_SHORT).show();
+                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

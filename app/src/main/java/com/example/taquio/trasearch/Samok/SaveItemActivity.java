@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.eschao.android.widget.elasticlistview.ElasticListView;
+import com.example.taquio.trasearch.Models.Bookmark;
 import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
@@ -114,15 +115,21 @@ public class SaveItemActivity extends AppCompatActivity{
         clearAll();
 
         Query query = FirebaseDatabase.getInstance().getReference()
-                .child("Bookmarks")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child("Bookmarks");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "getKeys: found user: " + singleSnapshot
-                            .getKey());
-                        thephotos.add(singleSnapshot.getKey());
+
+                    for (DataSnapshot ds : singleSnapshot.getChildren()){
+                        if(ds.getValue(Bookmark.class).getUser_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                        {
+                            Log.d(TAG, "getKeys: found user: " + singleSnapshot
+                                    .getKey());
+                            thephotos.add(ds.getKey());
+                        }
+                     }
+
                 }
                 getPhotos(thephotos);
             }
@@ -163,14 +170,14 @@ public class SaveItemActivity extends AppCompatActivity{
                                 newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                                 newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
-                                List<Like> likesList = new ArrayList<Like>();
-                                for (DataSnapshot dSnapshot : dataSnapshot
-                                        .child(getString(R.string.field_likes)).getChildren()) {
-                                    Like like = new Like();
-                                    like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                                    likesList.add(like);
-                                }
-                                newPhoto.setLikes(likesList);
+//                                List<Like> likesList = new ArrayList<Like>();
+//                                for (DataSnapshot dSnapshot : dataSnapshot
+//                                        .child(getString(R.string.field_likes)).getChildren()) {
+//                                    Like like = new Like();
+//                                    like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+//                                    likesList.add(like);
+//                                }
+//                                newPhoto.setLikes(likesList);
                                 photos.add(newPhoto);
                                 Log.d(TAG, "photo checking : "+ photos.size());
                             } catch (NullPointerException e) {

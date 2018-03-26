@@ -35,7 +35,7 @@ public class EditPostItem extends AppCompatActivity {
     private DatabaseReference mReference;
     private ImageView close;
     private TextView save, username;
-    private EditText caption, qty;
+    private EditText photo_desc, qty;
     private String captionHolder, qtyholder;
     private CircleImageView profphoto;
     private SquareImageView postedphoto;
@@ -53,7 +53,7 @@ public class EditPostItem extends AppCompatActivity {
         postedphoto = findViewById(R.id.post_image);
         username = findViewById(R.id.username);
 
-        caption = (EditText) findViewById(R.id.image_caption);
+        photo_desc = (EditText) findViewById(R.id.image_caption);
         qty = findViewById(R.id.item_qty);
 
         close = findViewById(R.id.ivCloseShare);
@@ -76,49 +76,31 @@ public class EditPostItem extends AppCompatActivity {
                             UniversalImageLoader.setImage(muser.getImage(),profphoto, null,"");
                             UniversalImageLoader.setImage(mphoto.getImage_path(),postedphoto, null,"");
                             username.setText(muser.getUserName());
-                            caption.setText(mphoto.getPhoto_description());
+                            photo_desc.setText(mphoto.getPhoto_description());
                             qty.setText(mphoto.getQuantity());
-                            captionHolder = caption.getText().toString();
+
+                            captionHolder = photo_desc.getText().toString();
                             qtyholder = qty.getText().toString();
 
-                            final Photo photo = new Photo();
-
-                            photo.setPhoto_description(caption.getText().toString());
-                            photo.setQuantity(qty.getText().toString());
-                            photo.setDate_created(mphoto.getDate_createdLong());
+                            final Photo photo = new Photo(photo_desc.getText().toString(), mphoto.getDate_createdLong()
+                                                    ,mphoto.getImage_path(), mphoto.getPhoto_id(),mphoto.getUser_id(),qty.getText().toString());
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(!caption.equals(mphoto.getPhoto_description()))
+//                if(!photo_desc.equals(mphoto.getPhoto_description()))
 //                {
 
                     mReference.child("Users_Photos")
                             .child(mphoto.getUser_id())
                             .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("caption")
-                            .setValue(caption.getText().toString());
+                            .setValue(photo);
 
                     mReference.child("Photos")
                             .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("caption")
-                            .setValue(caption.getText().toString());
+                            .setValue(photo);
 
-                    mReference.child("Users_Photos")
-                            .child(mphoto.getUser_id())
-                            .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("quantity")
-                            .setValue(qty.getText().toString());
-
-                    mReference.child("Photos")
-                            .child(mphoto.getPhoto_id())
-//                            .setValue(photo);
-                            .child("quantity")
-                            .setValue(qty.getText().toString());
-                    Log.d(TAG, "Na change: " + caption.getText().toString());
+                    Log.d(TAG, "Na change: " + photo_desc.getText().toString());
                     Toast.makeText(getApplicationContext(),"Successfully Edited!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(context, HomeActivity2.class));
 //                }
@@ -126,15 +108,5 @@ public class EditPostItem extends AppCompatActivity {
         });
 
 
-    }
-    public static String getDate(long milliSeconds, String dateFormat)
-    {
-        // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
-
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milliSeconds);
-        return formatter.format(calendar.getTime());
     }
 }

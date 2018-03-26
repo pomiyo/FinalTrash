@@ -10,24 +10,15 @@ import android.os.Parcelable;
 public class Report implements Parcelable{
 
     private String message_report;
-    private String photo_path;
+    private String report_id;
+    private String photo_id;
 
-    public Report(String message_report, String photo_path) {
-        this.message_report = message_report;
-        this.photo_path = photo_path;
-    }
+    public Report(String s, String report_id, String toString) {}
 
-    @Override
-    public String toString() {
-        return "Report{" +
-                "message_report='" + message_report + '\'' +
-                ", photo_path='" + photo_path + '\'' +
-                '}';
-    }
-
-    protected Report(Parcel in) {
+    public Report(Parcel in) {
         message_report = in.readString();
-        photo_path = in.readString();
+        report_id = in.readString();
+        photo_id = in.readString();
     }
 
     public static final Creator<Report> CREATOR = new Creator<Report>() {
@@ -42,6 +33,15 @@ public class Report implements Parcelable{
         }
     };
 
+    @Override
+    public String toString() {
+        return "Report{" +
+                "message_report='" + message_report + '\'' +
+                ", report_id='" + report_id + '\'' +
+                ", photo_id='" + photo_id + '\'' +
+                '}';
+    }
+
     public String getMessage_report() {
         return message_report;
     }
@@ -50,12 +50,20 @@ public class Report implements Parcelable{
         this.message_report = message_report;
     }
 
-    public String getPhoto_path() {
-        return photo_path;
+    public String getReport_id() {
+        return report_id;
     }
 
-    public void setPhoto_path(String photo_path) {
-        this.photo_path = photo_path;
+    public void setReport_id(String report_id) {
+        this.report_id = report_id;
+    }
+
+    public String getPhoto_id() {
+        return photo_id;
+    }
+
+    public void setPhoto_id(String photo_id) {
+        this.photo_id = photo_id;
     }
 
     @Override
@@ -66,7 +74,8 @@ public class Report implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(message_report);
-        dest.writeString(photo_path);
+        dest.writeString(report_id);
+        dest.writeString(photo_id);
     }
 }
 

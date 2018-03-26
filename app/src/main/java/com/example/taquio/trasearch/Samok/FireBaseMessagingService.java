@@ -29,20 +29,64 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
 
         String notification_title = remoteMessage.getNotification().getTitle();
         String notification_message = remoteMessage.getNotification().getBody();
-        String click_action = remoteMessage.getNotification().getClickAction();
+        final String click_action = remoteMessage.getNotification().getClickAction();
         String from_user_id = remoteMessage.getData().get("from_user_id");
-        final User[] user = new User[1];
+
+
+
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Query query = mUserDatabase.orderByChild("userID").equalTo(from_user_id);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        final User user = new User();
+
+        final NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.trasearchicon)
+                        .setContentTitle(notification_title)
+                        .setContentText(notification_message);
+
+        mUserDatabase.child(from_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot:dataSnapshot.getChildren())
-                {
-                    user[0] = singleSnapshot.getValue(User.class);
-                    Log.d(TAG, "onDataChange: "+user[0]);
-                }
+                String deviceToken = dataSnapshot.child("device_token").getValue().toString(),
+                        Email = dataSnapshot.child("Email").getValue().toString(),
+                        Image = dataSnapshot.child("Image").getValue().toString(),
+                        Image_thumb = dataSnapshot.child("Image_thumb").getValue().toString(),
+                        Name = dataSnapshot.child("Name").getValue().toString(),
+                        CPNumber = dataSnapshot.child("PhoneNumber").getValue().toString(),
+                        userID = dataSnapshot.child("userID").getValue().toString(),
+                        UserName = dataSnapshot.child("UserName").getValue().toString();
+                Boolean verify = dataSnapshot.child("isVerify").getValue(Boolean.class);
+
+                user.setDevice_token(deviceToken);
+                user.setEmail(Email);
+                user.setImage(Image);
+                user.setImage_thumb(Image_thumb);
+                user.setName(Name);
+                user.setPhoneNumber(CPNumber);
+                user.setUserID(userID);
+                user.setUserName(UserName);
+                user.setVerify(verify);
+
+
+                Intent resultIntent = new Intent(click_action);
+
+                Log.d(TAG, "onMessageReceived: For transfer: "+user);
+                resultIntent.putExtra("formessage","formessage");
+                resultIntent.putExtra("intent_user", user);
+
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(
+                                FireBaseMessagingService.this,
+                                0,
+                                resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                int mNotificationId = (int) System.currentTimeMillis();
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
 
             @Override
@@ -50,31 +94,5 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
 
             }
         });
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.trasearchicon)
-                        .setContentTitle(notification_title)
-                        .setContentText(notification_message);
-        Intent resultIntent = new Intent(click_action);
-        resultIntent.putExtra("formessage","formessage");
-        Log.d(TAG, "onMessageReceived: "+ user[0]);
-        resultIntent.putExtra("intent_user", user[0]);
-
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-
-
-
-        int mNotificationId = (int) System.currentTimeMillis();
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 }

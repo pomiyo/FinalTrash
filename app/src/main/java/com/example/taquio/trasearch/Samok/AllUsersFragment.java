@@ -79,7 +79,7 @@ public class AllUsersFragment extends Fragment {
                 AllUsers.class,
                 R.layout.all_users,
                 AllUsersFragment.AdminViewHolder.class,
-                mUsersDatabase.orderByChild("isVerify")
+                mUsersDatabase.orderByChild("isVerified")
         ) {
             @Override
             protected void populateViewHolder(final AdminViewHolder viewHolder, final AllUsers model, int position) {
@@ -102,7 +102,7 @@ public class AllUsersFragment extends Fragment {
                                         String Name = dataSnapshot.child("Name").getValue().toString();
                                         String profile_thuumb = dataSnapshot.child("Image_thumb").getValue().toString();
                                         String isOnline =  dataSnapshot.child("online").getValue().toString();
-                                        boolean isVerify = dataSnapshot.child("isVerify").getValue(Boolean.class);
+                                        boolean isVerify = dataSnapshot.child("isVerified").getValue(Boolean.class);
                                         viewHolder.setEmail(email);
                                         viewHolder.setName(Name);
                                         viewHolder.setProfileImage(profile_thuumb,getContext());
@@ -125,7 +125,7 @@ public class AllUsersFragment extends Fragment {
                                         String Name = dataSnapshot.child("bsnBusinessName").getValue().toString();
                                         String profile_thuumb = dataSnapshot.child("image").getValue().toString();
 //                                        String isOnline =  dataSnapshot.child("online").getValue().toString();
-                                        boolean isVerify = dataSnapshot.child("isVerify").getValue(Boolean.class);
+                                        boolean isVerify = dataSnapshot.child("isVerified").getValue(Boolean.class);
                                         viewHolder.setEmail(email);
                                         viewHolder.setName(Name);
                                         viewHolder.setProfileImage(profile_thuumb,getContext());
@@ -146,7 +146,7 @@ public class AllUsersFragment extends Fragment {
                                         String email = dataSnapshot.child("Email").getValue().toString();
                                         String Name = dataSnapshot.child("Name").getValue().toString();
                                         String profile_thuumb = dataSnapshot.child("Image_thumb").getValue().toString();
-                                        boolean isVerify = dataSnapshot.child("isVerify").getValue(Boolean.class);
+                                        boolean isVerify = dataSnapshot.child("isVerified").getValue(Boolean.class);
                                         viewHolder.setEmail(email);
                                         viewHolder.setName(Name);
                                         viewHolder.setProfileImage(profile_thuumb,getContext());

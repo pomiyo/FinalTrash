@@ -129,8 +129,16 @@
                     android:textSize="15dp"/>
 
             </LinearLayout>
-
-            <RelativeLayout
+            <Button
+                android:id="@+id/btnMessage"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+                android:background="@drawable/btn"
+                android:text="Message"
+                android:textColor="@color/black"
+                android:padding="3dp"
+                android:layout_gravity="center"/>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -138,14 +146,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnMessage"
-                    android:layout_width="150dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/btn"
-                    android:text="Message"
-                    android:textColor="@color/black"
-                    android:padding="3dp"/>
+
 
                 <Button
                     android:id="@+id/vProfile_sendFriequest_btn"
@@ -169,7 +170,7 @@
                     android:padding="3dp"
                     android:visibility="gone"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

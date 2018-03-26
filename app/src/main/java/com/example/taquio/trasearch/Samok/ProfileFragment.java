@@ -224,14 +224,14 @@ public class ProfileFragment extends Fragment {
 //
 //                        photo.setComments(comments);
 
-                        List<Like> likesList = new ArrayList<Like>();
-                        for (DataSnapshot dSnapshot : singleSnapshot
-                                .child(getString(R.string.field_likes)).getChildren()) {
-                            Like like = new Like();
-                            like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-                            likesList.add(like);
-                        }
-                        photo.setLikes(likesList);
+//                        List<Like> likesList = new ArrayList<Like>();
+//                        for (DataSnapshot dSnapshot : singleSnapshot
+//                                .child(getString(R.string.field_likes)).getChildren()) {
+//                            Like like = new Like();
+//                            like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+//                            likesList.add(like);
+//                        }
+//                        photo.setLikes(likesList);
                         photos.add(photo);
                     }catch(NullPointerException e){
                         Log.e(TAG, "onDataChange: NullPointerException: " + e.getMessage() );
