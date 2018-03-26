@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, description, channelTitle;
         public LinearLayout videoRow;
+        public ImageView thumbnail;
 
         public MyViewHolder(View view) {
             super(view);
@@ -32,6 +34,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
             description = (TextView) view.findViewById(R.id.videoListDesc);
             channelTitle = (TextView) view.findViewById(R.id.videoListChannel);
             videoRow = (LinearLayout) view.findViewById(R.id.videoRow);
+            thumbnail = (ImageView) view.findViewById(R.id.videoListThumbnail);
         }
     }
 
