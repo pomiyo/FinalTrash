@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +75,7 @@ public class ReportViewFragment extends Fragment {
             protected void populateViewHolder(final ReportViewViewHolder viewHolder, ReportView model, int position) {
                 final String list_id = getRef(position).getKey();
                 Log.d(TAG, "populateViewHolder: List ID: "+list_id);
-                final String email,url,photoDesc,reportMsg;
+                final String[] to = new String[1];
                 final Intent emailIntent = new Intent(Intent.ACTION_VIEW);
 
                 mUserDatabase.child(list_id).addValueEventListener(new ValueEventListener() {
@@ -82,6 +83,7 @@ public class ReportViewFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String Name = dataSnapshot.child("Name").getValue().toString();
                         viewHolder.setPoster(Name);
+                        to[0] = dataSnapshot.child("Email").getValue().toString();
                     }
 
                     @Override
@@ -115,10 +117,9 @@ public class ReportViewFragment extends Fragment {
 //                                emailIntent.setType("text/plain");
 //                                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, URL+"\nReport Message: "+reportMsg);
 
-                                String to = "edmar.greg@gmail.com";
                                 String subject= "TraSearch App Report";
                                 String body=URL+"\nReport Message: "+reportMsg;
-                                String mailTo = "mailto:" + to +
+                                String mailTo = "mailto:" + to[0] +
                                         "?&subject=" + Uri.encode(subject) +
                                         "&body=" + Uri.encode(body);
                                 emailIntent.setData(Uri.parse(mailTo));

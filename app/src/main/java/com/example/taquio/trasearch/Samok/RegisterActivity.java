@@ -3,12 +3,15 @@ package com.example.taquio.trasearch.Samok;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +24,7 @@ import com.example.taquio.trasearch.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -61,6 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView userProfileImage;
     private Uri filePath;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private final String APPLICATION_KEY = "f210079c-626f-47fe-a1ce-8b82077daffb";
+    private final int RESOLVE_HINT =19;
 
 
     @Override
@@ -77,6 +83,14 @@ public class RegisterActivity extends AppCompatActivity {
             field_email.setText(email);
         }
 
+        register_cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
 
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+
     public void addUser(String email,String password)
     {
         Log.d(TAG, "addUser: Started");
@@ -183,6 +198,12 @@ public class RegisterActivity extends AppCompatActivity {
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+        if (requestCode == RESOLVE_HINT) {
+            if (resultCode == RESULT_OK) {
+                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                // credential.getId();  <-- will need to process phone number string
+            }
         }
     }
 
@@ -278,4 +299,14 @@ public class RegisterActivity extends AppCompatActivity {
         field_phonenumber = findViewById(R.id.field_phonenumber);
         register_cancelBtn = findViewById(R.id.register_cancelBtn);
     }
+//    private void requestHint() throws IntentSender.SendIntentException {
+//        HintRequest hintRequest = new HintRequest.Builder()
+//                .setPhoneNumberIdentifierSupported(true)
+//                .build();
+//
+//        PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(
+//                apiClient, hintRequest);
+//        startIntentSenderForResult(intent.getIntentSender(),
+//                RESOLVE_HINT, null, 0, 0, 0);
+//    }
 }
