@@ -222,28 +222,6 @@ public class ViewPostFragment extends Fragment{
         }
     }
 
-//    private void getCurrentUser(){
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//        Query query = reference
-//                .child("Users")
-//                .orderByKey()
-//                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-//                    mCurrentUser = singleSnapshot.getValue(User.class);
-//                }
-////                getLikesString();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d(TAG, "onCancelled: query cancelled.");
-//            }
-//        });
-//    }
-
     private void getPhotoDetails(){
         Log.d(TAG, "getPhotoDetails: retrieving photo details.");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -278,25 +256,9 @@ public class ViewPostFragment extends Fragment{
         return formatter.format(calendar.getTime());
     }
     private void setupWidgets(){
-//        Log.d(TAG, "setupWidgets:  GETTTTINGGG IMAGEE >>>> " + mCurrentUser.getImage() );
-//        String timestampDiff = getTimestampDifference();
-//        if(!timestampDiff.equals("0")){
-//            mTimestamp.setText(timestampDiff + " DAYS AGO");
-//        }else{
-//            mTimestamp.setText("TODAY");
-//        }
-//        mTimestamp.setText(getDate(mPhoto.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
-//        if(mCurrentUser.getImage().equals("default"))
-//        {
-//            UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "drawable://" );
-//        }else {
-//        UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-//        mUsername.setText(mCurrentUser.getUserName());
-//        mCaption.setText(mPhoto.getPhoto_description());
-//        mItem.setText(mPhoto.getQuantity());
         mTimestamp.setText(getDate(getPhotoFromBundle().getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
         UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-        mUsername.setText(mCurrentUser.getUserName());
+        mUsername.setText(mCurrentUser.getName());
         mCaption.setText(getPhotoFromBundle().getPhoto_description());
         mItem.setText(getPhotoFromBundle().getQuantity());
         mBookmark.setOnClickListener(new View.OnClickListener() {
@@ -374,20 +336,32 @@ public class ViewPostFragment extends Fragment{
                     mProfileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+//                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+//                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+//                                    getActivity().getString(R.string.home_activity));
+//                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+//                            getActivity().startActivity(intent);
                             Intent intent = new Intent(getActivity(), MyProfileActivity.class);
-                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                            intent.putExtra("calling_your_own",
                                     getActivity().getString(R.string.home_activity));
-                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            Log.d(TAG, "onClick: Calling your OWN");
+                            intent.putExtra(getActivity().getString(R.string.intent_user),user);
                             getActivity().startActivity(intent);
                         }
                     });
                     mUsername.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+//                            Intent intent = new Intent(getActivity(), MyProfileActivity.class);
+//                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+//                                    getActivity().getString(R.string.home_activity));
+//                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+//                            getActivity().startActivity(intent);
                             Intent intent = new Intent(getActivity(), MyProfileActivity.class);
-                            intent.putExtra(getActivity().getString(R.string.calling_activity),
+                            intent.putExtra("calling_your_own",
                                     getActivity().getString(R.string.home_activity));
-                            intent.putExtra(getActivity().getString(R.string.intent_user), user);
+                            Log.d(TAG, "onClick: Calling your OWN");
+                            intent.putExtra(getActivity().getString(R.string.intent_user),user);
                             getActivity().startActivity(intent);
                         }
                     });
@@ -396,7 +370,7 @@ public class ViewPostFragment extends Fragment{
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
                             i.putExtra("user_id", mPhoto.getUser_id());
-                            i.putExtra("user_name", user.getUserName());
+                            i.putExtra("user_name", user.getName());
                             getContext().startActivity(i);
                         }
                     });
@@ -415,30 +389,9 @@ public class ViewPostFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back");
-                try {
-                    FirebaseDatabase.getInstance().getReference().child("Bookmarks")
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (!dataSnapshot.exists()) {
-                                        if (getTheTag().equals("fromBookmark")) {
-                                            getActivity().getFragmentManager().popBackStackImmediate();
-                                            ((MyProfileActivity)getActivity()).hideLayout();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                }catch (NullPointerException e){
-                    Log.d(TAG, "onClick: " + e.getMessage());
-                }
                 if(getTheTag().equals("fromBookmark")){
                     getActivity().getSupportFragmentManager().popBackStack();
-                    getActivity().finish();
+                    ((SaveItemActivity)getActivity()).showLayoutSave();
                 }
                 if(getTheTag().equals("fromProfile")){
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -453,27 +406,6 @@ public class ViewPostFragment extends Fragment{
 
 
     }
-
-//    private String getTimestampDifference(){
-//        Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
-//
-//        String difference = "";
-//        Calendar c = Calendar.getInstance();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.CANADA);
-//        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));//google 'android list of timezones'
-//        Date today = c.getTime();
-//        sdf.format(today);
-//        Date timestamp;
-//        final String photoTimestamp = mPhoto.getDate_created();
-//        try{
-//            timestamp = sdf.parse(photoTimestamp);
-//            difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));
-//        }catch (ParseException e){
-//            Log.e(TAG, "getTimestampDifference: ParseException: " + e.getMessage() );
-//            difference = "0";
-//        }
-//        return difference;
-//    }
     private String getTheTag(){
         Bundle bundle = this.getArguments();
         if(bundle != null) {
@@ -493,7 +425,6 @@ public class ViewPostFragment extends Fragment{
 
         Bundle bundle = this.getArguments();
         if(bundle != null) {
-            Toast.makeText(getContext(), "HEREEE >>>>> "+bundle.getInt(getString(R.string.activity_number)), Toast.LENGTH_SHORT).show();
             return bundle.getInt(getString(R.string.activity_number));
 
         }else{

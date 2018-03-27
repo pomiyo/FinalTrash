@@ -596,8 +596,8 @@ public class BusViewProfileFragment extends Fragment {
             UniversalImageLoader.setImage(user.getImage(), mProfilePhoto, null, "");
         }
         final String nuser = user.getUserID();
-        final String name = user.getUserName();
-        mName.setText(user.getUserName());
+        final String name = user.getName();
+        mName.setText(user.getName());
         mEmail.setText(user.getEmail());
         mPhoneNumber.setText(user.getPhoneNumber());
 

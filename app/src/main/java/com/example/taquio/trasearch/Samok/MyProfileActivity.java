@@ -32,7 +32,7 @@ public class MyProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnGridImageSelectedListener ,
         ViewProfileFragment.OnGridImageSelectedListener{
 
-    private static final String TAG = "ProfileActivity";
+    private static final String TAG = "MyProfileActivity";
     private Context mContext = MyProfileActivity.this;
     private ProgressBar mProgressbar;
     private CircleImageView profilePhoto;
@@ -96,26 +96,12 @@ public class MyProfileActivity extends AppCompatActivity implements
                 transaction.commit();
             }
         }
-        else if(intent.hasExtra("intent_user")){
-            User user = intent.getParcelableExtra("intent_user");
-            if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                Log.d(TAG, "init: inflating view profile");
-                ViewProfileFragment fragment = new ViewProfileFragment();
-                Bundle args = new Bundle();
-                args.putParcelable(getString(R.string.intent_user),
-                        intent.getParcelableExtra("intent_user"));
 
-                fragment.setArguments(args);
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, fragment);
-                transaction.addToBackStack(getString(R.string.view_profile_fragment));
-                transaction.commit();
-            }
-        }
-
-        else if(intent.hasExtra(getString(R.string.calling_activity))){
+        //==============================
+        else if(intent.hasExtra("calling_your_own"))
+        {
             Log.d(TAG, "init: searching for user object attached as intent extra"  );
+            Log.d(TAG, "init: Open your own profile");
             if(intent.hasExtra(getString(R.string.intent_user))){
                 User user = intent.getParcelableExtra(getString(R.string.intent_user));
                 Log.d(TAG, "init: THIS IS A TEST FOR " +intent.getParcelableExtra(getString(R.string.intent_user)) );
@@ -153,8 +139,27 @@ public class MyProfileActivity extends AppCompatActivity implements
             }else{
                 Toast.makeText(mContext, "something went wrong", Toast.LENGTH_SHORT).show();
             }
+        }
+        //======================================
+        else if(intent.hasExtra("intent_user")){
+            User user = intent.getParcelableExtra("intent_user");
+            if(!user.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                Log.d(TAG, "init: inflating view profile");
+                ViewProfileFragment fragment = new ViewProfileFragment();
+                Bundle args = new Bundle();
+                args.putParcelable(getString(R.string.intent_user),
+                        intent.getParcelableExtra("intent_user"));
 
-        }else{
+                fragment.setArguments(args);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, fragment);
+                transaction.addToBackStack(getString(R.string.view_profile_fragment));
+                transaction.commit();
+            }
+        }
+        //======================================
+        else{
             Log.d(TAG, "init: inflating Profile");
             ProfileFragment fragment = new ProfileFragment();
             Bundle args = new Bundle();

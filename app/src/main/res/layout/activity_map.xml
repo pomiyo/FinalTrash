@@ -13,5 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="502dp"
         android:layout_margin="5dp" />
+    <include layout="@layout/layout_bottom_navigation_view"/>
 
 </LinearLayout>

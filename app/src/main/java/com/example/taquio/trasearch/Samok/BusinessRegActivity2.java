@@ -72,7 +72,7 @@ public class BusinessRegActivity2 extends AppCompatActivity {
         bsnConPass = getIntent().getExtras().getString("CONPASS");
         bsnBusinessName = getIntent().getExtras().getString("BUSINESSNAME");
         bsnLocation = getIntent().getExtras().getString("LOCATION");
-        bsnPhone = getIntent().getExtras().getString("PHONE");
+//        bsnPhone = getIntent().getExtras().getString("PHONE");
         bsnMobile = getIntent().getExtras().getString("MOBILE");
         deviceToken = FirebaseInstanceId.getInstance().getToken();
 
@@ -123,14 +123,19 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                         userDetails.put("bsnBusinessName", bsnBusinessName);
                         userDetails.put("bsnLocation", bsnLocation);
                         userDetails.put("bsnMobile", bsnMobile);
-                        userDetails.put("bsnPhone", bsnPhone);
-                        userDetails.put("imagePermit", "default");
+//                        userDetails.put("bsnPhone", bsnPhone);
+//                        userDetails.put("imagePermit", "default");
                         userDetails.put("image", "none");
                         userDetails.put("image_thumb", "none");
                         userDetails.put("deviceToken", deviceToken);
                         userDetails.put("userId", user_id);
                         userDetails.put("userType", "business");
                         userDetails.put("isVerify", false);
+
+
+
+                        FirebaseDatabase.getInstance().getReference().child("ForVerification")
+                                .child(user_id).child("Business_Permit").setValue(imagePermit);
 
                         current_user_db.setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -172,8 +177,8 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                                     userDetails.put("bsnBusinessName", bsnBusinessName);
                                     userDetails.put("bsnLocation", bsnLocation);
                                     userDetails.put("bsnMobile", bsnMobile);
-                                    userDetails.put("bsnPhone", bsnPhone);
-                                    userDetails.put("imagePermit", taskSnapshot.getDownloadUrl().toString());
+//                                    userDetails.put("bsnPhone", bsnPhone);
+//                                    userDetails.put("imagePermit", taskSnapshot.getDownloadUrl().toString());
                                     userDetails.put("image", "none");
                                     userDetails.put("image_thumb", "none");
                                     userDetails.put("deviceToken", deviceToken);
@@ -209,7 +214,7 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                     }
 
                     if (!task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "ESelect image first", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Select image first", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.taquio.trasearch.Samok.EditProfileActivity;
 import com.example.taquio.trasearch.R;
@@ -37,7 +38,7 @@ public class PhotoFragment extends Fragment {
         Log.d(TAG, "onCreateView: started.");
 
 
-        Button btn = view.findViewById(R.id.btnLaunchCamera);
+        ImageView btn = view.findViewById(R.id.btnLaunchCamera);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,11 +47,12 @@ public class PhotoFragment extends Fragment {
                         Log.d(TAG, "onClick: starting camera");
                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                    }else{
-                        Intent intent = new Intent(getActivity(), CameraActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
                     }
+//                    else{
+//                        Intent intent = new Intent(getActivity(), CameraActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(intent);
+//                    }
                 }
 
             }
@@ -84,19 +86,20 @@ public class PhotoFragment extends Fragment {
                 }catch (NullPointerException e){
                     Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
                 }
-            }else{
-               try{
-                   bitmap = (Bitmap) data.getExtras().get("data");
-                   Log.d(TAG, "onActivityResult: received  new bitmap from camera: " + bitmap);
-                   Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                   intent.putExtra(getString(R.string.selected_bitmap), bitmap);
-                   intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
-                   startActivity(intent);
-                   getActivity().finish();
-               }catch (NullPointerException e){
-                   Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
-               }
             }
+//            else{
+//               try{
+//                   bitmap = (Bitmap) data.getExtras().get("data");
+//                   Log.d(TAG, "onActivityResult: received  new bitmap from camera: " + bitmap);
+//                   Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+//                   intent.putExtra(getString(R.string.selected_bitmap), bitmap);
+//                   intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
+//                   startActivity(intent);
+//                   getActivity().finish();
+//               }catch (NullPointerException e){
+//                   Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
+//               }
+//            }
 
         }
     }

@@ -42,7 +42,6 @@ public class SaveItemActivity extends AppCompatActivity{
 //    OnSelect mOnSelectedListener;
 
     private ElasticListView mListView;
-    private SaveListAdapter adapter;
     private ArrayList<String> msaveUserId;
     private ArrayList<String> thephotos;
     private ArrayList<Photo> mPaginatedPhotos;
@@ -52,20 +51,6 @@ public class SaveItemActivity extends AppCompatActivity{
     RelativeLayout mRelativeLayout;
     Toolbar savedToolbar;
 
-//    @Override
-//    public void onUpdate() {
-//        getSaveItems();
-//    }
-//    @Override
-//    public void onLoad() {
-//        Log.d(TAG, "ElasticListView: loading...");
-//        // Notify load is done
-//        mListView.notifyLoaded();
-//    }
-//
-//    public interface OnSelect {
-//        void onImageSelected(Photo photo, int activityNumber);
-//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

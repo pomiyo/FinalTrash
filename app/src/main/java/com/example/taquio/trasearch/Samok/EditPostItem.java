@@ -75,9 +75,11 @@ public class EditPostItem extends AppCompatActivity {
         Log.d(TAG, "Editing : " + muser);
         Log.d(TAG, "Editing Photo: " + mphoto);
 
+        String name = muser.getName();
+        String[] arname = name.split(" ") ;
                             UniversalImageLoader.setImage(muser.getImage(),profphoto, null,"");
                             UniversalImageLoader.setImage(mphoto.getImage_path(),postedphoto, null,"");
-                            username.setText(muser.getUserName());
+                            username.setText(arname[0]);
 
 
         save.setOnClickListener(new View.OnClickListener() {

@@ -3,12 +3,15 @@ package com.example.taquio.trasearch.Samok;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +24,7 @@ import com.example.taquio.trasearch.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -53,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
             ,field_password
             ,field_username
             ,field_cPassword
-            ,field_name
+            ,field_address
             ,field_phonenumber;
     private Button btn_submit;
     private TextView register_cancelBtn;
@@ -61,6 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView userProfileImage;
     private Uri filePath;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private final String APPLICATION_KEY = "f210079c-626f-47fe-a1ce-8b82077daffb";
+    private final int RESOLVE_HINT =19;
 
 
     @Override
@@ -77,6 +83,14 @@ public class RegisterActivity extends AppCompatActivity {
             field_email.setText(email);
         }
 
+        register_cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
 
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+
     public void addUser(String email,String password)
     {
         Log.d(TAG, "addUser: Started");
@@ -184,13 +199,19 @@ public class RegisterActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+        if (requestCode == RESOLVE_HINT) {
+            if (resultCode == RESULT_OK) {
+                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                // credential.getId();  <-- will need to process phone number string
+            }
+        }
     }
 
     private boolean hasRegError()
     {
         final String email = field_email.getText().toString(),
                 password = field_password.getText().toString(),
-                username = field_username.getText().toString(),
+//                username = field_username.getText().toString(),
                 name = field_username.getText().toString();
         boolean flag = true;
 
@@ -202,10 +223,10 @@ public class RegisterActivity extends AppCompatActivity {
         {
             field_username.setError("Please input a valid Name");
         }
-        else if (username.length()<=0)
-        {
-            field_username.setError("Please input a valid Username");
-        }
+//        else if (username.length()<=0)
+//        {
+//            field_username.setError("Please input a valid Username");
+//        }
         else if(password.length()<8)
         {
             field_password.setError("Password must be more than 8 characters");
@@ -223,8 +244,8 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Log.d(TAG, "updateUI: Adding User Details to Database");
 
-            final String username = field_username.getText().toString();
-            final String name = field_name.getText().toString().toUpperCase();
+            final String name = field_username.getText().toString();
+            final String address = field_address.getText().toString().toUpperCase();
             email = field_email.getText().toString();
             final String phonenumber = field_phonenumber.getText().toString();
             final String user_id=mAuth.getCurrentUser().getUid();
@@ -234,9 +255,9 @@ public class RegisterActivity extends AppCompatActivity {
             Map userDetails = new HashMap();
             userDetails.put("Email",email);
             userDetails.put("Name",name);
-            userDetails.put("UserName",username);
-            userDetails.put("Image","default");
-            userDetails.put("Image_thumb","default");
+            userDetails.put("Address",address);
+            userDetails.put("Image","none");
+            userDetails.put("Image_thumb","none");
             userDetails.put("device_token",deviceToken);
             userDetails.put("PhoneNumber",phonenumber);
             userDetails.put("userID",mAuth.getCurrentUser().getUid());
@@ -274,8 +295,18 @@ public class RegisterActivity extends AppCompatActivity {
 //        chooseImage = findViewById(R.id.register_chooseImage);
 //        userProfileImage = findViewById(R.id.register_image);
         field_cPassword = findViewById(R.id.field_cPassword);
-        field_name = findViewById(R.id.field_name);
+        field_address = findViewById(R.id.address);
         field_phonenumber = findViewById(R.id.field_phonenumber);
         register_cancelBtn = findViewById(R.id.register_cancelBtn);
     }
+//    private void requestHint() throws IntentSender.SendIntentException {
+//        HintRequest hintRequest = new HintRequest.Builder()
+//                .setPhoneNumberIdentifierSupported(true)
+//                .build();
+//
+//        PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(
+//                apiClient, hintRequest);
+//        startIntentSenderForResult(intent.getIntentSender(),
+//                RESOLVE_HINT, null, 0, 0, 0);
+//    }
 }

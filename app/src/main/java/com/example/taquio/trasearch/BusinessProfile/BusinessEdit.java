@@ -83,7 +83,7 @@ public class BusinessEdit extends AppCompatActivity {
         etLocation = (EditText) findViewById(R.id.bsnEditLoc);
         etPassword = (EditText) findViewById(R.id.ediProfile_password);
         etMobile = (EditText) findViewById(R.id.bsnEditMobile);
-        etPhone = (EditText) findViewById(R.id.bsnEditTele);
+//        etPhone = (EditText) findViewById(R.id.bsnEditTele);
         confirm = (ImageView) findViewById(R.id.businessSaveChanges);
         editPhoto = (TextView) findViewById(R.id.ediProfile_changeImage);
         profImage = (CircleImageView) findViewById(R.id.ediProfile_image);
@@ -101,7 +101,7 @@ public class BusinessEdit extends AppCompatActivity {
                 etName.setText(dataSnapshot.child("bsnBusinessName").getValue().toString());
                 etLocation.setText(dataSnapshot.child("bsnLocation").getValue().toString());
                 etMobile.setText(dataSnapshot.child("bsnMobile").getValue().toString());
-                etPhone.setText(dataSnapshot.child("bsnPhone").getValue().toString());
+//                etPhone.setText(dataSnapshot.child("bsnPhone").getValue().toString());
                 mAuthEmail = dataSnapshot.child("bsnEmail").getValue().toString();
 
                 Picasso.with(BusinessEdit.this).load(dataSnapshot.child("image").getValue().toString())
@@ -165,7 +165,7 @@ public class BusinessEdit extends AppCompatActivity {
                 if(!TextUtils.isEmpty(itsEmail)) { email = true; }
                 if(!TextUtils.isEmpty(itsLocation)) { location = true; }
                 if(!TextUtils.isEmpty(itsMobile)) { mobile = true; }
-                if(!TextUtils.isEmpty(itsPhone)) { phone = true; }
+//                if(!TextUtils.isEmpty(itsPhone)) { phone = true; }
                 if(resultUri != null) { image = true; }
 
                 final EditText input = new EditText(BusinessEdit.this);
@@ -190,7 +190,7 @@ public class BusinessEdit extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()) {
-                                                updateProfile(name, email, password, location, mobile, phone, image);
+                                                updateProfile(name, email, password, location, mobile, image);
                                             } else {
                                                 Toast.makeText(BusinessEdit.this, "Invalid Password" + mAuthPassword + "\n" + mAuthEmail, Toast.LENGTH_SHORT).show();
                                             }
@@ -215,7 +215,6 @@ public class BusinessEdit extends AppCompatActivity {
                                boolean Thispassword,
                                boolean Thislocation,
                                boolean Thismobile,
-                               boolean Thisphone,
                                boolean Thisimage) {
         Map updateDB = new HashMap();
         boolean flag = false, emailFlag = false;
@@ -237,10 +236,10 @@ public class BusinessEdit extends AppCompatActivity {
             flag = true;
             updateDB.put("bsnMobile", etMobile.getText().toString());
         }
-        if(Thisphone) {
-            flag = true;
-            updateDB.put("bsnPhone", etPhone.getText().toString());
-        }
+//        if(Thisphone) {
+//            flag = true;
+//            updateDB.put("bsnPhone", etPhone.getText().toString());
+//        }
         if(Thispassword)
         {
             flag = true;

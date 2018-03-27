@@ -22,11 +22,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,6 +57,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,6 +78,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private ArrayList<String> mUsers;
     private ArrayList<String> businessUser;
     private DatabaseReference databaseReference;
+    private static final int ACTIVITY_NUM = 3;
+    private Context mContext = MapActivity.this;
     //permissions
     private Boolean mLocationPermissionsGranted = false;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -87,9 +93,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     ArrayList<Location> latlong;
     GoogleMap mgoogleMap;
     GoogleApiClient mgoogleClient;
-    Marker marker;
     Button button;
-    TextView textView;
     String lattitude, longitude;
     LocationManager locationManager;
     private static final int LOCATION_REQUEST = 500;
@@ -143,15 +147,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         if (googleServicesAvailable()) {
-            Toast.makeText(this, "Map is Good!", Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_map);
             listPoints = new ArrayList<>();
             getLocationPermission();
             initMap();
+            setupBottomNavigationView();
 
-
-        } else {
-            //if not supported
 
         }
     }
@@ -161,53 +162,35 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Log.d("MapActivity", "setRoute: " + getDataFromBundle().getBsnBusinessName() +
                 " LatLng: " + getDataFromBundle().getBsnLocation() +
                 " Contact: " + getDataFromBundle().getBsnMobile() + "" + getDataFromBundle().getBsnPhone());
-       final String name = getDataFromBundle().getBsnBusinessName();
-       final String location = getDataFromBundle().getBsnLocation();
-       final String contact = "" + getDataFromBundle().getBsnMobile() + "" + getDataFromBundle().getBsnPhone();
+        final String name = getDataFromBundle().getBsnBusinessName();
+        final String location = getDataFromBundle().getBsnLocation();
+        final String contact = "" + getDataFromBundle().getBsnMobile() + "" + getDataFromBundle().getBsnPhone();
 
         Log.d("MapActivity", "setRoute: " + convertToLatLng(location));
         //addMarker(convertToLatLng(location), name, contact);
 
-       mgoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-           @Override
-           public void onMapLoaded() {
-               LatLng destine = convertToLatLng(location);
-
-               //Reset marker when already 2
-//        if (listPoints.size() == 2) {
-//            listPoints.clear();
-//            mgoogleMap.clear();
-//        }
-               LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-               //Save first point select
-               listPoints.add(ll);
-               //Save first point select
-               MarkerOptions markerOptions = new MarkerOptions();
-               markerOptions.position(ll);
-
-               if (listPoints.size() == 1) {
-                   //Add first marker to the map
-//                   markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-//                   mgoogleMap.addMarker(markerOptions);
-               }
-//               else{
-//                   markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-//                   addMarker(convertToLatLng(location), name, contact);
-//               }
-//               mgoogleMap.addMarker(markerOptions);
-               //Save first point select
-               listPoints.add(destine);
+        mgoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                LatLng destine = convertToLatLng(location);
+                LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
+                //Save first point select
+                listPoints.add(ll);
+                //Save first point select
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(ll);
+                listPoints.add(destine);
 //               Toast.makeText(this, "Listpoints " + listPoints.add(destine), Toast.LENGTH_SHORT).show();
 
-               if (listPoints.size() == 2) {
-                   addMarker(convertToLatLng(location), name, contact);
-                   //Create the URL to get request from first marker to second marker
-                   String url1 = getRequestUrl(listPoints.get(0), listPoints.get(1));
-                   TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                   taskRequestDirections.execute(url1);
-               }
-           }
-       });
+                if (listPoints.size() == 2) {
+                    addMarker(convertToLatLng(location), name, contact);
+                    //Create the URL to get request from first marker to second marker
+                    String url1 = getRequestUrl(listPoints.get(0), listPoints.get(1));
+                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                    taskRequestDirections.execute(url1);
+                }
+            }
+        });
 
     }
 
@@ -422,9 +405,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Name = dataSnapshot.child("bsnBusinessName").getValue().toString();
                                 Location = dataSnapshot.child("bsnLocation").getValue().toString();
-                                String Phone = dataSnapshot.child("bsnPhone").getValue().toString();
+//                                String Phone = dataSnapshot.child("bsnPhone").getValue().toString();
                                 String Mobile = dataSnapshot.child("bsnMobile").getValue().toString();
-                                Contact = "Contact Number: " + Phone + " / " + Mobile;
+                                Contact = "Contact Number: " + Location +"\n" + Mobile;
 
                                 addMarker(convertToLatLng(Location), Name, Contact);
                             }
@@ -512,8 +495,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-
-//            mgoogleMap.setMyLocationEnabled(true);
             //if from profile or from bottomnav
             Intent i = getIntent();
 
@@ -534,9 +515,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     break;
                 case "frombottomnav":
                     Toast.makeText(this, "From Buttom Nav: " + data, Toast.LENGTH_SHORT).show();
-                    getDeviceLocation();
-                    mgoogleMap.setMyLocationEnabled(true);
-                    readDatabase();
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        buildAlertMessageNoGps();
+
+                    } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                        getDeviceLocation();
+                        mgoogleMap.setMyLocationEnabled(true);
+                        readDatabase();
+                    }
                     break;
             }
 
@@ -565,7 +553,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 longitude = String.valueOf(longi);
             }
             {
-                Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Unable to Trace your location",Toast.LENGTH_SHORT).show();
             }
             return location;
         }
@@ -589,53 +577,40 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         final AlertDialog alert = builder.create();
         alert.show();
     }
-    private void getDeviceLocation() {
-        Log.d("MapActivity", "getDeviceLocation: getting the devices current location");
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
-
             if(mLocationPermissionsGranted){
 
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
-
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        boolean flag = false;
-                        final Location currentLocation;
-                        final double lat , lng;
                         if(task.isSuccessful()){
-                            flag = true;
-                            currentLocation = (Location) task.getResult();
-                            Log.d(TAG, "onComplete: found location! " + currentLocation);
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    10);
+                                    12);
+
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
             }
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
-
     }
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
-
-//    private void goToLocationZoom(double lat, double lng, float zoom) {
-//
-//        LatLng ll = new LatLng(lat, lng);
-//        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
-//        mgoogleMap.moveCamera(update);
-//    }
 
     @Override
     public void onBackPressed() {
@@ -665,37 +640,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         return new LatLng(lat,lng);
     }
 
-//    public void geoLocate(View view) throws IOException {
-//
-//        EditText str = findViewById(R.id.search);
-//        String str1 = str.getText().toString();
-//
-//        Geocoder gc = new Geocoder(this);
-//        List<Address> list = gc.getFromLocationName(str1, 1);
-//
-//        Address address = list.get(0);
-//        String locality = address.getLocality();
-//
-//        double lat = address.getLatitude();
-//        double lng = address.getLongitude();
-//        //goToLocationZoom(lat, lng, 15);
-//
-//        setMarker(locality, lat, lng);
-//    }
-
-//    private void setMarker(String locality, double lat, double lng) {
-//        if(marker!=null){
-//            marker.remove();
-//        }
-//
-//        MarkerOptions options = new MarkerOptions()
-//                .title(locality)
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-//                .position(new LatLng(lat, lng))
-//                .snippet("I am here");
-//        marker = mgoogleMap.addMarker(options);
-//    }
-
     LocationRequest mlocationRequest;
 
     @Override
@@ -719,17 +663,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
-            if(location == null){
-                Toast.makeText(this, "Can't get current location!", Toast.LENGTH_LONG).show();
-            }else{
-                LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15f);
-                mgoogleMap.animateCamera(update);
-            }
+        if(location == null){
+            Toast.makeText(this, "Can't get current location!", Toast.LENGTH_LONG).show();
+        }else{
+            LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15f);
+            mgoogleMap.animateCamera(update);
+        }
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    /*
+    * For Bottom Navigation
+    */
+    private void setupBottomNavigationView()
+    {
+        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, MapActivity.this ,bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
     }
 }

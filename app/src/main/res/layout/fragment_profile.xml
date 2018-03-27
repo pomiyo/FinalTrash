@@ -25,15 +25,14 @@
 
         </LinearLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/myProfile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_below="@+id/linearLayout1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="-30dp"
-            android:background="@drawable/background"
-            android:src="@drawable/images" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/myProfile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignTop="@+id/savebookmarks"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background"
+        android:src="@drawable/images" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

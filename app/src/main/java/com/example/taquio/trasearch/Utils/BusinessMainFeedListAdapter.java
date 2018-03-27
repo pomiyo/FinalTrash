@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -205,6 +206,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
         imageLoader.displayImage(getItem(position).getImage_path(), holder.image);
 
 
+
         //get the profile image and username
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
@@ -217,14 +219,17 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
                     Log.d(TAG, "onDataChange: found user: "
-                            + singleSnapshot.getValue(User.class).getUserName());
+                            + singleSnapshot.getValue(User.class).getName());
 
-                    holder.username.setText(singleSnapshot.getValue(User.class).getUserName());
+                    String name = singleSnapshot.getValue(User.class).getName();
+                    String[] arname = name.split(" ") ;
+
+                            holder.username.setText(arname[0]);
                     holder.username.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Log.d(TAG, "onClick: navigating to profile of: " +
-                                    holder.user.getUserName());
+                                    holder.user.getName());
 
                             Intent intent = new Intent(mContext, BusMyProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
@@ -260,7 +265,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
                         @Override
                         public void onClick(View v) {
                             Log.d(TAG,  "onClick: navigating to profile of: " +
-                                    holder.user.getUserName());
+                                    holder.user.getName());
 
                             Intent intent = new Intent(mContext, BusMyProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
@@ -272,16 +277,6 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
 
 
                     holder.user = singleSnapshot.getValue(User.class);
-//                    holder.comment.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            ((HomeActivity2)mContext).onCommentThreadSelected(getItem(position),
-//                                    mContext.getString(R.string.home_activity));
-////
-////                            //another thing?
-//                            ((HomeActivity2)mContext).hideLayout();
-//                        }
-//                    });
                 }
 
             }
@@ -302,7 +297,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     Log.d(TAG, "onDataChange: found user:  THISSSS" +
-                    singleSnapshot.getValue(User.class).getUserName());
+                    singleSnapshot.getValue(User.class).getName());
 
                     holder.user = singleSnapshot.getValue(User.class);
                     holder.dm.setOnClickListener(new View.OnClickListener() {
@@ -310,7 +305,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, MessageActivity.class);
                             i.putExtra("user_id", holder.photo.getUser_id());
-                            i.putExtra("user_name", holder.user.getUserName());
+                            i.putExtra("user_name", holder.user.getName());
                             mContext.startActivity(i);
                         }
                     });
@@ -319,7 +314,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
                         public void onClick(View v) {
                             Intent i = new Intent(mContext, MessageActivity.class);
                             i.putExtra("user_id", holder.photo.getUser_id());
-                            i.putExtra("user_name", holder.user.getUserName());
+                            i.putExtra("user_name", holder.user.getName());
                             mContext.startActivity(i);
                         }
                     });
@@ -475,7 +470,7 @@ public class BusinessMainFeedListAdapter extends ArrayAdapter<Photo> {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    currentUsername = singleSnapshot.getValue(User.class).getUserName();
+                    currentUsername = singleSnapshot.getValue(User.class).getName();
                 }
 
             }
