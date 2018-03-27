@@ -3,15 +3,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <Button
+
+    <ImageView
         android:id="@+id/btnLaunchCamera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/string_open_camera"
-        android:textSize="30sp"/>
+        android:layout_centerVertical="true"
+        android:background="@drawable/cameradesign"
+        android:src="@drawable/photo_camera" />
 
 </RelativeLayout>

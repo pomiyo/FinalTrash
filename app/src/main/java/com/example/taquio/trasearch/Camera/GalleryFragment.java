@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.taquio.trasearch.Samok.EditProfileActivity;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.HomeActivity2;
 import com.example.taquio.trasearch.Utils.FilePaths;
 import com.example.taquio.trasearch.Utils.FileSearch;
 import com.example.taquio.trasearch.Utils.GridImageAdapter;
@@ -73,7 +74,7 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: closing the gallery fragment.");
-                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().startActivity(new Intent(getContext(), HomeActivity2.class));
             }
         });
 
@@ -88,12 +89,6 @@ public class GalleryFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), NextActivity.class);
                     intent.putExtra(getString(R.string.selected_image), mSelectedImage);
                     startActivity(intent);
-                        }else{
-                            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                            intent.putExtra(getString(R.string.selected_image), mSelectedImage);
-                            intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
-                            startActivity(intent);
-                            getActivity().finish();
                         }
 
                     }

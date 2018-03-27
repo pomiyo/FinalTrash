@@ -91,11 +91,11 @@ public class FirebaseMethods {
                                 .getValue(User.class)
                                 .getName()
                 );
-                user.setUserName(
-                        ds.child(userID)
-                                .getValue(User.class)
-                                .getUserName()
-                );
+//                user.getAddress(
+//                        ds.child(userID)
+//                                .getValue(User.class)
+//                                .getAddress()
+//                );
                 user.setDevice_token(
                         ds.child(userID)
                                 .getValue(User.class)
@@ -149,7 +149,7 @@ public class FirebaseMethods {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri firebaseUrl = taskSnapshot.getDownloadUrl();
 
-                    Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Successfully Posted", Toast.LENGTH_SHORT).show();
 
                     //add the new photo to 'photos' node and 'user_photos' node
                     addPhotoToDatabase(post_desc, firebaseUrl.toString(), qty);

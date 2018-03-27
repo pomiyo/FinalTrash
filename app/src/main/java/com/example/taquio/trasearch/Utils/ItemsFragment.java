@@ -68,6 +68,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
 
         // Notify load is done
         mListView.notifyLoaded();
+        mListView.notifyUpdated();
     }
 
     @Nullable
@@ -86,6 +87,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
     private void initListViewRefresh(){
         mListView.setHorizontalFadingEdgeEnabled(true);
         mListView.setAdapter(adapter);
+        mListView.enableUpdateHeader(true);
         mListView.enableLoadFooter(true)
                 .getLoadFooter().setLoadAction(LoadFooter.LoadAction.RELEASE_TO_LOAD);
         mListView.setOnUpdateListener(this)

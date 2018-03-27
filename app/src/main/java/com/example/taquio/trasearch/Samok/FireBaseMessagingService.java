@@ -53,8 +53,8 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
                         Image_thumb = dataSnapshot.child("Image_thumb").getValue().toString(),
                         Name = dataSnapshot.child("Name").getValue().toString(),
                         CPNumber = dataSnapshot.child("PhoneNumber").getValue().toString(),
-                        userID = dataSnapshot.child("userID").getValue().toString(),
-                        UserName = dataSnapshot.child("UserName").getValue().toString();
+                        userID = dataSnapshot.child("userID").getValue().toString();
+//                        UserName = dataSnapshot.child("UserName").getValue().toString();
                 Boolean verify = dataSnapshot.child("isVerify").getValue(Boolean.class);
 
                 user.setDevice_token(deviceToken);
@@ -64,7 +64,7 @@ public class FireBaseMessagingService extends com.google.firebase.messaging.Fire
                 user.setName(Name);
                 user.setPhoneNumber(CPNumber);
                 user.setUserID(userID);
-                user.setUserName(UserName);
+//                user.setName(UserName);
                 user.setVerify(verify);
 
 

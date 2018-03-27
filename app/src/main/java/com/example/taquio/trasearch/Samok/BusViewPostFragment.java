@@ -436,7 +436,9 @@ public class BusViewPostFragment extends Fragment{
 //            UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "drawable://" );
 //        }else {
             UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-            mUsername.setText(mCurrentUser.getUserName());
+        String name = mCurrentUser.getName();
+        String[] arname = name.split(" ") ;
+            mUsername.setText(arname[0]);
 //            mLikes.setText(mLikesString);
             mCaption.setText(mPhoto.getPhoto_description());
             mItem.setText(mPhoto.getQuantity());
@@ -460,7 +462,8 @@ public class BusViewPostFragment extends Fragment{
 
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     final User user = singleSnapshot.getValue(User.class);
-
+                    String name = user.getName();
+                    String[] arname = name.split(" ") ;
                     mProfileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -486,7 +489,7 @@ public class BusViewPostFragment extends Fragment{
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
                             i.putExtra("user_id", mPhoto.getUser_id());
-                            i.putExtra("user_name", user.getUserName());
+                            i.putExtra("user_name", user.getName());
                             getContext().startActivity(i);
                         }
                     });
@@ -495,7 +498,7 @@ public class BusViewPostFragment extends Fragment{
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
                             i.putExtra("user_id", mPhoto.getUser_id());
-                            i.putExtra("user_name", user.getUserName());
+                            i.putExtra("user_name", user.getName());
                             getContext().startActivity(i);
                         }
                     });

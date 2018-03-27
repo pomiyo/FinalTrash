@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,16 +17,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taquio.trasearch.Models.ToBuy;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
+import com.example.taquio.trasearch.Utils.ToBuyAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,26 +57,48 @@ public class UserJunkShopView extends AppCompatActivity {
     private FirebaseUser currentUser;
     String user_id;
     String verifier;
+    private RecyclerView tobuy, tosell;
+    private ArrayList<String> tobuyMat;
+    private ArrayList<String> tosellMat;
+    private ArrayList<ToBuy> tobuyList;
+    private ToBuyAdapter buyAdapter, sellAdapter;
+
+    UserJunkShopView(){}
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_activity_profile);
         Log.d(TAG, "onCreate: business profile 2 sstarting");
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        //For BUY
+        tobuy = findViewById(R.id.recycler1);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
+        tobuy.setLayoutManager(lm);
+        tobuy.setItemAnimator(new DefaultItemAnimator());
+
+        tobuyList = new ArrayList<>();
+
+        buyAdapter = new ToBuyAdapter(tobuyList, this);
+
+
+        //For Sell
         final Junkshop bundle = (Junkshop) getIntent().getParcelableExtra("busprofile");
-        Toast.makeText(mContext, "" +bundle.getBsnBusinessName(), Toast.LENGTH_SHORT).show();
+        getBuy(bundle);
+
 
 //        setupViewPager();
         tvName = (TextView) findViewById(R.id.busEditUser);
         tvEmail = (TextView) findViewById(R.id.busUserEmail);
         tvMobile = (TextView) findViewById(R.id.busUserNumber);
-        tvPhone = (TextView) findViewById(R.id.busTele);
+//        tvPhone = (TextView) findViewById(R.id.busTele);
         tvLocation = (TextView) findViewById(R.id.busLoc);
         btnBuy = (Button) findViewById(R.id.btnBuy);
         btnSell = (Button) findViewById(R.id.btnSell);
         btnRoute = findViewById(R.id.route);
-        btnEdit = (Button) findViewById(R.id.busBtnEdit);
+//        btnEdit = (Button) findViewById(R.id.busBtnEdit);
         bottomNavigationView = findViewById(R.id.bottomNavViewBar);
 
         verify = (ImageView) findViewById(R.id.imVerify);
@@ -73,29 +106,6 @@ public class UserJunkShopView extends AppCompatActivity {
         profPicImage = (CircleImageView) findViewById(R.id.busImageView10);
 
         setupBottomNavigationView();
-//        btnBuy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(UserJunkShopView.this, BusinessBuy.class);
-//                startActivity(i);
-//            }
-//        });
-//
-//        btnSell.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(UserJunkShopView.this, BusinessBuy.class);
-//                startActivity(i);
-//            }
-//        });
-//
-//        btnEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(mContext, BusinessEdit.class);
-//                startActivity(i);
-//            }
-//        });
         //pass data to MapActivity
         btnRoute.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,20 +154,43 @@ public class UserJunkShopView extends AppCompatActivity {
         user_id = currentUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(bundle.getUserId());
 
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(final DataSnapshot dataSnapshot) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
+
+        FirebaseDatabase.getInstance().getReference().child("ToSell")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
+
+    private void getBuy(final Junkshop bundle) {
+        FirebaseDatabase.getInstance().getReference().child("ToBuy")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot sp: dataSnapshot.getChildren()){
+                            if(sp.getKey().equalsIgnoreCase(bundle.getUserId())){
+                                tobuyList.add(sp.getValue(ToBuy.class));
+
+                                tobuy.setAdapter(buyAdapter);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);

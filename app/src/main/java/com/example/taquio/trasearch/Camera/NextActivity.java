@@ -57,7 +57,7 @@ public class NextActivity extends AppCompatActivity {
         setContentView(R.layout.activitynext);
         mFirebaseMethods = new FirebaseMethods(NextActivity.this);
         mCaption = findViewById(R.id.caption);
-        mqty = findViewById(R.id.caption);
+        mqty = findViewById(R.id.qty);
 
         setupFirebaseAuth();
         setImage();
@@ -78,7 +78,7 @@ public class NextActivity extends AppCompatActivity {
                 share.setEnabled(false);
                 Log.d(TAG, "onClick: navigating to the final share screen.");
                 //upload the image to firebase
-                Toast.makeText(NextActivity.this, "Uploading new photo...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NextActivity.this, "Uploading Post...", Toast.LENGTH_SHORT).show();
                 String caption = mCaption.getText().toString();
                 String qty = mqty.getText().toString();
 

@@ -59,6 +59,7 @@ public class BusinessItemsFragment extends Fragment implements OnUpdateListener,
         Log.d(TAG, "ElasticListView: updating list view...");
 
         getKeys();
+        getPhotos();
     }
 
     @Override
@@ -67,6 +68,7 @@ public class BusinessItemsFragment extends Fragment implements OnUpdateListener,
 
         // Notify load is done
         mListView.notifyLoaded();
+        mListView.notifyUpdated();
     }
 
     @Nullable
@@ -85,6 +87,7 @@ public class BusinessItemsFragment extends Fragment implements OnUpdateListener,
     private void initListViewRefresh(){
         mListView.setHorizontalFadingEdgeEnabled(true);
         mListView.setAdapter(adapter);
+        mListView.enableUpdateHeader(true);
         mListView.enableLoadFooter(true)
                 .getLoadFooter().setLoadAction(LoadFooter.LoadAction.RELEASE_TO_LOAD);
         mListView.setOnUpdateListener(this)

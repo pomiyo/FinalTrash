@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
             ,field_password
             ,field_username
             ,field_cPassword
-            ,field_name
+            ,field_address
             ,field_phonenumber;
     private Button btn_submit;
     private TextView register_cancelBtn;
@@ -211,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity {
     {
         final String email = field_email.getText().toString(),
                 password = field_password.getText().toString(),
-                username = field_username.getText().toString(),
+//                username = field_username.getText().toString(),
                 name = field_username.getText().toString();
         boolean flag = true;
 
@@ -223,10 +223,10 @@ public class RegisterActivity extends AppCompatActivity {
         {
             field_username.setError("Please input a valid Name");
         }
-        else if (username.length()<=0)
-        {
-            field_username.setError("Please input a valid Username");
-        }
+//        else if (username.length()<=0)
+//        {
+//            field_username.setError("Please input a valid Username");
+//        }
         else if(password.length()<8)
         {
             field_password.setError("Password must be more than 8 characters");
@@ -244,8 +244,8 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Log.d(TAG, "updateUI: Adding User Details to Database");
 
-            final String username = field_username.getText().toString();
-            final String name = field_name.getText().toString().toUpperCase();
+            final String name = field_username.getText().toString();
+            final String address = field_address.getText().toString().toUpperCase();
             email = field_email.getText().toString();
             final String phonenumber = field_phonenumber.getText().toString();
             final String user_id=mAuth.getCurrentUser().getUid();
@@ -255,9 +255,9 @@ public class RegisterActivity extends AppCompatActivity {
             Map userDetails = new HashMap();
             userDetails.put("Email",email);
             userDetails.put("Name",name);
-            userDetails.put("UserName",username);
-            userDetails.put("Image","default");
-            userDetails.put("Image_thumb","default");
+            userDetails.put("Address",address);
+            userDetails.put("Image","none");
+            userDetails.put("Image_thumb","none");
             userDetails.put("device_token",deviceToken);
             userDetails.put("PhoneNumber",phonenumber);
             userDetails.put("userID",mAuth.getCurrentUser().getUid());
@@ -295,7 +295,7 @@ public class RegisterActivity extends AppCompatActivity {
 //        chooseImage = findViewById(R.id.register_chooseImage);
 //        userProfileImage = findViewById(R.id.register_image);
         field_cPassword = findViewById(R.id.field_cPassword);
-        field_name = findViewById(R.id.field_name);
+        field_address = findViewById(R.id.address);
         field_phonenumber = findViewById(R.id.field_phonenumber);
         register_cancelBtn = findViewById(R.id.register_cancelBtn);
     }

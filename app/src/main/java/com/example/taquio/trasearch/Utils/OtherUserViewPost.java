@@ -284,21 +284,9 @@ public class OtherUserViewPost extends Fragment {
         return formatter.format(calendar.getTime());
     }
     private void setupWidgets(){
-//        Log.d(TAG, "setupWidgets:  GETTTTINGGG IMAGEE >>>> " + mCurrentUser.getImage() );
-//        String timestampDiff = getTimestampDifference();
-//        if(!timestampDiff.equals("0")){
-//            mTimestamp.setText(timestampDiff + " DAYS AGO");
-//        }else{
-//            mTimestamp.setText("TODAY");
-//        }
-//        mTimestamp.setText(getDate(mPhoto.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
-//        UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-//        mUsername.setText(mCurrentUser.getUserName());
-////        mLikes.setText(mLikesString);
-//        mCaption.setText(mPhoto.getPhoto_description());
         mTimestamp.setText(getDate(getPhotoFromBundle().getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
         UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
-        mUsername.setText(mCurrentUser.getUserName());
+        mUsername.setText(mCurrentUser.getName());
         mCaption.setText(getPhotoFromBundle().getPhoto_description());
         mItem.setText(getPhotoFromBundle().getQuantity());
         mBookmark.setOnClickListener(new View.OnClickListener() {
@@ -398,7 +386,7 @@ public class OtherUserViewPost extends Fragment {
                         public void onClick(View v) {
                             Intent i = new Intent(getContext(), MessageActivity.class);
                             i.putExtra("user_id", mPhoto.getUser_id());
-                            i.putExtra("user_name", user.getUserName());
+                            i.putExtra("user_name", user.getName());
                             getContext().startActivity(i);
                         }
                     });
@@ -449,30 +437,6 @@ public class OtherUserViewPost extends Fragment {
 
     }
 
-    /**
-     * Returns a string representing the number of days ago the post was made
-     * @return
-     */
-//    private String getTimestampDifference(){
-//        Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
-//
-//        String difference = "";
-//        Calendar c = Calendar.getInstance();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.CANADA);
-//        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));//google 'android list of timezones'
-//        Date today = c.getTime();
-//        sdf.format(today);
-//        Date timestamp;
-//        final String photoTimestamp = mPhoto.getDate_created();
-//        try{
-//            timestamp = sdf.parse(photoTimestamp);
-//            difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));
-//        }catch (ParseException e){
-//            Log.e(TAG, "getTimestampDifference: ParseException: " + e.getMessage() );
-//            difference = "0";
-//        }
-//        return difference;
-//    }
     private String getTheTag(){
         Bundle bundle = this.getArguments();
         if(bundle != null) {

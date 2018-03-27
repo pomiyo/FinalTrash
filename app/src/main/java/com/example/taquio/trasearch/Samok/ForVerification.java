@@ -177,7 +177,7 @@ public class ForVerification extends AppCompatActivity {
                 {
                     ver_UploadExec.setEnabled(true);
                 }else{
-                    Toast.makeText(ForVerification.this,"You must choose a Selfie to upload",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForVerification.this,"Please take a picture for security",Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -193,7 +193,7 @@ public class ForVerification extends AppCompatActivity {
                 {
                     ver_UploadExec.setEnabled(true);
                 }else{
-                    Toast.makeText(ForVerification.this,"You must choose a Valid ID to upload",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForVerification.this,"Please provide a valid ID picture",Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

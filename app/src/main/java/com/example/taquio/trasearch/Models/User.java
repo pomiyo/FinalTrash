@@ -11,11 +11,23 @@ public class User implements Parcelable {
 
 
     private String userID, Email, Name, Image,
-            Image_thumb, UserName, device_token, PhoneNumber;
+            Image_thumb, Address, device_token, PhoneNumber;
     private Boolean isVerify;
 
     public User() {
 
+    }
+
+    public User(String userID, String email, String name, String image, String image_thumb, String address, String device_token, String phoneNumber, Boolean isVerify) {
+        this.userID = userID;
+        Email = email;
+        Name = name;
+        Image = image;
+        Image_thumb = image_thumb;
+        Address = address;
+        this.device_token = device_token;
+        PhoneNumber = phoneNumber;
+        this.isVerify = isVerify;
     }
 
     protected User(Parcel in) {
@@ -24,7 +36,7 @@ public class User implements Parcelable {
         Name = in.readString();
         Image = in.readString();
         Image_thumb = in.readString();
-        UserName = in.readString();
+        Address = in.readString();
         device_token = in.readString();
         PhoneNumber = in.readString();
         byte tmpIsVerify = in.readByte();
@@ -43,6 +55,21 @@ public class User implements Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID='" + userID + '\'' +
+                ", Email='" + Email + '\'' +
+                ", Name='" + Name + '\'' +
+                ", Image='" + Image + '\'' +
+                ", Image_thumb='" + Image_thumb + '\'' +
+                ", Address='" + Address + '\'' +
+                ", device_token='" + device_token + '\'' +
+                ", PhoneNumber='" + PhoneNumber + '\'' +
+                ", isVerify=" + isVerify +
+                '}';
+    }
+
     public String getUserID() {
         return userID;
     }
@@ -55,40 +82,40 @@ public class User implements Parcelable {
         return Email;
     }
 
-    public void setEmail(String Email) {
-        this.Email = Email;
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public String getName() {
         return Name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        Name = name;
     }
 
     public String getImage() {
         return Image;
     }
 
-    public void setImage(String Image) {
-        this.Image = Image;
+    public void setImage(String image) {
+        Image = image;
     }
 
     public String getImage_thumb() {
         return Image_thumb;
     }
 
-    public void setImage_thumb(String Image_thumb) {
-        this.Image_thumb = Image_thumb;
+    public void setImage_thumb(String image_thumb) {
+        Image_thumb = image_thumb;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
+    public void setAddress(String address) {
+        Address = address;
     }
 
     public String getDevice_token() {
@@ -103,16 +130,16 @@ public class User implements Parcelable {
         return PhoneNumber;
     }
 
-    public void setPhoneNumber(String PhoneNumber) {
-        this.PhoneNumber = PhoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
     }
 
     public Boolean getVerify() {
         return isVerify;
     }
 
-    public void setVerify(Boolean isVerify) {
-        this.isVerify = isVerify;
+    public void setVerify(Boolean verify) {
+        isVerify = verify;
     }
 
     @Override
@@ -121,30 +148,15 @@ public class User implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(userID);
-        parcel.writeString(Email);
-        parcel.writeString(Name);
-        parcel.writeString(Image);
-        parcel.writeString(Image_thumb);
-        parcel.writeString(UserName);
-        parcel.writeString(device_token);
-        parcel.writeString(PhoneNumber);
-        parcel.writeByte((byte) (isVerify == null ? 0 : isVerify ? 1 : 2));
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userID='" + userID + '\'' +
-                ", Email='" + Email + '\'' +
-                ", Name='" + Name + '\'' +
-                ", Image='" + Image + '\'' +
-                ", Image_thumb='" + Image_thumb + '\'' +
-                ", UserName='" + UserName + '\'' +
-                ", device_token='" + device_token + '\'' +
-                ", PhoneNumber='" + PhoneNumber + '\'' +
-                ", isVerify=" + isVerify +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userID);
+        dest.writeString(Email);
+        dest.writeString(Name);
+        dest.writeString(Image);
+        dest.writeString(Image_thumb);
+        dest.writeString(Address);
+        dest.writeString(device_token);
+        dest.writeString(PhoneNumber);
+        dest.writeByte((byte) (isVerify == null ? 0 : isVerify ? 1 : 2));
     }
 }

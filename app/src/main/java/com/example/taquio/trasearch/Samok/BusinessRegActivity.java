@@ -32,7 +32,7 @@ public class BusinessRegActivity extends AppCompatActivity{
         bsnConPass = (EditText) findViewById(R.id.bsnConPass);
         bsnBusinessName = (EditText) findViewById(R.id.bsnBusinessName);
         bsnLocation = (EditText) findViewById(R.id.bsnLocation);
-        bsnPhone = (EditText) findViewById(R.id.bsnPhone);
+//        bsnPhone = (EditText) findViewById(R.id.bsnPhone);
         bsnMobile = (EditText) findViewById(R.id.bsnMobile);
 
         busContinue = findViewById(R.id.registerCont);
@@ -44,17 +44,17 @@ public class BusinessRegActivity extends AppCompatActivity{
                 String conpass = bsnConPass.getText().toString();
                 String businessname = bsnBusinessName.getText().toString();
                 String location = bsnLocation.getText().toString();
-                String phone = bsnPhone.getText().toString();
+//                String phone = bsnPhone.getText().toString();
                 String mobile = bsnMobile.getText().toString();
                 if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(conpass) && !TextUtils.isEmpty(businessname)
-                        && !TextUtils.isEmpty(location) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(mobile)) {
+                        && !TextUtils.isEmpty(location) && !TextUtils.isEmpty(mobile)) {
 
                     Intent i = new Intent (mContext, BusinessRegActivity2.class);
                     i.putExtra("EMAIL",email);
                     i.putExtra("PASS",pass);
                     i.putExtra("BUSINESSNAME",businessname);
                     i.putExtra("LOCATION",location);
-                    i.putExtra("PHONE",phone);
+//                    i.putExtra("PHONE",phone);
                     i.putExtra("MOBILE",mobile);
                     startActivity(i);
                 }else {

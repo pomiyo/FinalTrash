@@ -70,9 +70,9 @@ public class BusinessProfile extends AppCompatActivity {
         tvName = (TextView) findViewById(R.id.busEditUser);
         tvEmail = (TextView) findViewById(R.id.busUserEmail);
         tvMobile = (TextView) findViewById(R.id.busUserNumber);
-        tvPhone = (TextView) findViewById(R.id.busTele);
+//        tvPhone = (TextView) findViewById(R.id.busTele);
         tvLocation = (TextView) findViewById(R.id.busLoc);
-        btnEdit = (Button) findViewById(R.id.busBtnEdit);
+//        btnEdit = (Button) findViewById(R.id.busBtnEdit);
         btnSell = (Button) findViewById(R.id.btnSell);
         btnBuy = (Button) findViewById(R.id.btnBuy);
         mBackArrow = findViewById(R.id.backArrow);
@@ -141,7 +141,7 @@ public class BusinessProfile extends AppCompatActivity {
                 tvName.setText(dataSnapshot.child("bsnBusinessName").getValue().toString());
                 tvEmail.setText(dataSnapshot.child("bsnEmail").getValue().toString());
                 tvMobile.setText(dataSnapshot.child("bsnMobile").getValue().toString());
-                tvPhone.setText(dataSnapshot.child("bsnPhone").getValue().toString());
+//                tvPhone.setText(dataSnapshot.child("bsnPhone").getValue().toString());
                 tvLocation.setText(dataSnapshot.child("bsnLocation").getValue().toString());
                 Picasso.with(BusinessProfile.this).load(dataSnapshot.child("image").getValue().toString())
                         .networkPolicy(NetworkPolicy.OFFLINE)

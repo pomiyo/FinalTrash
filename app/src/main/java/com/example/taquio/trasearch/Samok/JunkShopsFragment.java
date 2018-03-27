@@ -121,8 +121,6 @@ public class JunkShopsFragment extends Fragment {
                         Log.d(TAG, "onDataChange: >> \n"+ mUsers.get(o));
                         Log.d(TAG, "sakpan "+ businessUser.size());
                         int i = 0;
-//                        while(i < businessUser.size())
-//                        {
 
                             Query query = FirebaseDatabase.getInstance().getReference().child("Users")
                                     .child(mUsers.get(o));
@@ -141,7 +139,6 @@ public class JunkShopsFragment extends Fragment {
                                 }
                             });
                         }
-//                    }
 
 //                    setDataAdapter();
                 }
