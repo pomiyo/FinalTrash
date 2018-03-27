@@ -107,7 +107,8 @@ public class GuestHome extends AppCompatActivity {
         String data = searchQuery;
         Bundle videoBundle = new Bundle();
         videoBundle.putString("searchQuery", data);
-//        Log.d(TAG, "sendVideoData: I'm Here " + data + " " + searchQuery);
+        videoBundle.putBoolean("searchMethod", search_method);
+        Log.d(TAG, "sendVideoData: I'm Here " + data + " " + searchQuery + " " + search_method);
         return videoBundle;
 //        GuestVideosFragment videosFragment = new GuestVideosFragment();
 //        videosFragment.setArguments(videoBundle);

@@ -34,6 +34,7 @@ import java.util.concurrent.Future;
 public class GuestVideosFragment extends Fragment {
     private static final String TAG = "GuestVideoFragment";
     private String searchQuery;
+    private boolean search_method;
     private List<VideoData> videoDataList = new LinkedList<>();
     private RecyclerView recyclerView;
     private VideoDataAdapter mAdapter;
@@ -46,15 +47,20 @@ public class GuestVideosFragment extends Fragment {
         GuestHome activity = (GuestHome)getActivity();
         Bundle result = activity.sendVideoData();
         searchQuery = result.getString("searchQuery");
-//        Log.d(TAG, "onCreateView: " + searchQuery);
+        search_method = result.getBoolean("searchMethod");
         if (!searchQuery.isEmpty()) {
-            videoDataList = getVideos(searchQuery);
-            recyclerView = (RecyclerView) view.findViewById(R.id.guestVideoRecyclerView);
-            mAdapter = new VideoDataAdapter(videoDataList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(mAdapter);
+            if (!search_method) {
+                videoDataList = getVideos(searchQuery);
+                recyclerView = (RecyclerView) view.findViewById(R.id.guestVideoRecyclerView);
+                mAdapter = new VideoDataAdapter(videoDataList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+            }
+            else {
+                Log.d(TAG, "onCreateView: GuestVideoFragment Crawler " + search_method);
+            }
         }
         return view;
     }

@@ -34,7 +34,6 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
             description = (TextView) view.findViewById(R.id.videoListDesc);
             channelTitle = (TextView) view.findViewById(R.id.videoListChannel);
             videoRow = (LinearLayout) view.findViewById(R.id.videoRow);
-            thumbnail = (ImageView) view.findViewById(R.id.videoListThumbnail);
         }
     }
 

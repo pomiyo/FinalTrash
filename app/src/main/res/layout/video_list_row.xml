@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <!--<ImageView-->
             <!--android:id="@+id/videoListThumbnail"-->
             <!--android:layout_width="120dp"-->
@@ -36,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/videoListTitle"
-            android:layout_toRightOf="@+id/videoListThumbnail"
             android:textColor="@color/channelTitle"
             />
 
@@ -44,7 +43,6 @@
             android:id="@+id/videoListTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/videoListThumbnail"
             android:textColor="@color/title"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -53,8 +51,7 @@
             android:id="@+id/videoListDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/videoListChannel"
-            android:layout_toRightOf="@+id/videoListThumbnail"/>
-        <!--</RelativeLayout>-->
+            android:layout_below="@id/videoListChannel"/>
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
