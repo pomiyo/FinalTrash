@@ -60,18 +60,18 @@ public class EditProfileActivity extends AppCompatActivity {
             ,ediProfile_name
             ,ediProfile_email,
             ediProfile_password,
-            ediProfile_cpassword;
+            ediProfile_cpassword, ediProfile_address;
     private TextView ediProfile_changeImage;
     private CircleImageView ediProfile_image;
     private StorageReference mImageStorage;
     private ProgressDialog progressDialog;
     private Uri resultUri;
-    private String newName,newEmail,newPassword,newMobile,mauthEmail,mauthPassword;
+    private String newName,newEmail,newPassword,newMobile,mauthEmail,mauthPassword, newAddress;
     private ImageView ediProfile_saveChanges;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private Boolean name,email,password,mobile,image;
+    private Boolean name,email,password,mobile,image,address;
 
 
 
@@ -120,7 +120,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         itsPass = ediProfile_password.getText().toString(),
                         itsEmail = ediProfile_email.getText().toString(),
                         itsMobile = ediProfile_mobile.getText().toString(),
-                        itsCon = ediProfile_cpassword.getText().toString();
+                        itsCon = ediProfile_cpassword.getText().toString(),
+                        itsAddress = ediProfile_address.getText().toString();
 
                 if(!TextUtils.isEmpty(itsName))
                 {name = true;}
@@ -142,6 +143,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 {mobile = true;}
                 if(resultUri!=null)
                 {image=true;}
+                if (!TextUtils.isEmpty(itsAddress)) {
+                    address = true;
+                    newAddress = itsAddress;
+                }
 
                 final EditText input = new EditText(EditProfileActivity.this);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -173,7 +178,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
 
-                                                uploadData(password, image, name, email, mobile);
+                                                uploadData(password, image, name, email, mobile, address);
                                             }
                                             else
                                             {
@@ -211,7 +216,7 @@ public class EditProfileActivity extends AppCompatActivity {
             , boolean Thisimage
             , boolean Thisname
             , boolean Thisemail
-            , boolean Thismobile) {
+            , boolean Thismobile, Boolean Thisaddress) {
         Map updateDB = new HashMap();
        boolean flag =false
                ,emailFlag=false;
@@ -243,6 +248,10 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+        if(Thisaddress){
+            flag= true;
+            updateDB.put("Address", ediProfile_address.getText().toString());
         }
         if (Thisemail) {
             Log.d(TAG, "uploadData: Will Update Email");
@@ -277,6 +286,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 }
             });
+
             if (Thisimage) {
                 Log.d(TAG, "uploadData: Will Update Image");
 

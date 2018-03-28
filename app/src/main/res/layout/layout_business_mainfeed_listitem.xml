@@ -127,8 +127,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="Message"
-                        android:textColor="@color/green"/>
+                        android:text="MESSAGE"
+                        android:textColor="@color/blue"/>
                     <ImageView
                         android:id="@+id/direct_message"
                         android:layout_width="30dp"

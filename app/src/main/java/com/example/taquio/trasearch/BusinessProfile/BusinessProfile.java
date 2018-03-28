@@ -1,11 +1,9 @@
 package com.example.taquio.trasearch.BusinessProfile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,9 +16,6 @@ import android.widget.TextView;
 
 import com.example.taquio.trasearch.BusinessHome.BusinessHome;
 import com.example.taquio.trasearch.R;
-import com.example.taquio.trasearch.Samok.BusMyProfileActivity;
-import com.example.taquio.trasearch.Samok.HomeActivity2;
-import com.example.taquio.trasearch.Samok.MyProfileActivity;
 import com.example.taquio.trasearch.Samok.SettingsActivity;
 import com.example.taquio.trasearch.Utils.BusinessBottomNavigationViewHelper;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +56,7 @@ public class BusinessProfile extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.business_activity_profile2);
+        setContentView(R.layout.business_profile);
 
         setupBottomNavigationView();
 
@@ -123,13 +118,13 @@ public class BusinessProfile extends AppCompatActivity {
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.busProfileTabs);
 //        tabLayout.setupWithViewPager(mViewPager);
 
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(BusinessProfile.this, BusinessEdit.class);
-                startActivity(i);
-            }
-        });
+//        btnEdit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(BusinessProfile.this, BusinessEdit.class);
+//                startActivity(i);
+//            }
+//        });
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         user_id = currentUser.getUid();

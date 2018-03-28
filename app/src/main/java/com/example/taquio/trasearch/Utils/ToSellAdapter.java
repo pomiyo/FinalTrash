@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.taquio.trasearch.Models.ToBuy;
+import com.example.taquio.trasearch.Models.ToSell;
 import com.example.taquio.trasearch.R;
-import com.example.taquio.trasearch.Samok.RecyclerViewAdapter;
 import com.example.taquio.trasearch.Samok.UserJunkShopView;
 
 import java.util.ArrayList;
@@ -22,15 +22,15 @@ import java.util.List;
  * Created by Edward on 27/03/2018.
  */
 
-public class ToBuyAdapter  extends RecyclerView.Adapter<ToBuyAdapter.ViewHolder>{
+public class ToSellAdapter extends RecyclerView.Adapter<ToSellAdapter.ViewHolder>{
 
-    private static final String TAG = "Enter BUy Adapter" ;
-    private List<ToBuy> mybuyMaterials;
+    private static final String TAG = "Enter Sell Adapter" ;
+    private List<ToSell> mysellMaterials;
     private Context mcontext;
 
-    public ToBuyAdapter(ArrayList<ToBuy> tobuyList, UserJunkShopView userJunkShopView) {
+    public ToSellAdapter(ArrayList<ToSell> tosellList, UserJunkShopView userJunkShopView) {
 
-        mybuyMaterials = tobuyList;
+        mysellMaterials = tosellList;
         mcontext = userJunkShopView;
     }
 
@@ -40,7 +40,7 @@ public class ToBuyAdapter  extends RecyclerView.Adapter<ToBuyAdapter.ViewHolder>
         public ViewHolder(View itemView) {
             super(itemView);
 
-            material = itemView.findViewById(R.id.tvBuy);
+            material = itemView.findViewById(R.id.tvSell);
         }
 
     }
@@ -48,7 +48,7 @@ public class ToBuyAdapter  extends RecyclerView.Adapter<ToBuyAdapter.ViewHolder>
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.tobuy_list, parent, false);
+                    .inflate(R.layout.tosell_list, parent, false);
             
             return new ViewHolder(itemView);
     }
@@ -56,14 +56,14 @@ public class ToBuyAdapter  extends RecyclerView.Adapter<ToBuyAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        ToBuy buy = mybuyMaterials.get(position);
+        ToSell sell = mysellMaterials.get(position);
         Log.d(TAG, "onBindViewHolder: ");
-        holder.material.setText(buy.getMatname());
+        holder.material.setText(sell.getMatname());
 
     }
 
     @Override
     public int getItemCount() {
-        return mybuyMaterials.size();
+        return mysellMaterials.size();
     }
 }

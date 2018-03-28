@@ -168,28 +168,29 @@ public class BusOtherUserViewPost extends Fragment {
         try{
             UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
             Log.d(TAG, "init: GETTING BUNDLE >>>>>>>>>>>>> " +getPhotoFromBundle().getImage_path() );
-
+            mPhoto = getPhotoFromBundle();
+            getPhotoDetails();
 //            mActivityNumber = getActivityNumFromBundle();
-            Toast.makeText(getContext(), "ARAA AYY"+ mActivityNumber, Toast.LENGTH_SHORT).show();
-            String photo_id = getPhotoFromBundle().getPhoto_id();
-
-            Query query = FirebaseDatabase.getInstance().getReference()
-                    .child("Photos")
-                    .orderByChild(getString(R.string.field_photo_id))
-                    .equalTo(photo_id);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                        Photo newPhoto = new Photo();
-                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
-
-                        newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
-                        newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
-                        newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
-                        newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                        newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
-                        newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+//            Toast.makeText(getContext(), "ARAA AYY"+ mActivityNumber, Toast.LENGTH_SHORT).show();
+//            String photo_id = getPhotoFromBundle().getPhoto_id();
+//
+//            Query query = FirebaseDatabase.getInstance().getReference()
+//                    .child("Photos")
+//                    .orderByChild(getString(R.string.field_photo_id))
+//                    .equalTo(photo_id);
+//            query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+//                        Photo newPhoto = new Photo();
+//                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
+//
+//                        newPhoto.setPhoto_description(objectMap.get(getString(R.string.field_caption)).toString());
+//                        newPhoto.setQuantity(objectMap.get(getString(R.string.field_tags)).toString());
+//                        newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+//                        newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+//                        newPhoto.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
+//                        newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 //
 //                        List<Comment> commentsList = new ArrayList<Comment>();
 //                        for (DataSnapshot dSnapshot : singleSnapshot
@@ -201,22 +202,22 @@ public class BusOtherUserViewPost extends Fragment {
 //                            commentsList.add(comment);
 //                        }
 //                        newPhoto.setComments(commentsList);
-
-                        mPhoto = newPhoto;
-
-                        getCurrentUser();
-                        getPhotoDetails();
-                        //getLikesString();
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "onCancelled: query cancelled.");
-                }
-            });
+//
+//                        mPhoto = newPhoto;
+//
+//                        getCurrentUser();
+//                        getPhotoDetails();
+//                        //getLikesString();
+//
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d(TAG, "onCancelled: query cancelled.");
+//                }
+//            });
 
         }catch (NullPointerException e){
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage() );
@@ -340,37 +341,6 @@ public class BusOtherUserViewPost extends Fragment {
         });
     }
 
-//    private void addNewLike(){
-//        Log.d(TAG, "addNewLike: adding new like");
-//
-//        String newLikeID = myRef.push().getKey();
-//        Like like = new Like();
-//        like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//
-//        myRef.child("Photos")
-//                .child(mPhoto.getPhoto_id())
-//                .child(getString(R.string.field_likes))
-//                .child(newLikeID)
-//                .setValue(like);
-//
-//        myRef.child("Users_Photos")
-//                .child(mPhoto.getUser_id())
-//                .child(mPhoto.getPhoto_id())
-//                .child(getString(R.string.field_likes))
-//                .child(newLikeID)
-//                .setValue(like);
-//
-//        myRef.child("Likes")
-//                .child(mPhoto.getUser_id())
-//                .child(newLikeID)
-//                .child(mPhoto.getPhoto_id())
-//                .child("user_id")
-//                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//
-//        mHeart.toggleLike();
-//        getLikesString();
-//    }
-
     private void getPhotoDetails(){
         Log.d(TAG, "getPhotoDetails: retrieving photo details.");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -404,30 +374,13 @@ public class BusOtherUserViewPost extends Fragment {
         return formatter.format(calendar.getTime());
     }
     private void setupWidgets(){
-//        Log.d(TAG, "setupWidgets:  GETTTTINGGG IMAGEE >>>> " + mCurrentUser.getImage() );
-//        String timestampDiff = getTimestampDifference();
-//        if(!timestampDiff.equals("0")){
-//            mTimestamp.setText(timestampDiff + " DAYS AGO");
-//        }else{
-//            mTimestamp.setText("TODAY");
-//        }
         mTimestamp.setText(getDate(mPhoto.getDate_createdLong(), "MMM dd, yyyy E hh:mm aa"));
         UniversalImageLoader.setImage(mCurrentUser.getImage(), mProfileImage, null, "");
         mUsername.setText(mCurrentUser.getName());
 //        mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getPhoto_description());
         mItem.setText(mPhoto.getQuantity());
-//        mBookmark.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                myRef.child("Bookmarks")
-//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                        .child(mPhoto.getPhoto_id())
-//                        .child(mPhoto.getUser_id())
-//                        .child("photo_post")
-//                        .setValue(mPhoto.getImage_path());
-//            }
-//        });
+
         Query query = myRef.child("Users")
                 .orderByChild("userID")
                 .equalTo(mPhoto.getUser_id());
@@ -485,27 +438,6 @@ public class BusOtherUserViewPost extends Fragment {
             }
         });
 
-
-
-
-//        mComments.setText("#" + mPhoto.getComments().size());
-//        if(mPhoto.getComments().size() > 0){
-//            mComments.setText("View all " + mPhoto.getComments().size() + " comments");
-//        }else if(mPhoto.getComments().size() == 0){
-//            mComments.setText("");
-//        }else{
-//            mComments.setText("");
-//        }
-
-//        mComments.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating to comments thread");
-//
-//                mOnCommentThreadSelectedListener.onCommentThreadSelectedListener(mPhoto);
-//
-//            }
-//        });
 
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,9 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.Models.ToBuy;
+import com.example.taquio.trasearch.Models.ToSell;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
 import com.example.taquio.trasearch.Utils.ToBuyAdapter;
+import com.example.taquio.trasearch.Utils.ToSellAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +52,7 @@ public class UserJunkShopView extends AppCompatActivity {
 
     TextView tvName, tvEmail, tvMobile, tvPhone, tvLocation;
     Button btnBuy, btnSell, btnEdit,btnRoute;
-    ImageView verify, notVerify;
+    ImageView verify, notVerify, back;
     CircleImageView profPicImage;
     private BottomNavigationViewEx bottomNavigationView;
     private DatabaseReference databaseReference;
@@ -61,7 +63,9 @@ public class UserJunkShopView extends AppCompatActivity {
     private ArrayList<String> tobuyMat;
     private ArrayList<String> tosellMat;
     private ArrayList<ToBuy> tobuyList;
-    private ToBuyAdapter buyAdapter, sellAdapter;
+    private ArrayList<ToSell> tosellList;
+    private ToBuyAdapter buyAdapter;
+    private ToSellAdapter sellAdapter;
 
     UserJunkShopView(){}
 
@@ -82,11 +86,21 @@ public class UserJunkShopView extends AppCompatActivity {
         tobuyList = new ArrayList<>();
 
         buyAdapter = new ToBuyAdapter(tobuyList, this);
+//---------------------------------------------------
+        tosell = findViewById(R.id.recycler2);
+        RecyclerView.LayoutManager lm1 = new LinearLayoutManager(this);
+        tosell.setLayoutManager(lm1);
+        tosell.setItemAnimator(new DefaultItemAnimator());
+
+        tosellList = new ArrayList<>();
+
+        sellAdapter = new ToSellAdapter(tosellList, this);
 
 
         //For Sell
         final Junkshop bundle = (Junkshop) getIntent().getParcelableExtra("busprofile");
         getBuy(bundle);
+        getSell(bundle);
 
 
 //        setupViewPager();
@@ -98,6 +112,7 @@ public class UserJunkShopView extends AppCompatActivity {
         btnBuy = (Button) findViewById(R.id.btnBuy);
         btnSell = (Button) findViewById(R.id.btnSell);
         btnRoute = findViewById(R.id.route);
+        back = findViewById(R.id.backArrow);
 //        btnEdit = (Button) findViewById(R.id.busBtnEdit);
         bottomNavigationView = findViewById(R.id.bottomNavViewBar);
 
@@ -106,6 +121,13 @@ public class UserJunkShopView extends AppCompatActivity {
         profPicImage = (CircleImageView) findViewById(R.id.busImageView10);
 
         setupBottomNavigationView();
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
+            }
+        });
         //pass data to MapActivity
         btnRoute.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +143,7 @@ public class UserJunkShopView extends AppCompatActivity {
         tvName.setText(bundle.getBsnBusinessName());
         tvEmail.setText(bundle.getBsnEmail());
         tvMobile.setText(bundle.getBsnMobile());
-        tvPhone.setText(bundle.getBsnPhone());
+//        tvPhone.setText(bundle.getBsnPhone());
         tvLocation.setText(bundle.getBsnLocation());
         Picasso.with(UserJunkShopView.this).load(bundle.getImage())
                 .networkPolicy(NetworkPolicy.OFFLINE)
@@ -156,11 +178,22 @@ public class UserJunkShopView extends AppCompatActivity {
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("ToSell")
+
+    }
+
+    private void getSell(final Junkshop bundle) {
+        FirebaseDatabase.getInstance().getReference().child("ToSell").child(bundle.getUserId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot sp: dataSnapshot.getChildren()){
 
+                            Log.d(TAG, "mao ni: " + sp.getValue(ToBuy.class));
+                            Log.d(TAG, "c1: " + sp.getKey());
+                            Log.d(TAG, "c2: " + bundle.getUserId());
+                            tosellList.add(sp.getValue(ToSell.class));
+                            tosell.setAdapter(sellAdapter);
+                        }
                     }
 
                     @Override
@@ -171,16 +204,21 @@ public class UserJunkShopView extends AppCompatActivity {
     }
 
     private void getBuy(final Junkshop bundle) {
-        FirebaseDatabase.getInstance().getReference().child("ToBuy")
+        FirebaseDatabase.getInstance().getReference().child("ToBuy").child(bundle.getUserId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot sp: dataSnapshot.getChildren()){
-                            if(sp.getKey().equalsIgnoreCase(bundle.getUserId())){
-                                tobuyList.add(sp.getValue(ToBuy.class));
 
-                                tobuy.setAdapter(buyAdapter);
-                            }
+//                        tobuyList.add(dataSnapshot.getValue(ToBuy.class));
+//                        Log.d(TAG, "tobuy value : "+ dataSnapshot.getValue(ToBuy.class));
+//                        tobuy.setAdapter(buyAdapter);
+                        for(DataSnapshot sp: dataSnapshot.getChildren()){
+
+                            Log.d(TAG, "mao ni: " + sp.getValue(ToBuy.class));
+                            Log.d(TAG, "c1: " + sp.getKey());
+                            Log.d(TAG, "c2: " + bundle.getUserId());
+                            tobuyList.add(sp.getValue(ToBuy.class));
+                            tobuy.setAdapter(buyAdapter);
                         }
                     }
 

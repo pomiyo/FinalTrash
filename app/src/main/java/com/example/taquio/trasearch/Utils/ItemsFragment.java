@@ -92,7 +92,7 @@ public class ItemsFragment extends Fragment implements  OnUpdateListener, OnLoad
                 .getLoadFooter().setLoadAction(LoadFooter.LoadAction.RELEASE_TO_LOAD);
         mListView.setOnUpdateListener(this)
                 .setOnLoadListener(this);
-//        mListView.requestUpdate();
+        mListView.requestUpdate();
     }
     private void getKeys() {
         Log.d(TAG, "getKeys: searching for following");

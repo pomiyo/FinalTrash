@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -30,13 +31,21 @@ import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -141,13 +150,69 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        if (googleServicesAvailable()) {
+        if (googleServicesAvailable())
+        {
+            Toast.makeText(this, "Map is Good!", Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_map);
+
+            if (mgoogleClient == null) {
+                mgoogleClient = new GoogleApiClient.Builder(getApplicationContext())
+                        .addApi(LocationServices.API)
+                        .build();
+                mgoogleClient.connect();
+
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setInterval(30 * 1000);
+                locationRequest.setFastestInterval(5 * 1000);
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+// **************************
+
+                builder.setAlwaysShow(true); // this is the key ingredient
+
+// **************************
+
+                PendingResult result = LocationServices.SettingsApi.checkLocationSettings(mgoogleClient, builder.build());
+
+                result.setResultCallback(new ResultCallback()
+                {
+                    @Override
+                    public void onResult(@NonNull Result result)
+                    {
+                        final Status status = result.getStatus();
+                        //final LocationSettingsStates state = result.getLocationSettingStates;
+
+                        switch (status.getStatusCode())
+                        {
+                            case LocationSettingsStatusCodes.SUCCESS:
+                                break;
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                try {
+
+                                    status.startResolutionForResult(MapActivity.this, 1000);
+
+                                } catch (IntentSender.SendIntentException e)
+
+                                {
+
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                break;
+                        }
+                    }
+                });
+            }
+
+            mgoogleClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
             listPoints = new ArrayList<>();
             getLocationPermission();
             initMap();
@@ -179,6 +244,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //Save first point select
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(ll);
+
+                if (listPoints.size() == 1) {
+                }
                 listPoints.add(destine);
 //               Toast.makeText(this, "Listpoints " + listPoints.add(destine), Toast.LENGTH_SHORT).show();
 
@@ -384,7 +452,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     //if bottom navigation click
-    private void getBusinessUser() {
+    private void getBusinessUser()
+    {
+//        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+//        intent.putExtra("enabled", true);
+//        sendBroadcast(intent);
+
         for (int i = 0; i < mUsers.size(); i++) {
             Query q = databaseReference.child("Users")
                     .child(mUsers.get(i))
@@ -405,9 +478,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Name = dataSnapshot.child("bsnBusinessName").getValue().toString();
                                 Location = dataSnapshot.child("bsnLocation").getValue().toString();
-//                                String Phone = dataSnapshot.child("bsnPhone").getValue().toString();
+                                String Phone = dataSnapshot.child("bsnPhone").getValue().toString();
                                 String Mobile = dataSnapshot.child("bsnMobile").getValue().toString();
-                                Contact = "Contact Number: " + Location +"\n" + Mobile;
+                                Contact = "Contact Number Landline: " + Phone + " / Mobile: " + Mobile;
 
                                 addMarker(convertToLatLng(Location), Name, Contact);
                             }
@@ -472,6 +545,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mgoogleMap = googleMap;
 
         mgoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        //google map design
         try {
             latlong = new ArrayList<>();
             // Customise the styling of the base map using a JSON object defined
@@ -489,7 +563,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
-
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -497,7 +570,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             }
             //if from profile or from bottomnav
             Intent i = getIntent();
-
             String data = i.getStringExtra("CallFrom");
             switch (data) {
                 case "fromprofile":
@@ -515,16 +587,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     break;
                 case "frombottomnav":
                     Toast.makeText(this, "From Buttom Nav: " + data, Toast.LENGTH_SHORT).show();
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        buildAlertMessageNoGps();
-
-                    } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-                        getDeviceLocation();
-                        mgoogleMap.setMyLocationEnabled(true);
-                        readDatabase();
-                    }
+                    getDeviceLocation();
+                    mgoogleMap.setMyLocationEnabled(true);
+                    readDatabase();
                     break;
             }
 
@@ -553,12 +618,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 longitude = String.valueOf(longi);
             }
             {
-                Toast.makeText(this,"Unable to Trace your location",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
             }
             return location;
         }
         return null;
     }
+
     protected void buildAlertMessageNoGps() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -577,25 +643,40 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
-            if(mLocationPermissionsGranted){
-
+            if(!mLocationPermissionsGranted){
+                getLocationPermission();
+                getDeviceLocation();
+            }
+            else{
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
+                            if(location != null)
+                            {
+                                Log.d(TAG, "onComplete: found location!");
+                                Location currentLocation = (Location) location.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    12);
-
+                                if (currentLocation != null) {
+                                    mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 12));
+                                }else
+                                {
+                                    Toast.makeText(MapActivity.this,"Unble to Trace your location",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else{
+                                Intent intent=new Intent("android.location.GPS_ENABLED_CHANGE");
+                                intent.putExtra("enabled", true);
+                                sendBroadcast(intent);
+                            }
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();

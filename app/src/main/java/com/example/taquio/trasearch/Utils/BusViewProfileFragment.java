@@ -393,60 +393,6 @@ public class BusViewProfileFragment extends Fragment {
         });
 
 
-//        isFollowing();
-//        getFollowingCount();
-//        getFollowersCount();
-//        getPostsCount();
-
-//
-//
-//        mFollow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: now following: " + mUser.getUsername());
-//
-//                FirebaseDatabase.getInstance().getReference()
-//                        .child(getString(R.string.dbname_following))
-//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                        .child(mUser.getUser_id())
-//                        .child(getString(R.string.field_user_id))
-//                        .setValue(mUser.getUser_id());
-//
-//                FirebaseDatabase.getInstance().getReference()
-//                        .child(getString(R.string.dbname_followers))
-//                        .child(mUser.getUser_id())
-//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                        .child(getString(R.string.field_user_id))
-//                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                setFollowing();
-//            }
-//        });
-//
-//
-//        mUnfollow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: now unfollowing: " + mUser.getUsername());
-//
-//                FirebaseDatabase.getInstance().getReference()
-//                        .child(getString(R.string.dbname_following))
-//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                        .child(mUser.getUser_id())
-//                        .removeValue();
-//
-//                FirebaseDatabase.getInstance().getReference()
-//                        .child(getString(R.string.dbname_followers))
-//                        .child(mUser.getUser_id())
-//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                        .removeValue();
-//                setUnfollowing();
-//            }
-//        });
-//
-//        //setupGridView();
-
-
-
         return view;
     }
 
@@ -515,27 +461,6 @@ public class BusViewProfileFragment extends Fragment {
                     photo.setDate_created(Long.parseLong(objectMap.get(getString(R.string.field_date_created)).toString()));
                     photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
 
-
-                    ArrayList<Comment> comments = new ArrayList<Comment>();
-                    for (DataSnapshot dSnapshot : singleSnapshot
-                            .child(getString(R.string.field_comments)).getChildren()){
-                        Comment comment = new Comment();
-                        comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
-                        comment.setComment(dSnapshot.getValue(Comment.class).getComment());
-                        comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
-                        comments.add(comment);
-                    }
-
-//                    photo.setComments(comments);
-//
-//                    List<Like> likesList = new ArrayList<Like>();
-//                    for (DataSnapshot dSnapshot : singleSnapshot
-//                            .child(getString(R.string.field_likes)).getChildren()){
-//                        Like like = new Like();
-//                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
-//                        likesList.add(like);
-//                    }
-//                    photo.setLikes(likesList);
                     photos.add(photo);
                 }
                 setupImageGrid(photos);

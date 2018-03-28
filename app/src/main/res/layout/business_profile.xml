@@ -14,6 +14,14 @@
             android:layout_height="wrap_content">
 
             <include layout="@layout/business_profile_include"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/accSetting"
+                android:src="@drawable/user_settings"/>
 
         </RelativeLayout>
         <LinearLayout
