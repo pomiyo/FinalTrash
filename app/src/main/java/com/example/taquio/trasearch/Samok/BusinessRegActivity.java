@@ -9,9 +9,16 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 /**
  * Created by Edward on 20/02/2018.
@@ -20,21 +27,56 @@ import com.example.taquio.trasearch.R;
 public class BusinessRegActivity extends AppCompatActivity{
 
     private Context mContext = BusinessRegActivity.this;
-    EditText bsnMail, bsnPass, bsnConPass, bsnBusinessName, bsnLocation, bsnPhone, bsnMobile;
+    EditText bsnMail, bsnPass = (EditText) findViewById(R.id.bsnPass), bsnConPass, bsnBusinessName, bsnLocation, bsnPhone, bsnMobile;
     Button busContinue;
+    TextView regCancel;
+    private GoogleApiClient mGoogleApiClient;
+    private int PLACE_PICKER_REQUEST = 1;
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_register1);
 
-        bsnMail = (EditText) findViewById(R.id.bsnMail);
-        bsnPass = (EditText) findViewById(R.id.bsnPass);
-        bsnConPass = (EditText) findViewById(R.id.bsnConPass);
-        bsnBusinessName = (EditText) findViewById(R.id.bsnBusinessName);
-        bsnLocation = (EditText) findViewById(R.id.bsnLocation);
-        bsnPhone = (EditText) findViewById(R.id.bsnPhone);
-        bsnMobile = (EditText) findViewById(R.id.bsnMobile);
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, (GoogleApiClient.OnConnectionFailedListener)this)
+                .build();
 
+        bsnMail = findViewById(R.id.bsnMail);
+        bsnConPass = findViewById(R.id.bsnConPass);
+        bsnBusinessName = findViewById(R.id.bsnBusinessName);
+        bsnLocation = findViewById(R.id.bsnLocation);
+        bsnPhone = findViewById(R.id.bsnPhone);
+        bsnMobile = findViewById(R.id.bsnMobile);
+        regCancel = findViewById(R.id.regCancel);
+        regCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(BusinessRegActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         busContinue = findViewById(R.id.registerCont);
         busContinue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +106,20 @@ public class BusinessRegActivity extends AppCompatActivity{
             }
         });
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                StringBuilder stBuilder = new StringBuilder();
+                String address = String.format("%s", place.getAddress());
+
+                bsnLocation.setText(address);
+            }
+        }
     }
 
 }

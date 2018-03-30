@@ -72,6 +72,9 @@
         <!-- android:name="com.google.android.gms.version" -->
         <!-- android:value="@integer/google_play_services_version" /> -->
 
+        <application>
+
+        </application>
         <activity
             android:name=".Samok.RegisterActivity"
             android:parentActivityName=".Samok.ChooseLayout" />
@@ -134,7 +137,9 @@
         <activity android:name=".Samok.ForVerification" />
         <activity android:name=".Samok.GalleryActivity" />
         <activity android:name=".Samok.MapActivity" />
-
+<meta-data
+    android:name="com.google.android.geo.api_key"
+    android:value="AIzaSyAaxfSgKCm8RXlenogmDN0nmugiE1UFEZU"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyByPbiE1UPZbzH4W4B_x_-FqRIb_zoV060" />

@@ -124,13 +124,12 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                         userDetails.put("bsnLocation", bsnLocation);
                         userDetails.put("bsnMobile", bsnMobile);
                         userDetails.put("bsnPhone", bsnPhone);
-                        userDetails.put("imagePermit", "default");
                         userDetails.put("image", "none");
                         userDetails.put("image_thumb", "none");
                         userDetails.put("deviceToken", deviceToken);
                         userDetails.put("userId", user_id);
                         userDetails.put("userType", "business");
-                        userDetails.put("isVerify", false);
+                        userDetails.put("isVerified", false);
 
                         current_user_db.setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -173,13 +172,18 @@ public class BusinessRegActivity2 extends AppCompatActivity {
                                     userDetails.put("bsnLocation", bsnLocation);
                                     userDetails.put("bsnMobile", bsnMobile);
                                     userDetails.put("bsnPhone", bsnPhone);
-                                    userDetails.put("imagePermit", taskSnapshot.getDownloadUrl().toString());
                                     userDetails.put("image", "none");
                                     userDetails.put("image_thumb", "none");
                                     userDetails.put("deviceToken", deviceToken);
                                     userDetails.put("userId", user_id);
                                     userDetails.put("userType", "business");
-                                    userDetails.put("isVerify", false);
+                                    userDetails.put("isVerified", false);
+
+                                    DatabaseReference forVerificationDatabase;
+                                    forVerificationDatabase = FirebaseDatabase.getInstance().getReference().child("ForVerification").child(mAuth.getCurrentUser().getUid());
+
+                                    forVerificationDatabase.child("Permit").setValue(taskSnapshot.getDownloadUrl().toString());
+                                    forVerificationDatabase.child("isVerified").setValue(false);
 
                                     current_user_db.setValue(userDetails);
                                     progressDialog.dismiss();
