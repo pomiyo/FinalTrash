@@ -78,7 +78,13 @@
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="2.1dp"
                     android:src="@drawable/ic_verify"
+                    android:id="@+id/profile_Verify"
                     android:visibility="invisible"/>
+                <TextView
+                    android:id="@+id/profile_isVerified"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verify"/>
 
             </LinearLayout>
 

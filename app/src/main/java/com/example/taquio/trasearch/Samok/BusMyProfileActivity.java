@@ -8,18 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BusViewProfileFragment;
-import com.example.taquio.trasearch.Utils.ViewPostFragment;
-import com.example.taquio.trasearch.Utils.ViewProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -30,13 +32,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BusMyProfileActivity extends AppCompatActivity implements BusViewProfileFragment.OnGridImageSelectedListener{
 
-    private static final String TAG = "ProfileActivity";
+    private static final String TAG = "BusMyProfileActivity";
     private Context mContext = BusMyProfileActivity.this;
     private ProgressBar mProgressbar;
     private CircleImageView profilePhoto;
     private FirebaseDatabase mfirebaseDatabase;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase;
+    private TextView notVerifiedLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,17 @@ public class BusMyProfileActivity extends AppCompatActivity implements BusViewPr
         setContentView(R.layout.activity_busview_profile);
         init();
         profilePhoto = findViewById(R.id.myProfile_image);
+        notVerifiedLabel = findViewById(R.id.notVerifiedLabel);
 
+        if(notVerifiedLabel.getText().toString().equals("Verified User"))
+        {
+            notVerifiedLabel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(BusMyProfileActivity.this,BusinessRegActivity.class));
+                }
+            });
+        }
     }
 
     @Override
@@ -151,6 +164,25 @@ public class BusMyProfileActivity extends AppCompatActivity implements BusViewPr
         {
             mDatabase.child("online").setValue("online");
         }
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("isVerified"))
+                {
+                    if(dataSnapshot.child("isVerified").getValue(Boolean.class))
+                    {
+                        notVerifiedLabel.setText("Verified User");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     @Override

@@ -21,14 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taquio.trasearch.Profile.ProfileActivity;
-import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.example.taquio.trasearch.Models.Comment;
-import com.example.taquio.trasearch.Models.Like;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.Models.User;
 import com.example.taquio.trasearch.Models.UserSettings;
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.ForVerification;
+import com.example.taquio.trasearch.Samok.MessageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +45,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -79,10 +77,10 @@ public class ViewProfileFragment extends Fragment {
     private ProgressBar mProgressBar;
     private CircleImageView mProfilePhoto;
     private GridView gridView;
-    private ImageView mBackArrow;
+    private ImageView mBackArrow,profile_Verify;
     private BottomNavigationViewEx bottomNavigationView;
     private Context mContext;
-    private TextView editProfile;
+    private TextView profile_isVerified;
     private Button message;
     //vars
     private User mUser;
@@ -117,6 +115,8 @@ public class ViewProfileFragment extends Fragment {
         vProfile_sendFriequest_btn = view.findViewById(R.id.vProfile_sendFriequest_btn);
         declineRequest = view.findViewById(R.id.declineRequest);
         mBackArrow = view.findViewById(R.id.backArrow);
+        profile_Verify = view.findViewById(R.id.profile_Verify);
+        profile_isVerified  = view.findViewById(R.id.profile_isVerified);
 
         gridView = view.findViewById(R.id.gridView);
         bottomNavigationView = view.findViewById(R.id.bottomNavViewBar);
@@ -142,12 +142,61 @@ public class ViewProfileFragment extends Fragment {
         mNotificatioonDatabase = FirebaseDatabase.getInstance().getReference().child("Notifications");
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
+        mRootRef.child("Users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("isVerified"))
+                {
+                    if(dataSnapshot.child("isVerified").getValue(Boolean.class))
+                    {
+                        profile_Verify.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mRootRef.child("Users").child(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("isVerified"))
+                {
+                    if(dataSnapshot.child("isVerified").getValue(Boolean.class))
+                    {
+                        profile_Verify.setVisibility(View.VISIBLE);
+                        profile_isVerified.setText("Verified");
+                        profile_isVerified.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        profile_Verify.setVisibility(View.GONE);
+                        profile_isVerified.setVisibility(View.VISIBLE);
+                        profile_isVerified.setText("Verified");
+                        profile_isVerified.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(getContext(), ForVerification.class));
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onDataChange: Check Database");
+
                 mFriendRequestDatabase
                         .child(mCurrent_user.getUid())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
