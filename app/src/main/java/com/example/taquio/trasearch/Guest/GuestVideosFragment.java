@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.CrawledData;
+import com.example.taquio.trasearch.Samok.Spider;
+import com.example.taquio.trasearch.Samok.SpiderDataAdapter;
 import com.example.taquio.trasearch.SearchLogic.VideoData;
 import com.example.taquio.trasearch.SearchLogic.VideoDataAdapter;
 import com.example.taquio.trasearch.SearchLogic.VideoHTTPRequest;
@@ -36,8 +39,11 @@ public class GuestVideosFragment extends Fragment {
     private String searchQuery;
     private boolean search_method;
     private List<VideoData> videoDataList = new LinkedList<>();
+    private List<CrawledData> crawledDataList = new LinkedList<>();
     private RecyclerView recyclerView;
-    private VideoDataAdapter mAdapter;
+    private VideoDataAdapter mVideoAdapter;
+    private SpiderDataAdapter mCrawledAdapter;
+
 
     public GuestVideosFragment() {}
     @Nullable
@@ -52,14 +58,21 @@ public class GuestVideosFragment extends Fragment {
             if (!search_method) {
                 videoDataList = getVideos(searchQuery);
                 recyclerView = (RecyclerView) view.findViewById(R.id.guestVideoRecyclerView);
-                mAdapter = new VideoDataAdapter(videoDataList);
+                mVideoAdapter = new VideoDataAdapter(videoDataList);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
+                recyclerView.setAdapter(mVideoAdapter);
             }
             else {
-                Log.d(TAG, "onCreateView: GuestVideoFragment Crawler " + search_method);
+//                Log.d(TAG, "onCreateView: GuestVideoFragment Crawler " + search_method);
+                crawledDataList = getCrawledVideos(searchQuery);
+                recyclerView = (RecyclerView) view.findViewById(R.id.guestVideoRecyclerView);
+                mCrawledAdapter = new SpiderDataAdapter(crawledDataList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mCrawledAdapter);
             }
         }
         return view;
@@ -84,10 +97,10 @@ public class GuestVideosFragment extends Fragment {
         executor.shutdown();
         try {
             VideoHTTPRequest req = new VideoHTTPRequest();
-            HashMap<Integer, VideoData> videoDatas;
-            StringBuilder sb = new StringBuilder();
-            videoDatas = future.get();
-            videoDataList =  req.convertToList(videoDatas);
+            HashMap<Integer, VideoData> videoData;
+//            StringBuilder sb = new StringBuilder();
+            videoData = future.get();
+            videoDataList =  req.convertToList(videoData);
 //            for (VideoData video: this.videoDataList) {
 //                String title = video.getTitle();
 //                sb.append(title + "\n");
@@ -105,5 +118,36 @@ public class GuestVideosFragment extends Fragment {
             e.printStackTrace();
         }
         return videoDataList;
+    }
+
+    public List<CrawledData> getCrawledVideos(final String searchQuery) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        List<CrawledData> video = new LinkedList<>();
+        final Future<HashMap<Integer, CrawledData>> future = executor.submit(new Callable<HashMap<Integer, CrawledData>>() {
+            @Override
+            public HashMap<Integer, CrawledData> call() throws Exception {
+                Spider request = new Spider();
+                return request.searchEngine(searchQuery);
+            }
+        });
+        executor.shutdown();
+
+        try {
+            Spider req = new Spider();
+            HashMap<Integer, CrawledData> videoData;
+            StringBuilder sb = new StringBuilder();
+            videoData = future.get();
+            crawledDataList = req.convertToList(videoData);
+            for (CrawledData v: this.crawledDataList) {
+                String title = v.getTitle();
+                sb.append(title + "\n");
+            }
+            Log.d(TAG, "getCrawledVideos: CrawledData" + sb .toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return crawledDataList;
     }
 }

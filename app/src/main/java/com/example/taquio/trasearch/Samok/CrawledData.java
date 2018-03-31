@@ -4,8 +4,8 @@ package com.example.taquio.trasearch.Samok;
  * Created by Taquio on 2/23/2018.
  */
 
-public class CrawledData {
 
+public class CrawledData {
     private String title;
     private String url;
 

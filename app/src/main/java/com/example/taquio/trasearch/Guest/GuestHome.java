@@ -77,8 +77,13 @@ public class GuestHome extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         SectPageAdapter adapter = new SectPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GuestVideosFragment(), "Videos");
-        adapter.addFragment(new GuestArticlesFragment(), "Articles");
+        if (!search_method) {
+            adapter.addFragment(new GuestVideosFragment(), "Videos");
+            adapter.addFragment(new GuestArticlesFragment(), "Articles");
+        }
+        else {
+            adapter.addFragment(new GuestVideosFragment(), "Videos");
+        }
         viewPager.setAdapter(adapter);
 //        Log.d(TAG, "setupViewPager: Im also Here");
     }
