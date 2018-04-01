@@ -60,7 +60,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
     private Context mContext;
     private DatabaseReference mReference;
     private String currentUsername = "";
-    private boolean isBookmark = false;
+    private boolean isBookmark = false, saveLogic = false;
 
     //firebase
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -200,52 +200,56 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                saveLogic = true;
+                if (saveLogic){
                     FirebaseDatabase.getInstance().getReference().child("Bookmarks")
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 //                                    Toast.makeText(getContext(), "Datasnapshot " + dataSnapshot.getValue(), Toast.LENGTH_LONG).show();
 
-                                    if(!dataSnapshot.exists()){
+                                    if (!dataSnapshot.exists()) {
 
                                         mReference.child("Bookmarks")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .child(holder.photo.getPhoto_id())
                                                 .setValue("photoID");
-                                        Toast.makeText(getContext(), "Saved",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
+                                        saveLogic = false;
                                     }
-                                        for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                            Log.d(TAG, "snap: " + snapshot.getKey() );
-                                            if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(snapshot.getKey())){
-                                                Log.d(TAG, "comparator: " + snapshot.child(snapshot.getKey()).hasChild(holder.photo.getPhoto_id()));
-                                                Log.d(TAG, "kompara: " + snapshot.child(snapshot.getKey()));
-                                                Log.d(TAG, "tocompare: " + snapshot.child(snapshot.getKey()).child(holder.photo.getPhoto_id()).getKey().equals(holder.photo.getPhoto_id()));
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        Log.d(TAG, "snap: " + snapshot.getKey());
+                                        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(snapshot.getKey())) {
+                                            Log.d(TAG, "comparator: " + snapshot.child(snapshot.getKey()).hasChild(holder.photo.getPhoto_id()));
+                                            Log.d(TAG, "kompara: " + snapshot.child(snapshot.getKey()));
+                                            Log.d(TAG, "tocompare: " + snapshot.child(snapshot.getKey()).child(holder.photo.getPhoto_id()).getKey().equals(holder.photo.getPhoto_id()));
 
-                                                for(DataSnapshot sp: snapshot.getChildren()){
-                                                    Log.d(TAG, "child: " + sp.getKey());
-                                                    if(sp.getKey().equals(holder.photo.getPhoto_id())){
-                                                        Log.d(TAG, "removemark: " + holder.photo.getPhoto_id() );
+                                            for (DataSnapshot sp : snapshot.getChildren()) {
+                                                Log.d(TAG, "child: " + sp.getKey());
+                                                if (sp.getKey().equals(holder.photo.getPhoto_id())) {
+                                                    Log.d(TAG, "removemark: " + holder.photo.getPhoto_id());
 
-                                                        isBookmark = true;
-                                                        mReference.child("Bookmarks")
-                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                                .child(holder.photo.getPhoto_id())
-                                                                .removeValue();
-                                                        Toast.makeText(getContext(), "Unsave",Toast.LENGTH_SHORT).show();
-                                                    }
-
-                                                }
-                                                if(!isBookmark){
-                                                    Log.d(TAG, "addmark: " + holder.photo.getPhoto_id() );
+                                                    isBookmark = true;
                                                     mReference.child("Bookmarks")
                                                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                             .child(holder.photo.getPhoto_id())
-                                                            .setValue("photoID");
-                                                    Toast.makeText(getContext(), "Saved",Toast.LENGTH_SHORT).show();
+                                                            .removeValue();
+                                                    Toast.makeText(getContext(), "Unsave", Toast.LENGTH_SHORT).show();
+                                                    saveLogic =false;
                                                 }
+
+                                            }
+                                            if (!isBookmark) {
+                                                Log.d(TAG, "addmark: " + holder.photo.getPhoto_id());
+                                                mReference.child("Bookmarks")
+                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                        .child(holder.photo.getPhoto_id())
+                                                        .setValue("photoID");
+                                                Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
+                                                saveLogic = false;
                                             }
                                         }
+                                    }
 
 
                                 }
@@ -255,6 +259,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
                                 }
                             });
+            }
 
 
             }

@@ -114,13 +114,13 @@ public class UserJunkShopView extends AppCompatActivity {
         btnRoute = findViewById(R.id.route);
         back = findViewById(R.id.backArrow);
 //        btnEdit = (Button) findViewById(R.id.busBtnEdit);
-        bottomNavigationView = findViewById(R.id.bottomNavViewBar);
+//        bottomNavigationView = findViewById(R.id.bottomNavViewBar);
 
         verify = (ImageView) findViewById(R.id.imVerify);
         notVerify = (ImageView) findViewById(R.id.imNotVerify);
         profPicImage = (CircleImageView) findViewById(R.id.busImageView10);
 
-        setupBottomNavigationView();
+//        setupBottomNavigationView();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,13 +229,13 @@ public class UserJunkShopView extends AppCompatActivity {
                 });
     }
 
-    private void setupBottomNavigationView(){
-        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);
-        BottomNavigationViewHelper.enableNavigation(mContext,this ,bottomNavigationView);
-        Menu menu = bottomNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-    }
+//    private void setupBottomNavigationView(){
+//        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
+//        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);
+//        BottomNavigationViewHelper.enableNavigation(mContext,this ,bottomNavigationView);
+//        Menu menu = bottomNavigationView.getMenu();
+//        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+//        menuItem.setChecked(true);
+//    }
 
 }

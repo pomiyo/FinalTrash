@@ -71,7 +71,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private Boolean name,email,password,mobile,image,address;
+    private boolean name,email,password,mobile,image,address;
 
 
 
@@ -216,7 +216,8 @@ public class EditProfileActivity extends AppCompatActivity {
             , boolean Thisimage
             , boolean Thisname
             , boolean Thisemail
-            , boolean Thismobile, Boolean Thisaddress) {
+            , boolean Thismobile
+            , boolean Thisaddress) {
         Map updateDB = new HashMap();
        boolean flag =false
                ,emailFlag=false;
@@ -388,6 +389,7 @@ public class EditProfileActivity extends AppCompatActivity {
         ediProfile_image = findViewById(R.id.ediProfile_image);
         ediProfile_saveChanges = findViewById(R.id.ediProfile_saveChanges);
         ediProfile_cpassword = findViewById(R.id.ediProfile_cpassword);
+        ediProfile_address = findViewById(R.id.ediProfile_address);
 
 
     }
