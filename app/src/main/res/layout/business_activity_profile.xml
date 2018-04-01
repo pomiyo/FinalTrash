@@ -40,7 +40,7 @@
             android:layout_height="wrap_content">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:id="@+id/recycler1"/>
         </RelativeLayout>
             <LinearLayout
@@ -62,11 +62,11 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
                     android:id="@+id/recycler2"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-        <include layout="@layout/layout_bottom_navigation_view" />
+        <!--<include layout="@layout/layout_bottom_navigation_view" />-->
 </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
