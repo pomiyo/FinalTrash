@@ -37,16 +37,16 @@ public class BusinessMessages extends AppCompatActivity {
 
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BusinessInboxFragment());
-        adapter.addFragment(new FriendsListFragment());
+        adapter.addFragment(new BusinessInboxFragment(), "Inbox");
+        adapter.addFragment(new FriendsListFragment(), "Friends List");
         ViewPager viewPager = findViewById(R.id.businessMessagesContainer);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.busMessagesTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Inbox");
-        tabLayout.getTabAt(1).setText("Friends List");
+//        tabLayout.getTabAt(0).setText("Inbox");
+//        tabLayout.getTabAt(1).setText("Friends List");
     }
 
     private void setupBottomNavigationView() {

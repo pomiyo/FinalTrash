@@ -317,8 +317,8 @@ public class HomeActivity2 extends AppCompatActivity implements
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 //        adapter.addFragment(new VideosFragment());
 //        adapter.addFragment(new ArticlesFragment());
-        adapter.addFragment(new ItemsFragment());
-        adapter.addFragment(new JunkShopsFragment());
+        adapter.addFragment(new ItemsFragment(), "Items");
+        adapter.addFragment(new JunkShopsFragment(), "Shops");
         ViewPager viewPager = findViewById(R.id.container);
         viewPager.setAdapter(adapter);
 
@@ -327,8 +327,8 @@ public class HomeActivity2 extends AppCompatActivity implements
 
 //        tabLayout.getTabAt(0).setText("Videos");
 //        tabLayout.getTabAt(1).setText("Articles");
-        tabLayout.getTabAt(0).setText("Items");
-        tabLayout.getTabAt(1).setText("Shops");
+//        tabLayout.getTabAt(0).setText("Items");
+//        tabLayout.getTabAt(1).setText("Shops");
 
     }
 

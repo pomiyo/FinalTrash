@@ -65,8 +65,8 @@ public class CameraActivity extends AppCompatActivity {
      */
     private void setupViewPager(){
         SectionsPagerAdapter adapter =  new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GalleryFragment());
-        adapter.addFragment(new PhotoFragment());
+        adapter.addFragment(new GalleryFragment(), "Gallery");
+        adapter.addFragment(new PhotoFragment(), "Photo");
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(adapter);
@@ -74,8 +74,8 @@ public class CameraActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabsBottom);
         tabLayout.setupWithViewPager(mViewPager);
 
-        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
-        tabLayout.getTabAt(1).setText(getString(R.string.photo));
+//        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
+//        tabLayout.getTabAt(1).setText(getString(R.string.photo));
 
 
     }

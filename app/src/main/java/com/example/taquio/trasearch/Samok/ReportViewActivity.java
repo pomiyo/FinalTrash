@@ -25,13 +25,13 @@ public class ReportViewActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ReportViewFragment());
+        adapter.addFragment(new ReportViewFragment(), "Reports");
         ViewPager viewPager = findViewById(R.id.messageContainer);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.messageTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Reports");
+//        tabLayout.getTabAt(0).setText("Reports");
     }
 }

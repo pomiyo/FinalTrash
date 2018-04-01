@@ -42,16 +42,16 @@ public class MessagesActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new InboxFragment());
-        adapter.addFragment(new FriendsFragment());
+        adapter.addFragment(new InboxFragment(), "Inbox");
+        adapter.addFragment(new FriendsFragment(), "Friends List");
         ViewPager viewPager = findViewById(R.id.messageContainer);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.messageTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Inbox");
-        tabLayout.getTabAt(1).setText("Friends List");
+//        tabLayout.getTabAt(0).setText("Inbox");
+//        tabLayout.getTabAt(1).setText("Friends List");
     }
 
     private void setupBottomNavigationView() {

@@ -192,7 +192,7 @@ public class BusinessHome extends AppCompatActivity
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 //        adapter.addFragment(new BusinessVideoFragment());
 //        adapter.addFragment(new BusinessArticleFragment());
-        adapter.addFragment(new BusinessItemsFragment());
+        adapter.addFragment(new BusinessItemsFragment(), "Items");
         ViewPager viewPager = (ViewPager) findViewById(R.id.businessHomeContainer);
         viewPager.setAdapter(adapter);
 
@@ -201,7 +201,7 @@ public class BusinessHome extends AppCompatActivity
 
 //        tabLayout.getTabAt(0).setText("Videos");
 //        tabLayout.getTabAt(1).setText("Articles");
-        tabLayout.getTabAt(0).setText("Items");
+//        tabLayout.getTabAt(0).setText("Items");
     }
 
     private void setupBottomNavigationView() {

@@ -30,20 +30,22 @@ public class AdminActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UnverifiedUsers());
-        adapter.addFragment(new AllUsersFragment());
-        adapter.addFragment(new MaterialsFragment());
-        adapter.addFragment(new ReportFragment());
+        adapter.addFragment(new UnverifiedUsers(), "");
+        adapter.addFragment(new AllUsersFragment(), "");
+        adapter.addFragment(new MaterialsFragment(), "");
+        adapter.addFragment(new ReportFragment(), "");
         ViewPager viewPager = findViewById(R.id.adminContainer);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.adminTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Users (Not Yet Verified)");
-        tabLayout.getTabAt(1).setText("All Users");
-        tabLayout.getTabAt(2).setText("Material Fragment");
-        tabLayout.getTabAt(3).setText("Reports");
+        tabLayout.getTabAt(0).setIcon(R.drawable.notverified);
+        tabLayout.getTabAt(1).setIcon(R.drawable.allusers);
+        tabLayout.getTabAt(2).setIcon(R.drawable.materials);
+        tabLayout.getTabAt(3).setIcon(R.drawable.reports);
+
+
     }
 
 

@@ -3,11 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:weightSum="100">
 
+    <!--<RelativeLayout>-->
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="20"
+        android:background="@color/grey"
+        android:gravity="center">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/stat_icon"
@@ -24,39 +31,51 @@
             android:src="@drawable/images"/>
     </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/allUsersLayout"
+    <LinearLayout
+        android:id="@+id/allUsersLayout"
+        android:background="@color/grey"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_weight="65">
+
+        <TextView
+            android:id="@+id/allUsersName"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Sean Daniel Del Mar"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp" />
 
-            <TextView
-                android:id="@+id/allUsersName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="Sean Daniel Del Mar"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_marginStart="15dp" />
+        <TextView
+            android:id="@+id/allUsersEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp"
+            android:text="officialsuzuen@gmail.com"
+            android:textColor="#000000"
+            android:textSize="13sp"/>
 
-            <TextView
-                android:id="@+id/allUsersEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="2dp"
-                android:text="officialsuzuen@gmail.com"
-                android:textColor="#000000"
-                android:textSize="13sp"/>
+    </LinearLayout>
 
-        </LinearLayout>
-    <ImageView
-        android:id="@+id/isVerify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/verify"
-        android:layout_gravity="right"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="15"
+        android:gravity="center"
+        android:background="@color/grey"
+        android:layout_height="match_parent"
+        >
+        <ImageView
+            android:id="@+id/isVerify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/verify"
+            android:layout_gravity="right"/>
+    </LinearLayout>
+
 </LinearLayout>
