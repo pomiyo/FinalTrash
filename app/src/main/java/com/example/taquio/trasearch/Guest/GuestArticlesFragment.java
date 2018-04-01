@@ -32,6 +32,7 @@ import java.util.concurrent.Future;
 public class GuestArticlesFragment extends Fragment {
     private static final String TAG = "GuestArticlesFragment";
     private String searchQuery;
+    private boolean search_method;
     private List<ArticleData> articleDataList = new LinkedList<>();
     private RecyclerView recyclerView;
     private ArticleDataAdapter mAdapter;
@@ -41,18 +42,24 @@ public class GuestArticlesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_guest_articles_fragment, container, false);
-        Log.d(TAG, "onCreateView: Did i just Render?");
         GuestHome activity = (GuestHome)getActivity();
         Bundle result = activity.sendVideoData();
         searchQuery = result.getString("searchQuery");
+        search_method = result.getBoolean("searchMethod");
+
         if (!searchQuery.isEmpty()) {
-            articleDataList = getArticles(searchQuery);
-            recyclerView = (RecyclerView) view.findViewById(R.id.guestArticleRecyclerView);
-            mAdapter = new ArticleDataAdapter(articleDataList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(mAdapter);
+            if (!search_method) {
+                articleDataList = getArticles(searchQuery);
+                recyclerView = (RecyclerView) view.findViewById(R.id.guestArticleRecyclerView);
+                mAdapter = new ArticleDataAdapter(articleDataList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+            }
+            else {
+                Log.d(TAG, "onCreateView: GuestArticleFragment Crawler " + search_method);
+            }
         }
         return view;
     }

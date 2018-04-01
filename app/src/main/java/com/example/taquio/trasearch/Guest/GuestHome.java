@@ -77,8 +77,13 @@ public class GuestHome extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         SectPageAdapter adapter = new SectPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GuestVideosFragment(), "Videos");
-        adapter.addFragment(new GuestArticlesFragment(), "Articles");
+        if (!search_method) {
+            adapter.addFragment(new GuestVideosFragment(), "Videos");
+            adapter.addFragment(new GuestArticlesFragment(), "Articles");
+        }
+        else {
+            adapter.addFragment(new GuestVideosFragment(), "Videos");
+        }
         viewPager.setAdapter(adapter);
 //        Log.d(TAG, "setupViewPager: Im also Here");
     }
@@ -107,7 +112,8 @@ public class GuestHome extends AppCompatActivity {
         String data = searchQuery;
         Bundle videoBundle = new Bundle();
         videoBundle.putString("searchQuery", data);
-//        Log.d(TAG, "sendVideoData: I'm Here " + data + " " + searchQuery);
+        videoBundle.putBoolean("searchMethod", search_method);
+        Log.d(TAG, "sendVideoData: I'm Here " + data + " " + searchQuery + " " + search_method);
         return videoBundle;
 //        GuestVideosFragment videosFragment = new GuestVideosFragment();
 //        videosFragment.setArguments(videoBundle);

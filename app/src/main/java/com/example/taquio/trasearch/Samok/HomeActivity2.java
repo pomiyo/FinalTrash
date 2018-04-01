@@ -20,10 +20,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.taquio.trasearch.Guest.GuestHome;
 import com.example.taquio.trasearch.Models.Photo;
 import com.example.taquio.trasearch.R;
 import com.example.taquio.trasearch.Utils.BottomNavigationViewHelper;
@@ -64,6 +66,7 @@ public class HomeActivity2 extends AppCompatActivity implements
     private RelativeLayout mRelativeLayout;
     private DatabaseReference mUserDatabase;
     private  TextView notifications_badgeText;
+    private EditText searchText;
     private ArrayList<String> myLikes;
 
     TextView textNotificationCount;
@@ -119,6 +122,18 @@ public class HomeActivity2 extends AppCompatActivity implements
 
 //        doIncrease();
 
+        searchText = (EditText) findViewById(R.id.searchTextNonBusiness);
+
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity2.this, GuestHome.class);
+//                i.putExtra("searchMethod", search_method);
+//                i.putExtra("searchMethod", search_method);
+                startActivity(i);
+//                Log.d(TAG, "onClick: " + search_method);
+            }
+        });
 
         floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,8 +315,8 @@ public class HomeActivity2 extends AppCompatActivity implements
 
     public void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new VideosFragment());
-        adapter.addFragment(new ArticlesFragment());
+//        adapter.addFragment(new VideosFragment());
+//        adapter.addFragment(new ArticlesFragment());
         adapter.addFragment(new ItemsFragment());
         adapter.addFragment(new JunkShopsFragment());
         ViewPager viewPager = findViewById(R.id.container);
@@ -310,10 +325,10 @@ public class HomeActivity2 extends AppCompatActivity implements
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("Videos");
-        tabLayout.getTabAt(1).setText("Articles");
-        tabLayout.getTabAt(2).setText("Items");
-        tabLayout.getTabAt(3).setText("Shops");
+//        tabLayout.getTabAt(0).setText("Videos");
+//        tabLayout.getTabAt(1).setText("Articles");
+        tabLayout.getTabAt(0).setText("Items");
+        tabLayout.getTabAt(1).setText("Shops");
 
     }
 

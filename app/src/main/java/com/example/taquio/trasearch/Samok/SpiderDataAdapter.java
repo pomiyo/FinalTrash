@@ -1,14 +1,14 @@
-package com.example.taquio.trasearch.SearchLogic;
+package com.example.taquio.trasearch.Samok;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,11 +17,12 @@ import com.example.taquio.trasearch.R;
 import java.util.List;
 
 /**
- * Created by User on 22/03/2018.
+ * Created by User on 01/04/2018.
  */
 
-public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyViewHolder> {
-    private List<VideoData> videoDataList;
+public class SpiderDataAdapter extends RecyclerView.Adapter<SpiderDataAdapter.MyViewHolder>{
+//    private String TAG = "Spider Data Adapter";
+    private List<CrawledData> videoDataList;
     private Context context;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, description, channelTitle;
@@ -36,9 +37,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
         }
     }
 
-    public VideoDataAdapter(List<VideoData> videoDataList) {
-        this.videoDataList = videoDataList;
-    }
+    public SpiderDataAdapter(List<CrawledData>  videoDataList) {this.videoDataList = videoDataList; }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,18 +52,16 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        final VideoData video = videoDataList.get(position);
-        holder.title.setText(video.getTitle());
-        holder.description.setText(video.getDescription());
-        holder.channelTitle.setText(video.getChannelTitle());
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        final CrawledData data = videoDataList.get(position);
+        holder.title.setText(data.getTitle());
+        holder.description.setText(data.getUrl());
 
-        holder.title.setTextColor(ContextCompat.getColor(context, R.color.colorLink));
+        holder.description.setTextColor(ContextCompat.getColor(context, R.color.colorLink));
         holder.videoRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String urlSource = "https://www.youtube.com/watch?v=";
-                String url = urlSource.concat(video.getVideoId());
+                String url = data.getUrl().toString();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 v.getContext().startActivity(i);
