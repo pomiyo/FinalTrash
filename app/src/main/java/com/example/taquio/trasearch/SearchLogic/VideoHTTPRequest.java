@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.net.HttpURLConnection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,8 +25,9 @@ public class VideoHTTPRequest {
 
     private HashMap<Integer, VideoData> unfilteredData = new HashMap<Integer, VideoData>();
     private HashMap<Integer, VideoData> filteredData = new HashMap<Integer, VideoData>();
+    private List<VideoData> filteredVideo = new LinkedList<>();
 
-    public HashMap<Integer, VideoData> sendGet(String querySearch) throws Exception {
+    public List<VideoData> sendGet(String querySearch) throws Exception {
         // Youtube Data API link with API Key
         String urlSource = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=40&type=video&key=AIzaSyDUvqxt9hpw0CFfJG0fqsyoGbc96-h7hFk&q=";
         String url = urlSource.concat(querySearch.replace(' ', '+'));
@@ -45,7 +47,7 @@ public class VideoHTTPRequest {
 //            System.out.println(sb);
             this.jsonParser(sb.toString());
             this.filterData();
-            return filteredData;
+            return this.filteredVideo;
 //            return unfilteredData;
         }
         finally {
@@ -93,44 +95,68 @@ public class VideoHTTPRequest {
     public void filterData() {
         DataFilter filters = new DataFilter();
         String[] words = filters.getWordFilters();
+        List<VideoData> unfilteredData = new LinkedList<VideoData>();
+        unfilteredData = convertToList(this.unfilteredData);
 
-//		System.out.println("HashMapSize: " + this.unfilteredData.size());
+        for (Iterator<VideoData> iterator = unfilteredData.listIterator(); iterator.hasNext();){
+            VideoData value = iterator.next();
 
-        int wordsIndex = 0;
-        int filteredDataIndex = 0;
-        do {
-            for (Integer index: this.unfilteredData.keySet()) {
-                Integer key = index;
-                VideoData data = unfilteredData.get(key);
-
-                if (data.getTitle().toLowerCase().contains(words[wordsIndex])) {
-                    VideoData filteredVideo = new VideoData();
-                    filteredVideo.setTitle(data.getTitle());
-                    filteredVideo.setDescription(data.getDescription());
-                    filteredVideo.setChannelTitle(data.getChannelTitle());
-                    filteredVideo.setVideoId(data.getVideoId());
-                    filteredVideo.setDefaultThumbUrl(data.getDefaultThumbUrl());
-
-                    this.filteredData.put(filteredDataIndex, filteredVideo);
-                    this.unfilteredData.remove(key);
+            for (int wordsIndex = 0; wordsIndex < words.length; wordsIndex++) {
+                if (value.getTitle().toLowerCase().contains(words[wordsIndex])) {
+                    this.filteredVideo.add(value);
+                    iterator.remove();
                     break;
                 }
-                else if (data.getDescription().toLowerCase().contains(words[wordsIndex])) {
-                    VideoData filteredVideo = new VideoData();
-                    filteredVideo.setTitle(data.getTitle());
-                    filteredVideo.setDescription(data.getDescription());
-                    filteredVideo.setChannelTitle(data.getChannelTitle());
-                    filteredVideo.setVideoId(data.getVideoId());
-                    filteredVideo.setDefaultThumbUrl(data.getDefaultThumbUrl());
-
-                    this.filteredData.put(filteredDataIndex, filteredVideo);
-                    this.unfilteredData.remove(key);
+                if (value.getChannelTitle().toLowerCase().contains(words[wordsIndex])) {
+                    this.filteredVideo.add(value);
+                    iterator.remove();
+                    break;
+                }
+                if (value.getDescription().toLowerCase().contains(words[wordsIndex])) {
+                    this.filteredVideo.add(value);
+                    iterator.remove();
                     break;
                 }
             }
-            filteredDataIndex++;
-            wordsIndex++;
-        }while(wordsIndex < words.length);
+        }
+
+//		System.out.println("HashMapSize: " + this.unfilteredData.size());
+
+//        int wordsIndex = 0;
+//        int filteredDataIndex = 0;
+//        do {
+//            for (Integer index: this.unfilteredData.keySet()) {
+//                Integer key = index;
+//                VideoData data = unfilteredData.get(key);
+//
+//                if (data.getTitle().toLowerCase().contains(words[wordsIndex])) {
+//                    VideoData filteredVideo = new VideoData();
+//                    filteredVideo.setTitle(data.getTitle());
+//                    filteredVideo.setDescription(data.getDescription());
+//                    filteredVideo.setChannelTitle(data.getChannelTitle());
+//                    filteredVideo.setVideoId(data.getVideoId());
+//                    filteredVideo.setDefaultThumbUrl(data.getDefaultThumbUrl());
+//
+//                    this.filteredData.put(filteredDataIndex, filteredVideo);
+//                    this.unfilteredData.remove(key);
+//                    break;
+//                }
+//                else if (data.getDescription().toLowerCase().contains(words[wordsIndex])) {
+//                    VideoData filteredVideo = new VideoData();
+//                    filteredVideo.setTitle(data.getTitle());
+//                    filteredVideo.setDescription(data.getDescription());
+//                    filteredVideo.setChannelTitle(data.getChannelTitle());
+//                    filteredVideo.setVideoId(data.getVideoId());
+//                    filteredVideo.setDefaultThumbUrl(data.getDefaultThumbUrl());
+//
+//                    this.filteredData.put(filteredDataIndex, filteredVideo);
+//                    this.unfilteredData.remove(key);
+//                    break;
+//                }
+//            }
+//            filteredDataIndex++;
+//            wordsIndex++;
+//        }while(wordsIndex < words.length);
     }
 
     public HashMap<Integer, VideoData> getUnfilteredData() {

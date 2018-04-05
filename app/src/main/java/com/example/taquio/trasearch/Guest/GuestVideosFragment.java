@@ -87,9 +87,9 @@ public class GuestVideosFragment extends Fragment {
     public List<VideoData> getVideos(final String searchQuery) {
         ExecutorService executor = Executors.newCachedThreadPool();
         List<VideoData> video = new LinkedList<>();
-        Future<HashMap<Integer, VideoData>> future = executor.submit(new Callable<HashMap<Integer, VideoData>>() {
+        Future<List<VideoData>> future = executor.submit(new Callable<List<VideoData>>() {
             @Override
-            public HashMap<Integer, VideoData> call() throws Exception {
+            public List<VideoData> call() throws Exception {
                 VideoHTTPRequest request = new VideoHTTPRequest();
                 return request.sendGet(searchQuery);
             }
@@ -99,8 +99,8 @@ public class GuestVideosFragment extends Fragment {
             VideoHTTPRequest req = new VideoHTTPRequest();
             HashMap<Integer, VideoData> videoData;
 //            StringBuilder sb = new StringBuilder();
-            videoData = future.get();
-            videoDataList =  req.convertToList(videoData);
+//            videoData = future.get();
+            videoDataList =  future.get();
 //            for (VideoData video: this.videoDataList) {
 //                String title = video.getTitle();
 //                sb.append(title + "\n");

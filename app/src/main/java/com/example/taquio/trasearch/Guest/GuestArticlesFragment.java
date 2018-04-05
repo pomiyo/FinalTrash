@@ -67,9 +67,9 @@ public class GuestArticlesFragment extends Fragment {
     public List<ArticleData> getArticles (final String searchQuery) {
         ExecutorService executor = Executors.newCachedThreadPool();
         List<ArticleData> article = new LinkedList<>();
-        Future<HashMap<Integer, ArticleData>> future = executor.submit(new Callable<HashMap<Integer, ArticleData>>() {
+        Future<List<ArticleData>> future = executor.submit(new Callable<List<ArticleData>>() {
             @Override
-            public HashMap<Integer, ArticleData> call() throws Exception {
+            public List<ArticleData> call() throws Exception {
                 ArticleHTTPRequest request = new ArticleHTTPRequest();
                 return request.sendGet(searchQuery);
             }
@@ -79,8 +79,8 @@ public class GuestArticlesFragment extends Fragment {
             ArticleHTTPRequest req = new ArticleHTTPRequest();
             HashMap<Integer, ArticleData> articleDatas;
             StringBuilder sb = new StringBuilder();
-            articleDatas = future.get();
-            articleDataList = req.convertToList(articleDatas);
+//            articleDatas = future.get();
+            articleDataList = future.get();
             for (ArticleData value: this.articleDataList) {
                 String name = value.getName();
                 sb.append(name + "\n");

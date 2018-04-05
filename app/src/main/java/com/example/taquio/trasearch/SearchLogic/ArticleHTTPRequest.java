@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,8 +23,9 @@ public class ArticleHTTPRequest {
 
     private HashMap<Integer, ArticleData> unfilteredData = new HashMap<Integer, ArticleData>();
     private HashMap<Integer, ArticleData> filteredData = new HashMap<Integer, ArticleData>();
+    private List<ArticleData> filteredArticle = new LinkedList<>();
 
-    public HashMap<Integer, ArticleData> sendGet(String querySearch) throws Exception {
+    public List<ArticleData> sendGet(String querySearch) throws Exception {
         String urlSource = "https://kgsearch.googleapis.com/v1/entities:search?languages=en&limit=30&types=WebSite&types=Book&types=EducationalOrganization&types=Organization&key=AIzaSyDUvqxt9hpw0CFfJG0fqsyoGbc96-h7hFk&query=";
         String url = urlSource.concat(querySearch.replace(' ', '+'));
 
@@ -41,7 +43,7 @@ public class ArticleHTTPRequest {
             this.jsonParser(sb.toString());
             this.filterData();
 
-            return filteredData;
+            return this.filteredArticle;
         }
         finally {
             urlConnection.disconnect();
@@ -97,62 +99,90 @@ public class ArticleHTTPRequest {
     public void filterData() {
         DataFilter filters = new DataFilter();
         String[] words = filters.getWordFilters();
+        List<ArticleData> unfilteredData = new LinkedList<>();
+        unfilteredData = convertToList(this.unfilteredData);
 
-        int wordsIndex = 0;
-        int filteredDataIndex = 0;
-        do {
-            for (Integer index: this.unfilteredData.keySet()) {
-                ArticleData data = unfilteredData.get(index);
+        for (Iterator<ArticleData> iterator = unfilteredData.listIterator(); iterator.hasNext();){
+            ArticleData value = iterator.next();
 
-                if (data.getName().toLowerCase().contains(words[wordsIndex])) {
-                    ArticleData filteredArticle = new ArticleData();
-                    filteredArticle.setName(data.getName());
-                    filteredArticle.setDescription(data.getDescription());
-                    filteredArticle.setArticleBody(data.getArticleBody());
-                    filteredArticle.setArticleURL(data.getArticleURL());
-                    filteredArticle.setUrl(data.getUrl());
-                    filteredArticle.setResultType(data.getResultType());
-
-                    this.filteredData.put(filteredDataIndex, filteredArticle);
-                    this.unfilteredData.remove(index);
+            for (int wordsIndex = 0; wordsIndex < words.length; wordsIndex++) {
+                if (value.getName().toLowerCase().contains(words[wordsIndex])) {
+                    this.filteredArticle.add(value);
+                    iterator.remove();
                     break;
                 }
-                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
-                    if (data.getArticleBody().toLowerCase().contains(words[wordsIndex])) {
-                        ArticleData filteredArticle = new ArticleData();
-                        filteredArticle.setName(data.getName());
-                        filteredArticle.setDescription(data.getDescription());
-                        filteredArticle.setArticleBody(data.getArticleBody());
-                        filteredArticle.setArticleURL(data.getArticleURL());
-                        filteredArticle.setUrl(data.getUrl());
-                        filteredArticle.setResultType(data.getResultType());
-
-                        this.filteredData.put(filteredDataIndex, filteredArticle);
-                        this.unfilteredData.remove(index);
+                else if (!(value.getArticleBody().equalsIgnoreCase("Not Available"))) {
+                    if (value.getArticleBody().toLowerCase().contains(words[wordsIndex])) {
+                        this.filteredArticle.add(value);
+                        iterator.remove();
                         break;
                     }
                 }
-                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
-                    if (data.getDescription().toLowerCase().contains(words[wordsIndex])) {
-                        ArticleData filteredArticle = new ArticleData();
-                        filteredArticle.setName(data.getName());
-                        filteredArticle.setDescription(data.getDescription());
-                        filteredArticle.setArticleBody(data.getArticleBody());
-                        filteredArticle.setArticleURL(data.getArticleURL());
-                        filteredArticle.setUrl(data.getUrl());
-                        filteredArticle.setResultType(data.getResultType());
-                        System.out.println("True in this word" + words[wordsIndex]);
-
-                        this.filteredData.put(filteredDataIndex, filteredArticle);
-                        this.unfilteredData.remove(index);
+                else if (!(value.getDescription().equalsIgnoreCase("Not Available"))) {
+                    if (value.getDescription().toLowerCase().contains(words[wordsIndex])) {
+                        this.filteredArticle.add(value);
+                        iterator.remove();
                         break;
                     }
                 }
-
             }
-            filteredDataIndex++;
-            wordsIndex++;
-        }while(wordsIndex < words.length);
+        }
+
+//        int wordsIndex = 0;
+//        int filteredDataIndex = 0;
+//        do {
+//            for (Integer index: this.unfilteredData.keySet()) {
+//                ArticleData data = unfilteredData.get(index);
+//
+//                if (data.getName().toLowerCase().contains(words[wordsIndex])) {
+//                    ArticleData filteredArticle = new ArticleData();
+//                    filteredArticle.setName(data.getName());
+//                    filteredArticle.setDescription(data.getDescription());
+//                    filteredArticle.setArticleBody(data.getArticleBody());
+//                    filteredArticle.setArticleURL(data.getArticleURL());
+//                    filteredArticle.setUrl(data.getUrl());
+//                    filteredArticle.setResultType(data.getResultType());
+//
+//                    this.filteredData.put(filteredDataIndex, filteredArticle);
+//                    this.unfilteredData.remove(index);
+//                    break;
+//                }
+//                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
+//                    if (data.getArticleBody().toLowerCase().contains(words[wordsIndex])) {
+//                        ArticleData filteredArticle = new ArticleData();
+//                        filteredArticle.setName(data.getName());
+//                        filteredArticle.setDescription(data.getDescription());
+//                        filteredArticle.setArticleBody(data.getArticleBody());
+//                        filteredArticle.setArticleURL(data.getArticleURL());
+//                        filteredArticle.setUrl(data.getUrl());
+//                        filteredArticle.setResultType(data.getResultType());
+//
+//                        this.filteredData.put(filteredDataIndex, filteredArticle);
+//                        this.unfilteredData.remove(index);
+//                        break;
+//                    }
+//                }
+//                else if (!(data.getArticleBody().equalsIgnoreCase("Not Available"))) {
+//                    if (data.getDescription().toLowerCase().contains(words[wordsIndex])) {
+//                        ArticleData filteredArticle = new ArticleData();
+//                        filteredArticle.setName(data.getName());
+//                        filteredArticle.setDescription(data.getDescription());
+//                        filteredArticle.setArticleBody(data.getArticleBody());
+//                        filteredArticle.setArticleURL(data.getArticleURL());
+//                        filteredArticle.setUrl(data.getUrl());
+//                        filteredArticle.setResultType(data.getResultType());
+//                        System.out.println("True in this word" + words[wordsIndex]);
+//
+//                        this.filteredData.put(filteredDataIndex, filteredArticle);
+//                        this.unfilteredData.remove(index);
+//                        break;
+//                    }
+//                }
+//
+//            }
+//            filteredDataIndex++;
+//            wordsIndex++;
+//        }while(wordsIndex < words.length);
     }
 
     public HashMap<Integer, ArticleData> getUnfilteredData() {
