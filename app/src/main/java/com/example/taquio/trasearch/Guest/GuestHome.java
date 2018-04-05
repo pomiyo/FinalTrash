@@ -83,6 +83,7 @@ public class GuestHome extends AppCompatActivity {
         }
         else {
             adapter.addFragment(new GuestVideosFragment(), "Videos");
+            adapter.addFragment(new GuestArticlesFragment(), "Articles");
         }
         viewPager.setAdapter(adapter);
 //        Log.d(TAG, "setupViewPager: Im also Here");

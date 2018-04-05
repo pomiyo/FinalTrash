@@ -133,16 +133,16 @@ public class GuestVideosFragment extends Fragment {
         executor.shutdown();
 
         try {
-            Spider req = new Spider();
-            HashMap<Integer, CrawledData> videoData;
-            StringBuilder sb = new StringBuilder();
+//            Spider req = new Spider();
+//            HashMap<Integer, CrawledData> videoData;
+//            StringBuilder sb = new StringBuilder();
 //            videoData = future.get();
             crawledDataList = future.get();
-            for (CrawledData v: this.crawledDataList) {
-                String title = v.getTitle();
-                sb.append(title + "\n");
-            }
-            Log.d(TAG, "getCrawledVideos: CrawledData" + sb .toString());
+//            for (CrawledData v: this.crawledDataList) {
+//                String title = v.getTitle();
+//                sb.append(title + "\n");
+//            }
+//            Log.d(TAG, "getCrawledVideos: CrawledData" + sb .toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

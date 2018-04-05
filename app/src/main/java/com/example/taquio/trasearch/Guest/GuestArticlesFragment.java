@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taquio.trasearch.R;
+import com.example.taquio.trasearch.Samok.ArticleCrawledData;
+import com.example.taquio.trasearch.Samok.Spider;
+import com.example.taquio.trasearch.Samok.SpiderArticleAdapter;
 import com.example.taquio.trasearch.SearchLogic.ArticleData;
 import com.example.taquio.trasearch.SearchLogic.ArticleDataAdapter;
 import com.example.taquio.trasearch.SearchLogic.ArticleHTTPRequest;
@@ -34,8 +37,10 @@ public class GuestArticlesFragment extends Fragment {
     private String searchQuery;
     private boolean search_method;
     private List<ArticleData> articleDataList = new LinkedList<>();
+    private List<ArticleCrawledData> articleCrawledDataList = new LinkedList<>();
     private RecyclerView recyclerView;
-    private ArticleDataAdapter mAdapter;
+    private ArticleDataAdapter mArticleDataAdapter;
+    private SpiderArticleAdapter mCrawledArticleAdapter;
 
     public GuestArticlesFragment() {}
     @Nullable
@@ -51,14 +56,21 @@ public class GuestArticlesFragment extends Fragment {
             if (!search_method) {
                 articleDataList = getArticles(searchQuery);
                 recyclerView = (RecyclerView) view.findViewById(R.id.guestArticleRecyclerView);
-                mAdapter = new ArticleDataAdapter(articleDataList);
+                mArticleDataAdapter = new ArticleDataAdapter(articleDataList);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
+                recyclerView.setAdapter(mArticleDataAdapter);
             }
             else {
-                Log.d(TAG, "onCreateView: GuestArticleFragment Crawler " + search_method);
+//                Log.d(TAG, "onCreateView: GuestArticleFragment Crawler " + search_method);
+                articleCrawledDataList = getCrawledArticle(searchQuery);
+                recyclerView = (RecyclerView) view.findViewById(R.id.guestArticleRecyclerView);
+                mCrawledArticleAdapter = new SpiderArticleAdapter(articleCrawledDataList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mCrawledArticleAdapter);
             }
         }
         return view;
@@ -92,5 +104,26 @@ public class GuestArticlesFragment extends Fragment {
             e.printStackTrace();
         }
         return articleDataList;
+    }
+
+    public List<ArticleCrawledData> getCrawledArticle (final String searchQuery) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+//        List<ArticleCrawledData>
+        Future<List<ArticleCrawledData>> future = executor.submit(new Callable<List<ArticleCrawledData>>() {
+            @Override
+            public List<ArticleCrawledData> call() throws Exception {
+                Spider req = new Spider();
+                return req.searchArticle(searchQuery);
+            }
+        });
+        executor.shutdown();
+        try {
+            articleCrawledDataList = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return articleCrawledDataList;
     }
 }

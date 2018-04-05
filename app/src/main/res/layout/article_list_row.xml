@@ -18,6 +18,7 @@
     android:paddingTop="@dimen/row_padding_vertical">
 
     <LinearLayout
+        android:id="@+id/articleRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
