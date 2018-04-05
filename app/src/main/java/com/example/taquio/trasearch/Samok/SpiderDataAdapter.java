@@ -55,9 +55,10 @@ public class SpiderDataAdapter extends RecyclerView.Adapter<SpiderDataAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final CrawledData data = videoDataList.get(position);
         holder.title.setText(data.getTitle());
-        holder.description.setText(data.getUrl());
+        holder.description.setText(data.getDesc());
+        holder.channelTitle.setText(data.getChannelName());
 
-        holder.description.setTextColor(ContextCompat.getColor(context, R.color.colorLink));
+        holder.title.setTextColor(ContextCompat.getColor(context, R.color.colorLink));
         holder.videoRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

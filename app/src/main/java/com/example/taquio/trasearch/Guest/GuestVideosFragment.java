@@ -123,11 +123,11 @@ public class GuestVideosFragment extends Fragment {
     public List<CrawledData> getCrawledVideos(final String searchQuery) {
         ExecutorService executor = Executors.newCachedThreadPool();
         List<CrawledData> video = new LinkedList<>();
-        final Future<HashMap<Integer, CrawledData>> future = executor.submit(new Callable<HashMap<Integer, CrawledData>>() {
+        final Future<List<CrawledData>> future = executor.submit(new Callable<List<CrawledData>>() {
             @Override
-            public HashMap<Integer, CrawledData> call() throws Exception {
+            public List<CrawledData> call() throws Exception {
                 Spider request = new Spider();
-                return request.searchEngine(searchQuery);
+                return request.searchVideo(searchQuery);
             }
         });
         executor.shutdown();
@@ -136,8 +136,8 @@ public class GuestVideosFragment extends Fragment {
             Spider req = new Spider();
             HashMap<Integer, CrawledData> videoData;
             StringBuilder sb = new StringBuilder();
-            videoData = future.get();
-            crawledDataList = req.convertToList(videoData);
+//            videoData = future.get();
+            crawledDataList = future.get();
             for (CrawledData v: this.crawledDataList) {
                 String title = v.getTitle();
                 sb.append(title + "\n");
